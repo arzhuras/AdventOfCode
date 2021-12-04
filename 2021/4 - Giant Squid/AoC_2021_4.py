@@ -93,11 +93,6 @@ def sumUnmarked(grid):
     return score
 
 
-############
-### MAIN ###
-############
-
-
 def resolve_part1(winGrid):
     print()
     print(ANSI_RED, "### PART 1 ###", ANSI_NORM)
@@ -120,10 +115,16 @@ def resolve_part2(winGrid):
     return winGrid[1] * winGrid[2]
 
 
+############
+### MAIN ###
+############
+
+
 # g_inputLines = readInputFile("sample.txt")
 g_inputLines = readInputFile()
 
 initData()
+
 
 startTime = time.time()
 winGridLst = scanGrid()  # winGrid: id, raw, unmarked sum
