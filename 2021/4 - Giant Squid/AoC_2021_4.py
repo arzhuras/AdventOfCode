@@ -134,7 +134,6 @@ startTime = time.time()
 res = resolve_part1(winGridLst[0])
 print()
 print(f"-> part 1 ({time.time() - startTime:.3f}s): {ANSI_BLUE}{res}{ANSI_NORM}")
-# 64124 too high
 
 startTime = time.time()
 res = resolve_part2(winGridLst[-1])
