@@ -20,6 +20,10 @@ INPUT_FILE_NAME = SCRIPT_NAME.replace("py", "txt")
 g_inputLines = []
 g_data = {}
 
+#############################
+### INITIALISATION & DATA ###
+#############################
+
 
 def readInputFile(argFile=INPUT_FILE_NAME):
     inputLines = []
@@ -48,6 +52,11 @@ def initData():
     # print(g_data)
 
 
+##################
+### PROCEDURES ###
+##################
+
+
 def isWin(grid, raw):
     for line in range(5):
         for col in range(5):
@@ -69,8 +78,7 @@ def scanGrid():
             if grid[0][0] == -2:  # skip grid already won
                 continue
 
-            res = isWin(grid, raw)
-            if res == True:
+            if isWin(grid, raw) == True:
                 winGridLst.append([gridId, raw, sumUnmarked(grid)])
                 print("GOTCHA -", "gridId:", gridId, "winGridLst[-1]:", winGridLst[-1])
     return winGridLst
@@ -83,6 +91,11 @@ def sumUnmarked(grid):
             if elt > -1:
                 score += elt
     return score
+
+
+############
+### MAIN ###
+############
 
 
 def resolve_part1(winGrid):
