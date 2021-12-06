@@ -8,8 +8,7 @@ os.chdir(SCRIPT_DIR)
 
 print(f"=== {SCRIPT_DIR}/{SCRIPT_NAME} ===")
 
-INPUT_FILE_NAME = SCRIPT_NAME.replace("py", "txt")
-# INPUT_URL = "https://adventofcode.com/2021/day/" + str(1) + "/input"
+INPUT_FILE_NAME = "input.txt"
 
 #########################
 ### COMMON PROCEDURES ###
@@ -50,7 +49,7 @@ def initData():
     for timer in g_inputLines[0].split(","):
         cycle[int(timer)] += 1
 
-    #print("init:", g_data)
+    # print("init:", g_data)
 
 
 ##################
