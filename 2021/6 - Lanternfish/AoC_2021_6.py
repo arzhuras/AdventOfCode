@@ -59,10 +59,7 @@ def initData():
 ##################
 
 
-def resolve_part1(numberOfDay):
-    print()
-    print(ANSI_RED, "### PART 1 ###", ANSI_NORM)
-
+def simulate(numberOfDay):
     cycle = g_data["cycle"]
 
     print(f"Initial day   : {cycle}")
@@ -72,16 +69,23 @@ def resolve_part1(numberOfDay):
             cycle[i] = cycle[i + 1]
         cycle[6] += spawn
         cycle[8] = spawn
-        print(f"After {day:2} days : {cycle}")
+        # print(f"After {day:2} days : {cycle}")
 
     return sum(cycle)
 
 
-def resolve_part2():
+def resolve_part1(numberOfDay):
+    print()
+    print(ANSI_RED, "### PART 1 ###", ANSI_NORM)
+
+    return simulate(numberOfDay)
+
+
+def resolve_part2(numberOfDay):
     print()
     print(ANSI_RED, "### PART 2 ###", ANSI_NORM)
 
-    return 0
+    return simulate(numberOfDay)
 
 
 ############
@@ -96,12 +100,13 @@ initData()
 
 
 startTime = time.time()
-res = resolve_part1(256)
+res = resolve_part1(80)
 print()
 print(f"-> part 1 ({time.time() - startTime:.3f}s): {ANSI_BLUE}{res}{ANSI_NORM}")
-# 1531 too low
+
+initData()
 
 startTime = time.time()
-res = resolve_part2()
+res = resolve_part2(256)
 print()
 print(f"-> part 2 ({time.time() - startTime:.3f}s): {ANSI_BLUE}{res}{ANSI_NORM}")
