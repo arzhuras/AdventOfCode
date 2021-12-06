@@ -53,7 +53,7 @@ _, _, dayTitle = dayTitle.split()
 # print(dayTitle)
 
 # Create current day directory
-DAY_PATH = f"{date.year}.bak/{date.day} - {dayTitle}"
+DAY_PATH = f"{date.year}/{date.day} - {dayTitle}"
 print(ANSI_BLUE, DAY_PATH, ANSI_NORM)
 os.makedirs(DAY_PATH, exist_ok=True)
 
@@ -72,8 +72,11 @@ print(ANSI_BLUE, "  input.txt", ANSI_NORM)
 with open(f"{DAY_PATH}/input.txt", "w") as destFile:
     destFile.write(r.text)
 
-tmp = f"AoC_{date.year}_{date.day}.py"
-print(ANSI_BLUE, f"  {tmp}.txt", ANSI_NORM)
-with open(TEMPLATE_FILE_NAME, "r") as inputFile, open(f"{DAY_PATH}/{tmp}", "w") as destFile:
+destFileName = f"AoC_{date.year}_{date.day}.py"
+if os.path.exists(f"{DAY_PATH}/{destFileName}"):
+    print(ANSI_RED, f"{DAY_PATH}/{destFileName} already exists", ANSI_NORM)
+    exit()
+print(ANSI_BLUE, f"  {destFileName}", ANSI_NORM)
+with open(TEMPLATE_FILE_NAME, "r") as inputFile, open(f"{DAY_PATH}/{destFileName}", "x") as destFile:
     content = inputFile.read()
     destFile.write(content)
