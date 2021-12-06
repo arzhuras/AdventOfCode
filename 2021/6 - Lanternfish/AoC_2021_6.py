@@ -50,7 +50,7 @@ def initData():
     for timer in g_inputLines[0].split(","):
         cycle[int(timer)] += 1
 
-    print("init:", g_data)
+    #print("init:", g_data)
 
 
 ##################
