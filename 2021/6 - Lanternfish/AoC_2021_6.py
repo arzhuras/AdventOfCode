@@ -8,14 +8,13 @@ os.chdir(SCRIPT_DIR)
 
 print(f"=== {SCRIPT_DIR}/{SCRIPT_NAME} ===")
 
-
 INPUT_FILE_NAME = SCRIPT_NAME.replace("py", "txt")
 # INPUT_URL = "https://adventofcode.com/2021/day/" + str(1) + "/input"
-
 
 #########################
 ### COMMON PROCEDURES ###
 #########################
+
 ANSI_NORM = "\033[0m"
 ANSI_RED = "\033[31;1m"
 ANSI_GREEN = "\033[32;1m"
@@ -51,7 +50,7 @@ def initData():
     for timer in g_inputLines[0].split(","):
         cycle[int(timer)] += 1
 
-    print(g_data)
+    print("init:", g_data)
 
 
 ##################
@@ -92,12 +91,10 @@ def resolve_part2(numberOfDay):
 ### MAIN ###
 ############
 
-
 # g_inputLines = readInputFile("sample.txt")
 g_inputLines = readInputFile()
 
 initData()
-
 
 startTime = time.time()
 res = resolve_part1(80)
