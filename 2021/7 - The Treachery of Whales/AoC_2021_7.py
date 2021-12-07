@@ -42,8 +42,7 @@ g_data = {}
 
 
 def initData():
-    g_data["line"] = []
-
+    g_data["pos"] = [int(pos) for pos in g_inputLines[0].split(",")]
     # print("initData:", g_data)
 
 
@@ -52,26 +51,54 @@ def initData():
 ##################
 
 
+def compute(fuelMode):
+    minPos = min(g_data["pos"])
+    maxPos = max(g_data["pos"])
+    print("minPos:", minPos, "maxPos", maxPos)
+
+    targetPosSumLst = [0] * (maxPos + 1)
+    for targetPos in range(minPos, maxPos + 1):
+        targetPosSum = 0
+        for pos in g_data["pos"]:
+            n = abs(pos - targetPos)
+            if fuelMode == 1:
+                targetPosSum += n
+            else:  # fuelMode 2
+                targetPosSum += int(n * (n + 1) / 2)
+        targetPosSumLst[targetPos] = targetPosSum
+
+    # print(targetPosSumLst)
+    bestSum = targetPosSumLst[minPos]
+    bestSumPos = minPos
+    for i in range(minPos + 1, maxPos + 1):
+        if targetPosSumLst[i] < bestSum:
+            bestSum = targetPosSumLst[i]
+            bestSumPos = i
+
+    print("bestSumPos:", bestSumPos, "bestSum:", bestSum)
+    return bestSum
+
+
 def resolve_part1():
     print()
     print(ANSI_RED, "### PART 1 ###", ANSI_NORM)
 
-    return 0
+    return compute(1)
 
 
 def resolve_part2():
     print()
     print(ANSI_RED, "### PART 2 ###", ANSI_NORM)
 
-    return 0
+    return compute(2)
 
 
 ############
 ### MAIN ###
 ############
 
-g_inputLines = readInputFile("sample.txt")
-# g_inputLines = readInputFile()
+# g_inputLines = readInputFile("sample.txt")
+g_inputLines = readInputFile()
 
 initData()
 

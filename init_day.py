@@ -48,8 +48,11 @@ soup = BeautifulSoup(r.text, "html.parser")
 
 dayTitle = soup.find("h2").text
 dayTitle = dayTitle.replace("-", "")
+dayTitle = dayTitle.replace("Day", "")
+dayTitle = dayTitle.replace(str(date.day), "")
+dayTitle = dayTitle.replace(":", "")
 dayTitle = dayTitle.strip()
-_, _, dayTitle = dayTitle.split()
+# _, _, dayTitle = dayTitle.split()
 # print(dayTitle)
 
 # Create current day directory
