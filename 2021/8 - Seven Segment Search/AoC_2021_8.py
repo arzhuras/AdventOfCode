@@ -131,7 +131,9 @@ def resolve_part2():
 
         # print()
         # for i in "abcedfg":
-        # print(f"  segmentDic['{i}']: {segmentDic[i]}")
+        #    print(f"  segmentDic['{i}']: {segmentDic[i]}")
+
+        # exit()
 
         bdMatch = ""
         cfMatch = ""
@@ -214,8 +216,8 @@ def resolve_part2():
 ### MAIN ###
 ############
 
-# g_inputLines = readInputFile("sample.txt")
-g_inputLines = readInputFile()
+g_inputLines = readInputFile("sample.txt")
+# g_inputLines = readInputFile()
 
 initData()
 
