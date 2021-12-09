@@ -42,9 +42,12 @@ g_data = {}
 
 
 def initData():
-    g_data["line"] = []
+    g_data["grid"] = []
 
-    # print("initData:", g_data)
+    for line in g_inputLines:
+        g_data["grid"].append(line)
+
+    print("initData:", g_data)
 
 
 ##################
