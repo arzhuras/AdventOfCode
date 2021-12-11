@@ -74,6 +74,7 @@ def resolve_part2():
 ############
 
 g_inputLines = readInputFile("sample.txt")
+# g_inputLines = readInputFile("sample2.txt")
 # g_inputLines = readInputFile()
 
 initData()
