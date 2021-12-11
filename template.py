@@ -42,10 +42,10 @@ g_data = {}
 
 
 def initData():
-    g_data["grid"] = []
+    g_data["line"] = []
 
     for line in g_inputLines:
-        g_data["grid"].append(line)
+        g_data["line"].append(line)
 
     print("initData:", g_data)
 
@@ -83,6 +83,8 @@ startTime = time.time()
 res = resolve_part1()
 print()
 print(f"-> part 1 ({time.time() - startTime:.3f}s): {ANSI_BLUE}{res}{ANSI_NORM}")
+
+initData()
 
 ### PART 2 ###
 startTime = time.time()
