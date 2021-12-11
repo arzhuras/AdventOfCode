@@ -122,12 +122,12 @@ def resolve_part1(nbStep):
 
     totalFlashCount = 0
     for step in range(1, nbStep + 1):
-        curFlashCount = computeStep()
-        totalFlashCount += curFlashCount
+        stepFlashCount = computeStep()
+        totalFlashCount += stepFlashCount
 
         if (step) % 10 == 0:
             showGrid(step)
-            print(f"totalFlashCount: {totalFlashCount} curFlashCount: {curFlashCount}")
+            print(f"totalFlashCount: {totalFlashCount} stepFlashCount: {stepFlashCount}")
             print()
 
     return totalFlashCount
