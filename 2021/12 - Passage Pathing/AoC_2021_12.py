@@ -43,8 +43,8 @@ g_data = {}
 
 
 def initData():
-    g_data["nodes"] = DefaultDict(list)
-    g_data["big"] = DefaultDict(list)
+    g_data["nodes"] = DefaultDict(lambda: [])
+    g_data["big"] = DefaultDict(lambda: [])
     g_data["path"] = []
 
     for line in g_inputLines:
