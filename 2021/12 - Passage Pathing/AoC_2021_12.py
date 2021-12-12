@@ -63,7 +63,7 @@ def initData():
 ##################
 
 
-def scanPath(curNode, curPath=[], twice="", depth=0):
+def scanPath(curNode, curPath=[], allowTwice=False, depth=0):
     tab = "  " * depth
     # print(f"{tab}### {curNode} {curPath} {twice}")
 
@@ -79,15 +79,15 @@ def scanPath(curNode, curPath=[], twice="", depth=0):
 
         elif big[destNode]:
             # print(f"{ANSI_GREEN}{tab}  {curNode} -> {destNode}: SCAN BIG{ANSI_NORM}")
-            scanPath(destNode, curPath, twice, depth + 1)
+            scanPath(destNode, curPath, allowTwice, depth + 1)
 
         elif not destNode in curPath:
             # print(f"{ANSI_GREEN}{tab}  {curNode} -> {destNode}: SCAN SMALL FIRST TIME{ANSI_NORM}")
-            scanPath(destNode, curPath, twice, depth + 1)
+            scanPath(destNode, curPath, allowTwice, depth + 1)
 
-        elif twice == "" and destNode != "start":
+        elif allowTwice and destNode != "start":
             # print(f"{ANSI_RED}{tab}  {curNode} -> {destNode}: SCAN SMALL SECOND TIME{ANSI_NORM}")
-            scanPath(destNode, curPath, destNode, depth + 1)
+            scanPath(destNode, curPath, False, depth + 1)
 
         else:
             # print(f"{tab}  {curNode} -> {destNode}: SKIP")
@@ -100,7 +100,7 @@ def resolve_part1():
     print()
     print(ANSI_RED, "### PART 1 ###", ANSI_NORM)
 
-    scanPath("start", twice="False")
+    scanPath("start")
 
     return len(g_data["path"])
 
@@ -109,7 +109,7 @@ def resolve_part2():
     print()
     print(ANSI_RED, "### PART 2 ###", ANSI_NORM)
 
-    scanPath("start")
+    scanPath("start", allowTwice=True)
 
     return len(g_data["path"])
 
