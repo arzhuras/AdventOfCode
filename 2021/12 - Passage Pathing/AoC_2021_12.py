@@ -72,7 +72,7 @@ def scanPath(curNode, curPath=[], twice="", depth=0):
     curPath.append(curNode)
     for destNodeId, destNode in enumerate(g_data["nodes"][curNode]):
         if destNode == "end":
-            curPath.append(destNode)
+            curPath.append("end")
             # print(f"{ANSI_BLUE}{tab}  {curNode} -> {destNode}: PATH COMPLETED {curPath}{ANSI_NORM}")
             g_data["path"].append(curPath.copy())
             curPath.pop()
@@ -80,10 +80,11 @@ def scanPath(curNode, curPath=[], twice="", depth=0):
         elif big[destNode]:
             # print(f"{ANSI_GREEN}{tab}  {curNode} -> {destNode}: SCAN BIG{ANSI_NORM}")
             scanPath(destNode, curPath, twice, depth + 1)
-        # elif not destNode in curPath and big[curNode]:
+
         elif not destNode in curPath:
             # print(f"{ANSI_GREEN}{tab}  {curNode} -> {destNode}: SCAN SMALL FIRST TIME{ANSI_NORM}")
             scanPath(destNode, curPath, twice, depth + 1)
+
         elif twice == "" and destNode != "start":
             # print(f"{ANSI_RED}{tab}  {curNode} -> {destNode}: SCAN SMALL SECOND TIME{ANSI_NORM}")
             scanPath(destNode, curPath, destNode, depth + 1)
