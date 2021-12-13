@@ -70,7 +70,6 @@ def initData():
         g_data["grid"].append(["."] * (maxCol + 1))
 
     if (maxLine + 1) % 2 == 0:
-        print("ligne pair")
         g_data["grid"].append(["."] * (maxCol + 1))
 
     for i in range(len(g_data["col"])):
@@ -98,7 +97,6 @@ def foldY(foldLine):
 
     grid = g_data["grid"]
 
-    print("foldY", foldLine, grid[foldLine])
     sourceLine = len(grid) - 1
     for line in range(foldLine):
         tmpGrid.append(grid[line])
