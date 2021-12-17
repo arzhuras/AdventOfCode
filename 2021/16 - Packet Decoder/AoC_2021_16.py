@@ -1,6 +1,7 @@
 import sys
 import os
 import time
+import math
 
 SCRIPT_DIR = os.path.dirname(sys.argv[0])
 SCRIPT_NAME = os.path.basename(sys.argv[0])
@@ -55,31 +56,96 @@ def initData():
 ##################
 
 
-def decodeType4(packet):
-    print("decodeType4:", packet)
-    idx = 0
-
+def decodeLiteral(packet, tab="  "):
+    print(f"{tab}decodeLiteral: {packet}")
+    cursor = 0
     tmpStr = ""
-    while True:
-        tmpStr += packet[idx + 1 : idx + 5]
-        if packet[idx] == "0":
-            break
-        idx += 5
+    while packet[cursor] == "1":
+        cursor += 1
+        tmpStr += packet[cursor : cursor + 4]
+        cursor += 4
+    cursor += 1
+    tmpStr += packet[cursor : cursor + 4]
+    cursor += 4
+
     val = int(tmpStr, 2)
-    print(f"  {val}")
 
-    return val
+    print(f"{tab} -> cursor: {cursor}, valLst: {[val]}")
+    return cursor, [val]
 
 
-def decodeType6(packet):
-    pass
+def decodeOperator(packet, tab="  "):
+
+    cursor = 0
+    valLst = []
+    if packet[cursor] == "0":  # total lengths in bits
+        cursor += 1
+        bitLen = int(packet[cursor : cursor + 15], 2)
+        cursor += 15
+        print(f"{tab}decodeOperator: bitLen: {bitLen} {packet[0]} {packet[1:16]} {packet[cursor:]}")
+        endCursor = cursor + bitLen
+        while cursor < endCursor:
+            res, resValLst = decodePacket(packet[cursor:endCursor], tab + "  ")
+            cursor += res
+            valLst += resValLst
+    else:
+        cursor += 1
+        subpacketCnt = int(packet[cursor : cursor + 11], 2)
+        cursor += 11
+        print(f"{tab}decodeOperator: subpacketCnt: {subpacketCnt} {packet[0]} {packet[1:11]} {packet[cursor:]}")
+
+        for _ in range(subpacketCnt):
+            res, resValLst = decodePacket(packet[cursor:], tab + "  ")
+            cursor += res
+            valLst += resValLst
+
+    print(f"{tab} -> cursor: {cursor}, valLst: {valLst}")
+    return cursor, valLst
+
+
+def decodePacket(packet, tab="  "):
+    global g_packetVersionSum
+    packetVersion = int(packet[0:3], 2)
+    g_packetVersionSum += packetVersion
+    packetType = int(packet[3:6], 2)
+    cursor = 6
+    print(f"{tab}decodePacket - ver: {packetVersion}, type: {packetType}, {packet[0:3]} {packet[3:6]} {packet[6:]}")
+
+    # decode
+    if packetType == 4:
+        res, valLst = decodeLiteral(packet[cursor:], tab + "  ")
+    else:
+        res, valLst = decodeOperator(packet[cursor:], tab + "  ")
+        if packetType == 0:  # sum
+            valLst = [sum(valLst)]
+        elif packetType == 1:  # product
+            valLst = [math.prod(valLst)]
+        elif packetType == 2:  # minimum
+            valLst = [min(valLst)]
+        elif packetType == 3:  # maximum
+            valLst = [max(valLst)]
+        elif packetType == 5:  # greater than
+            valLst = [1 if valLst[0] > valLst[1] else 0]
+        elif packetType == 6:  # less than
+            valLst = [1 if valLst[0] < valLst[1] else 0]
+        elif packetType == 7:  # equals
+            valLst = [1 if valLst[0] == valLst[1] else 0]
+    cursor += res
+
+    print(f"{tab} -> cursor: {cursor}, valLst: {valLst}")
+    return cursor, valLst
+
+
+g_packetVersionSum = 0
 
 
 def resolve_part1():
     print()
     print(ANSI_RED, "### PART 1 ###", ANSI_NORM)
 
+    global g_packetVersionSum
     for transmission in g_data["line"]:
+        g_packetVersionSum = 0
 
         # conversion hexa
         packet = ""
@@ -87,37 +153,51 @@ def resolve_part1():
             packet += f"{int(hexdigit, 16):04b}"  # gère les leading zéro
 
         # header
-        packetVersion = int(packet[0:3], 2)
-        packetType = int(packet[3:6], 2)
         print(f"transmission: {transmission}")
-        print(f"  binaire: {packet[0:3]} {packet[3:6]} {packet[6:]}")
-        print(f"  version: {packetVersion}, type: {packetType}")
+        print(f"  binaire: {packet}")
 
-        # decode
-        if packetType == 4:
-            decodeType4(packet[6:])
-        elif packetType == 6:
-            decodeType6(packet[6:])
-        else:
-            print(ANSI_RED, "DECODE ERROR", ANSI_NORM)
+        res, valLst = decodePacket(packet)
 
-    return 0
+        print(f"  SKIP {packet[res:]}")
+        print(f"{ANSI_BLUE}-> {g_packetVersionSum}{ANSI_NORM}")
+        print()
+
+    return g_packetVersionSum
 
 
 def resolve_part2():
     print()
     print(ANSI_RED, "### PART 2 ###", ANSI_NORM)
 
-    return 0
+    global g_packetVersionSum
+    for transmission in g_data["line"]:
+        g_packetVersionSum = 0
+
+        # conversion hexa
+        packet = ""
+        for hexdigit in transmission:
+            packet += f"{int(hexdigit, 16):04b}"  # gère les leading zéro
+
+        # header
+        print(f"transmission: {transmission}")
+        print(f"  binaire: {packet}")
+
+        res, valLst = decodePacket(packet)
+
+        print(f"  SKIP {packet[res:]}")
+        print(f"{ANSI_BLUE}-> {valLst[0]}{ANSI_NORM}")
+        print()
+
+    return valLst[0]
 
 
 ############
 ### MAIN ###
 ############
 
-g_inputLines = readInputFile("sample.txt")
+# g_inputLines = readInputFile("sample.txt")
 # g_inputLines = readInputFile("sample2.txt")
-# g_inputLines = readInputFile()
+g_inputLines = readInputFile()
 
 initData()
 
