@@ -15,9 +15,13 @@ INPUT_FILE_NAME = "input.txt"
 #########################
 
 ANSI_NORM = "\033[0m"
+ANSI_GREY = "\033[30;1m"
 ANSI_RED = "\033[31;1m"
 ANSI_GREEN = "\033[32;1m"
+ANSI_YELLOW = "\033[33;1m"
 ANSI_BLUE = "\033[34;1m"
+ANSI_PURPLE = "\033[35;1m"
+ANSI_CYAN = "\033[36;1m"
 
 g_inputLines = []
 

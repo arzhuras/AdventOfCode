@@ -21,6 +21,15 @@ TEMPLATE_FILE_NAME = "template.py"
 URL_DAY = "https://adventofcode.com/{0}/day/{1}"
 URL_INPUT = URL_DAY + "/input"
 
+print(sys.argv, len(sys.argv))
+
+targetDay = ""
+if len(sys.argv) >= 2:
+    targetDay = sys.argv[1]
+
+targetYear = ""
+if len(sys.argv) >= 3:
+    targetYear = sys.argv[2]
 
 if not os.path.exists(SESSION_FILE_NAME):
     print(ANSI_RED, "Missing .session file ", ANSI_NORM)
@@ -40,23 +49,35 @@ s.cookies.set("session", session)
 
 date = datetime.date.today()
 
+if targetDay == "":
+    targetDay = str(date.day)
+
+if targetYear == "":
+    targetYear = str(date.year)
 
 # Get current day puzzle
-r = s.get(URL_DAY.format(date.year, date.day))
+r = s.get(URL_DAY.format(targetYear, targetDay))
+
+if r.status_code != 200:
+    print()
+    print(ANSI_RED, "Invalid date", targetDay, targetYear, ANSI_NORM)
+    print("USAGE:", sys.argv[0], "<DAY> <YEAR>")
+    print()
+    exit()
 # print(r.text)
 soup = BeautifulSoup(r.text, "html.parser")
 
 dayTitle = soup.find("h2").text
 dayTitle = dayTitle.replace("-", "")
 dayTitle = dayTitle.replace("Day", "")
-dayTitle = dayTitle.replace(str(date.day), "")
+dayTitle = dayTitle.replace(targetDay, "")
 dayTitle = dayTitle.replace(":", "")
 dayTitle = dayTitle.strip()
 # _, _, dayTitle = dayTitle.split()
 # print(dayTitle)
 
 # Create current day directory
-DAY_PATH = f"{date.year}/{date.day} - {dayTitle}"
+DAY_PATH = f"{targetYear}/{targetDay} - {dayTitle}"
 print(ANSI_BLUE, DAY_PATH, ANSI_NORM)
 os.makedirs(DAY_PATH, exist_ok=True)
 
@@ -68,14 +89,14 @@ with open(f"{DAY_PATH}/sample.txt", "w") as destFile:
     destFile.write(codeLst[0].text)
 
 # Get current day input
-r = s.get(URL_INPUT.format(date.year, date.day))
+r = s.get(URL_INPUT.format(targetYear, targetDay))
 # print(r.text)
 
 print(ANSI_BLUE, "  input.txt", ANSI_NORM)
 with open(f"{DAY_PATH}/input.txt", "w") as destFile:
     destFile.write(r.text)
 
-destFileName = f"AoC_{date.year}_{date.day}.py"
+destFileName = f"AoC_{targetYear}_{targetDay}.py"
 if os.path.exists(f"{DAY_PATH}/{destFileName}"):
     print(ANSI_RED, f"{DAY_PATH}/{destFileName} already exists", ANSI_NORM)
     exit()
