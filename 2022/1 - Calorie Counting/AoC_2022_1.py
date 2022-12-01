@@ -37,7 +37,7 @@ def initData():
     for line in g_inputLines:
         g_data["line"].append(line)
 
-    print("initData:", g_data)
+    # print("initData:", g_data)
 
 
 ##################
@@ -49,23 +49,45 @@ def resolve_part1():
     print()
     print(Ansi.red, "### PART 1 ###", Ansi.norm)
 
-    return 0
+    curSum = 0
+    maxSum = 0
+    for line in g_inputLines:
+        if line == "":
+            if curSum > maxSum:
+                maxSum = curSum
+            curSum = 0
+        else:
+            curSum += int(line)
+
+    return maxSum
 
 
 def resolve_part2():
     print()
     print(Ansi.red, "### PART 2 ###", Ansi.norm)
 
-    return 0
+    curSum = 0
+    sumLst = []
+    for line in g_inputLines:
+        if line == "":
+            sumLst.append(curSum)
+            curSum = 0
+        else:
+            curSum += int(line)
+    sumLst.append(curSum)
+
+    sumLst.sort()
+
+    return sum(sumLst[-3:])
 
 
 ############
 ### MAIN ###
 ############
 
-g_inputLines = readInputFile("sample.txt")
+# g_inputLines = readInputFile("sample.txt")
 # g_inputLines = readInputFile("sample2.txt")
-# g_inputLines = readInputFile()
+g_inputLines = readInputFile()
 
 initData()
 
