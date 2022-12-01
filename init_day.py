@@ -4,6 +4,14 @@ from bs4 import BeautifulSoup
 import requests
 import datetime
 
+""" 
+- Se logguer sur https://adventofcode.com/
+- <ctrl> + <shift> + i
+- onglet stockage
+- groupe Cookies
+- cooikie: session 
+-> recopier la valeur dans .session
+"""
 SCRIPT_DIR = os.path.dirname(sys.argv[0])
 SCRIPT_NAME = os.path.basename(sys.argv[0])
 os.chdir(SCRIPT_DIR)

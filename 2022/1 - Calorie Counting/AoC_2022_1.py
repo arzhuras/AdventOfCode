@@ -76,9 +76,9 @@ def resolve_part2():
             curSum += int(line)
     sumLst.append(curSum)
 
-    sumLst.sort()
+    # sumLst.sort()
 
-    return sum(sumLst[-3:])
+    return sum(sorted(sumLst)[-3:])
 
 
 ############
