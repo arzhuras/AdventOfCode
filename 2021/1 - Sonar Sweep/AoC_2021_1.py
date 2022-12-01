@@ -67,3 +67,4 @@ print(f"part1 : {res} measures larger than previous")
 
 res = resolve_part2()
 print(f"part1 : {res} window measures larger than previous")
+# print(g_inputLines)

@@ -52,15 +52,11 @@ VAR_DIC = {"w": 0, "x": 1, "y": 2, "z": 3}
 
 def initData():
     g_data["alu"] = []
-    # g_data["var"] = [0, 0, 0, 0]
+    g_data["var"] = [0, 0, 0, 0]
 
-    alu = g_data["alu"]
-    idx = -1
     for line in g_inputLines:
         if len(line) == 5:  # INP
-            alu.append([])
-            idx = len(alu) - 1
-            alu[idx].append((INS_DIC["inp"], VAR_DIC[line[4]], line))
+            g_data["alu"].append((INS_DIC["inp"], VAR_DIC[line[4]], line))
         else:
             ins, var1, var2 = line.split()
             if var2 in ("w", "x", "y", "z"):
@@ -69,15 +65,10 @@ def initData():
             else:
                 var2IsVal = IS_VAL
                 var2 = int(var2)
-            alu[idx].append((INS_DIC[ins], VAR_DIC[var1], var2IsVal, var2, line))
+            g_data["alu"].append((INS_DIC[ins], VAR_DIC[var1], var2IsVal, var2, line))
         # print(f"{line:10}: {g_data['alu'][-1]}")
 
-    if False:
-        for idx, block in enumerate(alu):
-            print("###", idx)
-            for ins in block:
-                print(ins)
-            print()
+    # print("initData:", g_data)
 
 
 ##################
@@ -87,14 +78,43 @@ def initData():
 g_depth = [0] * 15
 
 
-def runMonad(aluIdx, digit, var):
-    # print(f"{ANSI_BLUE}-> {aluIdx} {digit} {var}{ANSI_NORM}")
+def runMonad(
+    curInsIdx=0,
+    var=[0, 0, 0, 0],
+    depth=0,
+):
+    if depth >= 15:
+        print(ANSI_RED, "MAX DEPTH", ANSI_NORM)
+        return False, ""
+
+    tab = "  " * depth
+    # print(f"{ANSI_BLUE}{tab}MONAD {depth} {curInsIdx}{ANSI_NORM}")
+    tab += "  "
 
     alu = g_data["alu"]
-    for curIns in alu[aluIdx]:
-        # print(f"  [{aluIdx}] {curIns}")
+    # var = g_data["var"]
+    while curInsIdx < len(alu):
+        curIns = alu[curInsIdx]
+        # print(curInsIdx, curIns)
         if curIns[0] == 0:  # INP
-            var[curIns[1]] = digit
+            if depth == 14:
+                print(f"{tab}{ANSI_RED}[{curInsIdx}] {str(curIns[:-1]):20} {str(curIns[-1]):10}-> MaxDepth{ANSI_NORM}")
+                return False, ""
+            for curDigit in range(9, 0, -1):
+                g_depth[depth] = curDigit
+                var[curIns[1]] = curDigit
+                # print(
+                # f"{tab}{ANSI_BLUE}[{curInsIdx}] {str(curIns[:-1]):20} {str(curIns[-1]):10}-> {curDigit} {var}{ANSI_NORM}"
+                # )
+                if depth <= 7:
+                    print(
+                        f"{tab}{ANSI_BLUE}[{curInsIdx}] depth:{depth} {g_depth} {curDigit} {var}{ANSI_NORM} {time.time() - startTime:.3f}s"
+                    )
+                res = runMonad(curInsIdx + 1, var.copy(), depth + 1)
+                if res[0] == True:
+                    return True, str(curDigit) + res[1]  # found a valid model
+            g_depth[depth] = 0
+            return False, ""  # no valid model found
         else:
             if curIns[0] == 1:  # ADD
                 if curIns[2] == IS_VAL:
@@ -110,83 +130,45 @@ def runMonad(aluIdx, digit, var):
                 if curIns[2] == IS_VAL:
                     if curIns[3] == 0:
                         print(ANSI_RED, "DIVIDE BY ZERO", ANSI_NORM)
-                        return []
+                        return False, ""
                     var[curIns[1]] = int(var[curIns[1]] / curIns[3])
                 else:
                     if var[curIns[3]] == 0:
                         print(ANSI_RED, "DIVIDE BY ZERO", ANSI_NORM)
-                        return []
+                        return False, ""
                     var[curIns[1]] = int(var[curIns[1]] / var[curIns[3]])
             elif curIns[0] == 4:  # MOD
                 if curIns[2] == IS_VAL:
                     if curIns[3] <= 0:
                         print(ANSI_RED, "MOD <= 0", ANSI_NORM)
-                        return []
+                        return False, ""
                     var[curIns[1]] %= curIns[3]
                 else:
                     if var[curIns[3]] <= 0:
                         print(ANSI_RED, "MOD <= 0", ANSI_NORM)
-                        return []
+                        return False, ""
                     var[curIns[1]] %= var[curIns[3]]
             elif curIns[0] == 5:  # EQL
                 if curIns[2] == IS_VAL:
                     var[curIns[1]] = 1 if var[curIns[1]] == curIns[3] else 0
                 else:
                     var[curIns[1]] = 1 if var[curIns[1]] == var[curIns[3]] else 0
-        # print(f" {str(curIns[:-1]):20} [{aluIdx}] {str(curIns[-1]):10}-> {var}")
+        # print(f"{tab}[{curInsIdx}] {str(curIns[:-1]):20} {str(curIns[-1]):10}-> {var}")
+        curInsIdx += 1
 
-    return var
-
-
-g_divZ = [1, 1, 1, 1, 1, 26, 1, 26, 26, 1, 26, 26, 26, 26]
-g_addX = [13, 11, 12, 10, 14, -1, 14, -16, -8, 12, -16, -13, -6, -6]
-g_addY = [6, 11, 5, 6, 8, 14, 9, 4, 7, 13, 11, 11, 6, 1]
-
-g_stepDigit = [0] * 14
-
-
-def runMonadOptim(step, digit, z):
-    tab = "  " * step
-    g_stepDigit[step] = digit
-    # print(f"{ANSI_BLUE}{tab}MONAD {step} {digit} {z}{ANSI_NORM}")
-    tab += "  "
-    oldZ = z
-
-    x = z % 26
-    x += g_addX[step]
-
-    if g_divZ[step] != 1:
-        z = int(z / 26)
-    if x != digit:
-        z *= 26
-        z += g_addY[step] + digit
+    if var[3] == 0:
+        print(f"{tab}{ANSI_GREEN} VALID [{curInsIdx}] {str(curIns[:-1]):20} {str(curIns[-1]):10}-> {var}{ANSI_NORM}")
+        return True, ""  # valid model
     else:
-        print(f"{ANSI_GREEN}{tab}[{step}] x={x} - z= {oldZ} -> {z} {g_stepDigit}{ANSI_NORM}")
-
-    if step < 7:
-        print(
-            f"{tab}[{step}] digit: {digit} x={x} - z= {oldZ} addY: {g_addY[step]} -> {z} {g_stepDigit} {time.time() - startTime:.3f}s"
-        )
-
-    if step < 5:
-        for digit in range(9, 7, -1):
-            g_depth[step + 1] = digit
-            res = runMonadOptim(step + 1, digit, z)
-    else:
-        if z == 0:
-            print(f"{tab}Z ZERO [{step}] {digit} - z= {z} {g_stepDigit} {time.time() - startTime:.3f}s")
-            exit()
-
-    g_stepDigit[step] = 0
-    return z
+        # print(f"{tab}{ANSI_GREY} INVALID [{curInsIdx}] {str(curIns[:-1]):20} {str(curIns[-1]):10}-> {var}{ANSI_NORM}")
+        return False, ""  # invalid model
 
 
 def resolve_part1():
     print()
     print(ANSI_RED, "### PART 1 ###", ANSI_NORM)
 
-    for digit in range(9, 0, -1):
-        res = runMonadOptim(0, digit, 0)
+    res = runMonad()
 
     return res
 

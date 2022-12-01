@@ -142,16 +142,9 @@ g_divZ = [1, 1, 1, 1, 1, 26, 1, 26, 26, 1, 26, 26, 26, 26]
 g_addX = [13, 11, 12, 10, 14, -1, 14, -16, -8, 12, -16, -13, -6, -6]
 g_addY = [6, 11, 5, 6, 8, 14, 9, 4, 7, 13, 11, 11, 6, 1]
 
-g_stepDigit = [0] * 14
-
 
 def runMonadOptim(step, digit, z):
-    tab = "  " * step
-    g_stepDigit[step] = digit
-    # print(f"{ANSI_BLUE}{tab}MONAD {step} {digit} {z}{ANSI_NORM}")
-    tab += "  "
-    oldZ = z
-
+    # print("runMonadOptim:", step, digit, z)
     x = z % 26
     x += g_addX[step]
 
@@ -160,24 +153,7 @@ def runMonadOptim(step, digit, z):
     if x != digit:
         z *= 26
         z += g_addY[step] + digit
-    else:
-        print(f"{ANSI_GREEN}{tab}[{step}] x={x} - z= {oldZ} -> {z} {g_stepDigit}{ANSI_NORM}")
 
-    if step < 7:
-        print(
-            f"{tab}[{step}] digit: {digit} x={x} - z= {oldZ} addY: {g_addY[step]} -> {z} {g_stepDigit} {time.time() - startTime:.3f}s"
-        )
-
-    if step < 5:
-        for digit in range(9, 7, -1):
-            g_depth[step + 1] = digit
-            res = runMonadOptim(step + 1, digit, z)
-    else:
-        if z == 0:
-            print(f"{tab}Z ZERO [{step}] {digit} - z= {z} {g_stepDigit} {time.time() - startTime:.3f}s")
-            exit()
-
-    g_stepDigit[step] = 0
     return z
 
 
@@ -185,8 +161,21 @@ def resolve_part1():
     print()
     print(ANSI_RED, "### PART 1 ###", ANSI_NORM)
 
-    for digit in range(9, 0, -1):
-        res = runMonadOptim(0, digit, 0)
+    zInputLst = []
+    zInputLst.append([0] * 10)
+    # print(zInputLst)
+    for step in range(14):
+        print(f"{ANSI_BLUE}### Step: {step}{ANSI_NORM}")
+        zInputLst.append([])
+        for digit in range(1, 10):
+            # res = runMonad(step, digit, [666, 777, 888, zInputLst[step][digit - 1]])
+            # print(f"[{step}] {digit} - z:{zInputLst[step][digit - 1]} -> {res}")
+            # zInputLst[step + 1].append(res[3])
+            res = runMonadOptim(step, digit, zInputLst[step][digit - 1])
+            print(f"[{step}] {digit} - z:{zInputLst[step][digit - 1]} -> {res} optim")
+            zInputLst[step + 1].append(res)
+        print()
+    print(zInputLst)
 
     return res
 
