@@ -104,3 +104,9 @@ startTime = time.time()
 res = resolve_part2()
 print()
 print(f"-> part 2 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
+
+"""
+elves = open("toto.txt").read().split("\n\n")
+calories = [sum(map(int, elf.split())) for elf in elves]
+print(max(calories), sum(sorted(calories)[-3:]))
+"""
