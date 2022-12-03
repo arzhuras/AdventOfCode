@@ -45,6 +45,11 @@ def initData():
 ##################
 
 
+def intersection(lst1, lst2):
+    lst3 = [value for value in lst1 if value in lst2]
+    return lst3
+
+
 def resolve_part1():
     print()
     print(Ansi.red, "### PART 1 ###", Ansi.norm)
@@ -54,11 +59,9 @@ def resolve_part1():
         a = line[: int(len(line) / 2)]
         b = line[int(len(line) / 2) :]
         print(a, b)
-        for car in a:
-            # print("test", car, b)
-            if b.find(car) > -1:
-                print("  found", car, ":", ord(car), "->", b)
-                break
+        car = intersection(a, b)[0]
+        print("-> inter", car)
+
         prio = ord(car)
         if prio >= 97:
             prio = prio - 96
@@ -68,11 +71,6 @@ def resolve_part1():
         res += prio
 
     return res
-
-
-def intersection(lst1, lst2):
-    lst3 = [value for value in lst1 if value in lst2]
-    return lst3
 
 
 def resolve_part2():
@@ -108,9 +106,9 @@ def resolve_part2():
 ### MAIN ###
 ############
 
-# g_inputLines = readInputFile("sample.txt")
+g_inputLines = readInputFile("sample.txt")
 # g_inputLines = readInputFile("sample2.txt")
-g_inputLines = readInputFile()
+# g_inputLines = readInputFile()
 
 initData()
 
