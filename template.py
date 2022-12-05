@@ -48,15 +48,17 @@ def initData():
 def resolve_part1():
     print()
     print(Ansi.red, "### PART 1 ###", Ansi.norm)
+    res = 0
 
-    return 0
+    return res
 
 
 def resolve_part2():
     print()
     print(Ansi.red, "### PART 2 ###", Ansi.norm)
+    res = 0
 
-    return 0
+    return res
 
 
 ############

@@ -35,7 +35,6 @@ g_data = {}
 def initData():
     g_data["line"] = []
 
-    print(len(g_inputLines[0]))
     nbStacks = int((len(g_inputLines[0]) + 1) / 4)
 
     g_data["stacks"] = [deque() for i in range(nbStacks)]
@@ -73,10 +72,10 @@ def resolve_part1():
     moves = g_data["moves"]
 
     for count, src, dst in moves:
+        #print(count, stacks[src], stacks[dst])
         for _ in range(count):
-            print(count, stacks[src], stacks[dst])
             stacks[dst].append(stacks[src].pop())
-            print(stacks)
+        #print(stacks)
     
     res = ""
     for elt in stacks:
@@ -92,10 +91,14 @@ def resolve_part2():
     moves = g_data["moves"]
 
     for count, src, dst in moves:
+        #print(count, "[", src, "]", stacks[src], "[", dst, "]", stacks[dst])
+        tmpDeq = deque()
         for _ in range(count):
-            print(count, stacks[src], stacks[dst], stacks[src][-count:])
-            stacks[dst].append(stacks[src].pop())
-            print(stacks)
+            tmpDeq.append(stacks[src].pop())
+        #print("tmpDeq", tmpDeq)
+        for _ in range(count):
+            stacks[dst].append(tmpDeq.pop())
+        #print("->",stacks)
     
     res = ""
     for elt in stacks:
@@ -107,9 +110,9 @@ def resolve_part2():
 ### MAIN ###
 ############
 
-g_inputLines = readInputFile("sample.txt")
+# g_inputLines = readInputFile("sample.txt")
 # g_inputLines = readInputFile("sample2.txt")
-#g_inputLines = readInputFile()
+g_inputLines = readInputFile()
 
 initData()
 
