@@ -73,6 +73,8 @@ def resolve_part2():
         x2, y2 = map(int, b.split("-"))
         a = set(range(x1, y1 + 1))
         b = set(range(x2, y2 + 1))
+        print(line, a, b)
+        print(a & b)
         if a & b:
             res += 1
 
@@ -83,9 +85,9 @@ def resolve_part2():
 ### MAIN ###
 ############
 
-# g_inputLines = readInputFile("sample.txt")
+g_inputLines = readInputFile("sample.txt")
 # g_inputLines = readInputFile("sample2.txt")
-g_inputLines = readInputFile()
+# g_inputLines = readInputFile()
 
 initData()
 
