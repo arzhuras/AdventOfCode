@@ -69,7 +69,7 @@ def resolve_part1():
                         visible = False
                         break
                 if visible == True:
-                    print(f"[{y}, {x}] {curHeight} VISIBLE RIGHT")
+                    # print(f"[{y}, {x}] {curHeight} VISIBLE RIGHT")
                     visibleCount += 1
 
             # scan left
@@ -82,7 +82,7 @@ def resolve_part1():
                         visible = False
                         break
                 if visible == True:
-                    print(f"[{y}, {x}] {curHeight} VISIBLE LEFT")
+                    # print(f"[{y}, {x}] {curHeight} VISIBLE LEFT")
                     visibleCount += 1
 
             # scan up
@@ -95,7 +95,7 @@ def resolve_part1():
                         visible = False
                         break
                 if visible == True:
-                    print(f"[{y}, {x}] {curHeight} VISIBLE UP")
+                    # print(f"[{y}, {x}] {curHeight} VISIBLE UP")
                     visibleCount += 1
 
             # scan down
@@ -108,7 +108,7 @@ def resolve_part1():
                         visible = False
                         break
                 if visible == True:
-                    print(f"[{y}, {x}] {curHeight} VISIBLE DOWN")
+                    # print(f"[{y}, {x}] {curHeight} VISIBLE DOWN")
                     visibleCount += 1
 
     res = visibleCount + 2 * width + 2 * (height - 2)
@@ -124,7 +124,6 @@ def resolve_part2():
     width = len(g_inputLines[0])
     height = len(g_inputLines)
 
-    visibleCount = 0
     scenicScoreLst = []
     for y in range(width):
         for x in range(height):
@@ -134,68 +133,44 @@ def resolve_part2():
             scenicScore = 1
 
             # scan right
-            visible = True
             viewDist = 0
             y2 = y
             for x2 in range(x + 1, width):
                 viewDist += 1
                 if g_inputLines[y2][x2] >= curHeight:
-                    # print(f"  [{y2}, {x2}] {g_inputLines[y2][x2]} -> FALSE RIGHT")
-                    visible = False
                     break
-            if visible == True:
-                print(f"[{y}, {x}] {curHeight} VISIBLE RIGHT {viewDist}")
-                visibleCount += 1
             scenicScore *= viewDist
 
             # scan left
-            visible = True
             viewDist = 0
             y2 = y
             for x2 in range(x - 1, -1, -1):
                 viewDist += 1
                 if g_inputLines[y2][x2] >= curHeight:
-                    # print(f"  [{y2}, {x2}] {g_inputLines[y2][x2]} -> FALSE LEFT")
-                    visible = False
                     break
-            if visible == True:
-                print(f"[{y}, {x}] {curHeight} VISIBLE LEFT {viewDist}")
-                visibleCount += 1
             scenicScore *= viewDist
 
             # scan up
-            visible = True
             viewDist = 0
             x2 = x
             for y2 in range(y - 1, -1, -1):
                 viewDist += 1
                 if g_inputLines[y2][x2] >= curHeight:
-                    # print(f"  [{y2}, {x2}] {g_inputLines[y2][x2]} -> FALSE UP")
-                    visible = False
                     break
-            if visible == True:
-                print(f"[{y}, {x}] {curHeight} VISIBLE UP {viewDist}")
-                visibleCount += 1
             scenicScore *= viewDist
 
             # scan down
-            visible = True
             viewDist = 0
             x2 = x
             for y2 in range(y + 1, height):
                 viewDist += 1
                 if g_inputLines[y2][x2] >= curHeight:
-                    # print(f"  [{y2}, {x2}] {g_inputLines[y2][x2]} -> FALSE DOWN")
-                    visible = False
                     break
-            if visible == True:
-                print(f"[{y}, {x}] {curHeight} VISIBLE DOWN {viewDist}")
-                visibleCount += 1
             scenicScore *= viewDist
 
             scenicScoreLst.append(scenicScore)
 
-    print(scenicScoreLst)
+    # print(scenicScoreLst)
 
     res = max(scenicScoreLst)
 
