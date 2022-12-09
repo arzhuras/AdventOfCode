@@ -116,6 +116,56 @@ def resolve_part1():
     return res
 
 
+# scan mode (y,x) -1, 0, 1
+SCAN_TOP = (-1, 0)
+SCAN_RIGHT = (0, 1)
+SCAN_DOWN = (1, 0)
+SCAN_LEFT = (0, -1)
+
+
+def getViewDist(x, y, treeHeight, scan):  # scan mode (x,y) -1, 0, 1
+    width = len(g_inputLines[0])
+    height = len(g_inputLines)
+    print("->", x, y, treeHeight, scan)
+    # y
+    if scan[0] == -1:
+        minY = y - 1
+        maxY = 0
+        incY = -1
+    elif scan[0] == 0:
+        minY = y
+        maxY = y + 1
+        incY = 1
+    else:
+        minY = y + 1
+        maxY = height
+        incY = 1
+
+    # x
+    if scan[1] == -1:
+        minX = x - 1
+        maxX = 0
+        incX = -1
+    elif scan[1] == 0:
+        minX = x
+        maxX = x + 1
+        incX = 1
+    else:
+        minX = x + 1
+        maxX = width
+        incX = 1
+
+    viewDist = 0
+    for y2 in range(minY, maxY, incY):
+        print("y2", y2)
+        for x2 in range(minX, maxX, incX):
+            print("  x2", x2)
+            viewDist += 1
+            if g_inputLines[y2][x2] >= treeHeight:
+                break
+    return viewDist
+
+
 def resolve_part2():
     print()
     print(Ansi.red, "### PART 2 ###", Ansi.norm)
@@ -127,7 +177,7 @@ def resolve_part2():
     scenicScoreLst = []
     for y in range(width):
         for x in range(height):
-            curHeight = g_inputLines[y][x]
+            treeHeight = g_inputLines[y][x]
             # print(f"[{y}, {x}] {curHeight}")
 
             scenicScore = 1
@@ -137,16 +187,17 @@ def resolve_part2():
             y2 = y
             for x2 in range(x + 1, width):
                 viewDist += 1
-                if g_inputLines[y2][x2] >= curHeight:
+                if g_inputLines[y2][x2] >= treeHeight:
                     break
             scenicScore *= viewDist
+            # print(viewDist, getViewDist(x, y, treeHeight, SCAN_RIGHT))
 
             # scan left
             viewDist = 0
             y2 = y
             for x2 in range(x - 1, -1, -1):
                 viewDist += 1
-                if g_inputLines[y2][x2] >= curHeight:
+                if g_inputLines[y2][x2] >= treeHeight:
                     break
             scenicScore *= viewDist
 
@@ -155,7 +206,7 @@ def resolve_part2():
             x2 = x
             for y2 in range(y - 1, -1, -1):
                 viewDist += 1
-                if g_inputLines[y2][x2] >= curHeight:
+                if g_inputLines[y2][x2] >= treeHeight:
                     break
             scenicScore *= viewDist
 
@@ -164,14 +215,15 @@ def resolve_part2():
             x2 = x
             for y2 in range(y + 1, height):
                 viewDist += 1
-                if g_inputLines[y2][x2] >= curHeight:
+                if g_inputLines[y2][x2] >= treeHeight:
                     break
             scenicScore *= viewDist
 
             scenicScoreLst.append(scenicScore)
 
     # print(scenicScoreLst)
-
+    print(getViewDist(2, 3, "5", SCAN_RIGHT))
+    print(getViewDist(2, 3, "5", SCAN_LEFT))
     res = max(scenicScoreLst)
 
     return res
@@ -181,9 +233,9 @@ def resolve_part2():
 ### MAIN ###
 ############
 
-# g_inputLines = readInputFile("sample.txt")
+g_inputLines = readInputFile("sample.txt")
 # g_inputLines = readInputFile("sample2.txt")
-g_inputLines = readInputFile()
+# g_inputLines = readInputFile()
 
 initData()
 
