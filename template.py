@@ -77,6 +77,8 @@ res = resolve_part1()
 print()
 print(f"-> part 1 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
 
+exit()
+
 initData()
 
 ### PART 2 ###
