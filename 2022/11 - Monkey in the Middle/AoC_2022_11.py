@@ -90,8 +90,9 @@ def initData():
 def inspect(monkey, mode=1):
     stuff = data.monkeys[monkey]
 
-    primeMul1 = 13 * 17 * 19 * 23
-    primeMul2 = 2 * 3 * 5 * 7 * 11 * 13 * 17 * 19
+    # primeMul1 = 13 * 17 * 19 * 23
+    # primeMul2 = 2 * 3 * 5 * 7 * 11 * 13 * 17 * 19
+
     for _ in range(len(stuff["items"])):
         data.inspectCount[monkey] += 1
         worry = stuff["items"][0]
