@@ -1,5 +1,6 @@
 from tools import *
 import time
+from collections import deque
 
 INPUT_FILE_NAME = "input.txt"
 
@@ -10,16 +11,23 @@ INPUT_FILE_NAME = "input.txt"
 g_inputLines = []
 
 
+class Data:
+    rawInput = []
+
+
+data = Data()
+
+
 def readInputFile(argFile=INPUT_FILE_NAME):
-    inputLines = []
+    data.rawInput = []
     print(f"-> read {argFile}")
     with open(argFile, "r") as inputFile:
         for line in inputFile:
             line = line.rstrip("\n")
-            inputLines.append(line)
-    print(f"  {len(inputLines)} lignes")
+            data.rawInput.append(line)
+    print(f"  {len(data.rawInput)} lignes")
     # print(inputLines)
-    return inputLines
+    return data.rawInput
 
 
 #############################
