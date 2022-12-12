@@ -36,16 +36,14 @@ def readInputFile(argFile=INPUT_FILE_NAME):
 
 init_script()
 
-g_data = {}
-
 
 def initData():
-    g_data["line"] = []
+    data.line = []
 
-    for line in g_inputLines:
-        g_data["line"].append(line)
+    for line in data.rawInput:
+        data.line.append(line)
 
-    print("initData:", g_data)
+    print("initData:", data.line)
 
 
 ##################
