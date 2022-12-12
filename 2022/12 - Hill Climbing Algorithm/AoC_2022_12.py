@@ -85,27 +85,32 @@ def inspectNode(curX, curY, curCost=0, depth=0):
 
     data.best[curY][curX] = curCost
 
+    # test si on est sur la destination et update le shortest
     if curX == data.dest[0] and curY == data.dest[1]:
         print(tab, "  DEST found", curCost)
         if data.shortest == None or data.shortest > curCost:
             data.shortest = curCost
         return
 
+    # test si chemin déjà trop long
     if data.shortest != None and curCost >= data.shortest:
         return
 
+    # parcours des noeuds adjacent
     for scan in SCAN_UP, SCAN_RIGHT, SCAN_DOWN, SCAN_LEFT:
         nextX, nextY = curX + scan[1], curY + scan[0]
+
         if nextX < 0 or nextX >= data.width:
             continue
         if nextY < 0 or nextY >= data.height:
             continue
 
+        # test si noeud déjà visité avec meilleur score
         if data.best[nextY][nextX] != -1 and curCost >= data.best[nextY][nextX] + 1:
-            # print(tab, "  already inspected")
+            # print(tab, "  already inspected with best score")
             continue
 
-        # nextHeat = data.grid[nextY][nextX]
+        # test si on peut aller sur le noeud
         if data.grid[nextY][nextX] - curHeat > 1:
             continue
 
