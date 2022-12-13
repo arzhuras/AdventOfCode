@@ -45,6 +45,7 @@ def initData():
     data.height = len(data.rawInput)
     data.width = len(data.rawInput[0])
     data.shortest = None
+    data.visited = 0
 
     for y in range(data.height):
         tmpLst = []
@@ -61,10 +62,10 @@ def initData():
         data.grid.append(tuple(tmpLst))
         data.best.append([-1] * data.width)
 
-    print("data.grid:", data.grid)
-    print("data.best:", data.best)
-    print("data.origin:", data.origin)
-    print("data.dest:", data.dest)
+    # print("data.grid:", data.grid)
+    # print("data.best:", data.best)
+    # print("data.origin:", data.origin)
+    # print("data.dest:", data.dest)
 
 
 ##################
@@ -79,15 +80,16 @@ SCAN_LEFT = (0, -1)
 
 def inspectNode(curX, curY, curCost=0, depth=0):
     tab = " " * depth
-    # print(tab, f"[{depth}] ({curX}, {curY})")
+    data.visited += 1
     curX, curY = curX, curY
     curHeat = data.grid[curY][curX]
 
+    # print(tab, f"[{depth}] ({curX}, {curY}), curCost: {curCost}, best: {data.best[curY][curX]}, visited: {data.visited}/{data.width * data.height}")
     data.best[curY][curX] = curCost
 
     # test si on est sur la destination et update le shortest
     if curX == data.dest[0] and curY == data.dest[1]:
-        print(tab, "  DEST found", curCost)
+        # print(tab, "  DEST found", curCost, data.shortest)
         if data.shortest == None or data.shortest > curCost:
             data.shortest = curCost
         return
@@ -123,8 +125,8 @@ def resolve_part1():
     res = 0
 
     inspectNode(data.origin[0], data.origin[1])
-    for line in data.best:
-        print(line)
+    # for line in data.best:
+    # print(line)
 
     res = data.shortest
     return res
@@ -133,9 +135,28 @@ def resolve_part1():
 def resolve_part2():
     print()
     print(Ansi.red, "### PART 2 ###", Ansi.norm)
-    res = 0
+    res = []
 
-    return res
+    for y in range(data.height):
+        for x in range(data.width):
+            if data.grid[y][x] == ord("a"):
+                print(f"Check new origin: {x},{y}")
+                # reset
+                data.best = []
+                data.shortest = None
+                data.visited = 0
+                for _ in range(data.height):
+                    data.best.append([-1] * data.width)
+
+                inspectNode(x, y)
+                # for line in data.best:
+                # print(line)
+
+                if data.shortest != None:
+                    res.append(data.shortest)
+
+    print(res)
+    return min(res)
 
 
 ############
@@ -154,7 +175,7 @@ res = resolve_part1()
 print()
 print(f"-> part 1 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
 
-exit()
+# exit()
 
 initData()
 
