@@ -141,6 +141,8 @@ def check(a, b, tab=""):
             print(f"{tab}  ret not right")
             return "not right"
 
+        # else "continue"
+
 
 def resolve_part1():
     print()
