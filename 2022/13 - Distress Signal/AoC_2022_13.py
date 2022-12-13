@@ -125,7 +125,6 @@ def check(a, b, tab=""):
             else:
                 # print(f"{tab}  -> a = b: continue")
                 ret = "continue"
-                pass
         elif isinstance(eltA, str) and isinstance(eltB, int):
             ret = check(eltA, "[" + str(eltB) + "]", tab + "  ")
         elif isinstance(eltA, int) and isinstance(eltB, str):
