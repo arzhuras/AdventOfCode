@@ -8,15 +8,6 @@ INPUT_FILE_NAME = "input.txt"
 ### COMMON PROCEDURES ###
 #########################
 
-g_inputLines = []
-
-
-class Data:
-    rawInput = []
-
-
-data = Data()
-
 
 def readInputFile(argFile=INPUT_FILE_NAME):
     data.rawInput = []
@@ -35,6 +26,13 @@ def readInputFile(argFile=INPUT_FILE_NAME):
 #############################
 
 init_script()
+
+
+class Data:
+    rawInput = []
+
+
+data = Data()
 
 
 def initData():
