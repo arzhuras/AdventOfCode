@@ -77,7 +77,7 @@ def getNextElt(lstStr, idx):  # forcément une liste avec [ & ]
         # print("  getNextElement: list", elt, "idx", idx)
         return idx, elt
 
-    # it's a number
+    # else it's a number
     # print(lstStr[idx:])
     elt = 0
     if lstStr[idx + 1] == "," or lstStr[idx + 1] == "]":
@@ -167,6 +167,25 @@ def resolve_part2():
     print(Ansi.red, "### PART 2 ###", Ansi.norm)
     res = 0
 
+    packets = []
+    for line in data.rawInput:
+        if len(line) > 0:
+            line = line.replace("[", "")
+            line = line.replace("]", "")
+            tmpStr = ""
+            for field in line.split(","):
+                field = "0" + field
+                tmpStr += field[-2:]
+            packets.append(tmpStr)
+            # print(line)
+    packets.append("02")
+    packets.append("06")
+    packets.sort()
+    # for elt in packets:
+    # print(elt)
+    print("[[2]]", packets.index("02") + 1)
+    print("[[6]]", packets.index("06") + 1)
+    res = (packets.index("02") + 1) * (packets.index("06") + 1)
     return res
 
 
@@ -174,9 +193,9 @@ def resolve_part2():
 ### MAIN ###
 ############
 
-g_inputLines = readInputFile("sample.txt")
+# g_inputLines = readInputFile("sample.txt")
 # g_inputLines = readInputFile("sample2.txt")
-# g_inputLines = readInputFile()
+g_inputLines = readInputFile()
 
 initData()
 
@@ -188,7 +207,7 @@ print(f"-> part 1 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}"
 
 # 371 low
 
-exit()
+# exit()
 
 initData()
 
@@ -197,3 +216,6 @@ startTime = time.time()
 res = resolve_part2()
 print()
 print(f"-> part 2 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
+
+# 16999 low
+# 32116 high
