@@ -117,17 +117,17 @@ def addSand():
             y += 1
         #print("Bottom", x, y)
         if y > data.maxY:
-            print(f"Sands in edless void (y): {x}, {y}")
+            print(f"Sands in endless void (y): {x}, {y}")
             return False
         if grid[y][x-1] == ".":
             x -= 1
             if x < 0:
-                print(f"Sands in edless void (minX): {x}, {y}")
+                print(f"Sands in endless void (minX): {x}, {y}")
                 return False
         elif grid[y][x+1] == ".":
             x += 1
             if x > data.maxX:
-                print(f"Sands in edless void (maxX): {x}, {y}")
+                print(f"Sands in endless void (maxX): {x}, {y}")
                 return False
         else:
             grid[y-1][x] = f"{Ansi.green}o{Ansi.norm}"
