@@ -42,6 +42,9 @@ data = Data()
 def initData():
     data.line = []
 
+    data.minX, data.maxX = None, None
+    data.minY, data.maxY = 0, None
+
     tmpLines = []
     for line in data.rawInput:
         line = line.replace("->", "")
@@ -63,6 +66,7 @@ def initData():
     data.origin = (500 - data.minX, 0)
     #print(tmpLines)
 
+    data.grid = []
     data.grid = [["."] * (data.maxX - data.minX + 1) for _ in range(data.maxY + 1)]
 
     for elt in tmpLines:
@@ -94,6 +98,7 @@ def initData():
     data.minX = 0
     data.grid[data.origin[1]][data.origin[0]] = "+"
     print("min/max", data.minX, data.maxX, data.minY, data.maxY)
+    print("origin", data.origin[0], data.origin[1])
     data.sandUnits = 0
     # print("initData:", data.line)
     #showGrid(data.grid)
@@ -102,6 +107,10 @@ def addSand():
     grid = data.grid
     x = data.origin[0]
     y = data.origin[1]
+
+    if grid[y][x] != "." and grid[y][x] != "+":
+        print(f"Reservoir full: {x}, {y}")
+        return False
 
     while True:
         while y <= data.maxY and (grid[y][x] == "." or grid[y][x] == "+"):
@@ -123,8 +132,21 @@ def addSand():
         else:
             grid[y-1][x] = f"{Ansi.green}o{Ansi.norm}"
             data.sandUnits += 1
-            print(f"Sand {data.sandUnits} at rest: {x}, {y-1}")
+            # print(f"Sand {data.sandUnits} at rest: {x}, {y-1}")
+            if (x <= 5):
+                gridExtendX(10,0)
+            elif (x >= data.maxX - 5):
+                gridExtendX(0,10)
             return True
+
+def gridExtendX(left, right):
+    for i in range(0, len(data.grid)-1):
+        data.grid[i] = ["."] * left + data.grid[i] + ["."] * right
+    data.grid[i+1] = ["#"] * left + data.grid[i+1] + ["#"] * right
+    data.maxX = data.maxX + left + right 
+    data.origin = (data.origin[0] + left, data.origin[1])
+    print("extend min/max", data.minX, data.maxX, data.minY, data.maxY)
+    print("extend origin ", data.origin[0], data.origin[1])
         
 ##################
 ### PROCEDURES ###
@@ -156,16 +178,39 @@ def resolve_part1():
 def resolve_part2():
     print()
     print(Ansi.red, "### PART 2 ###", Ansi.norm)
-    res = 0
 
-    return res
+    # showGrid(data.grid)
+
+    # infinite floor
+    data.grid.append(["."] * (data.maxX + 1))
+    data.grid.append(["#"] * (data.maxX + 1))
+    data.maxY += 2
+
+    #gridExtendX(1000,1000)
+    #showGrid(data.grid)
+    #exit()
+
+    ret = addSand()
+    while ret == True:
+        #if data.sandUnits > 120 : 
+            #showGrid(data.grid)
+            #exit()
+        #showGrid(data.grid)
+        #print()
+        ret = addSand()
+    showGrid(data.grid)
+    print()
+    print("extend min/max", data.minX, data.maxX, data.minY, data.maxY)
+    print("extend origin ", data.origin[0], data.origin[1])
+
+    return data.sandUnits
 
 
 ############
 ### MAIN ###
 ############
 
-# readInputFile("sample.txt")
+#readInputFile("sample.txt")
 # readInputFile("sample2.txt")
 readInputFile()
 
@@ -177,7 +222,7 @@ res = resolve_part1()
 print()
 print(f"-> part 1 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
 
-exit()
+#exit()
 
 initData()
 
