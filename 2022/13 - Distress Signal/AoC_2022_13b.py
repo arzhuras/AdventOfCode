@@ -260,6 +260,13 @@ for line in data.rawInput:
         print("->", lst)
         print()
 
+lst2 = [1,2]
+toto = eval("print(lst2)")
+toto = eval("print(" + line + ")")
+# toto = eval("lst2 = " + line) # syntax error! eval() only allows for expressions. Assignment is not an expression but a statement; you'd have to use exec instead.
+toto = exec("lst2 = " + line)
+print("lst2",lst2)
+
 exit()
 
 initData()
