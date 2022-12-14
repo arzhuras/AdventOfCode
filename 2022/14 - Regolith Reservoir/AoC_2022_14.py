@@ -33,6 +33,8 @@ class Data:
     grid = []
     minX, maxX = None, None
     minY, maxY = 0, None
+    origin = (None,None)
+    sandUnits = None
 
 data = Data()
 
@@ -58,6 +60,7 @@ def initData():
             tmpFields.append((x,y))
         tmpLines.append(tmpFields)
     print("min/max", data.minX, data.maxX, data.minY, data.maxY)
+    data.origin = (500 - data.minX, 0)
     #print(tmpLines)
 
     data.grid = [["."] * (data.maxX - data.minX + 1) for _ in range(data.maxY + 1)]
@@ -73,7 +76,7 @@ def initData():
                 else:
                     start, end = coordB[1], coordA[1] + 1
                 for y in range(start, end):
-                    data.grid[y][x] = "#"
+                    data.grid[y][x] = f"{Ansi.blue}#{Ansi.norm}"
             elif (coordA[1] == coordB[1]): # fill x
                 y = coordA[1]
                 if coordA[0] < coordB[0]:
@@ -81,17 +84,48 @@ def initData():
                 else:
                     start, end = coordB[0] - data.minX, coordA[0] - data.minX + 1
                 for x in range(start, end):
-                    data.grid[y][x] = "#"
+                    data.grid[y][x] = f"{Ansi.blue}#{Ansi.norm}"
             else:
                 print("error")
                 exit()
             coordA = coordB
-    data.grid[0][500-data.minX] = "+"
-    
+
+    data.maxX -= data.minX
+    data.minX = 0
+    data.grid[data.origin[1]][data.origin[0]] = "+"
+    print("min/max", data.minX, data.maxX, data.minY, data.maxY)
+    data.sandUnits = 0
     # print("initData:", data.line)
     #showGrid(data.grid)
 
+def addSand():
+    grid = data.grid
+    x = data.origin[0]
+    y = data.origin[1]
 
+    while True:
+        while y <= data.maxY and (grid[y][x] == "." or grid[y][x] == "+"):
+            y += 1
+        #print("Bottom", x, y)
+        if y > data.maxY:
+            print(f"Sands in edless void (y): {x}, {y}")
+            return False
+        if grid[y][x-1] == ".":
+            x -= 1
+            if x < 0:
+                print(f"Sands in edless void (minX): {x}, {y}")
+                return False
+        elif grid[y][x+1] == ".":
+            x += 1
+            if x > data.maxX:
+                print(f"Sands in edless void (maxX): {x}, {y}")
+                return False
+        else:
+            grid[y-1][x] = f"{Ansi.green}o{Ansi.norm}"
+            data.sandUnits += 1
+            print(f"Sand {data.sandUnits} at rest: {x}, {y-1}")
+            return True
+        
 ##################
 ### PROCEDURES ###
 ##################
@@ -105,11 +139,18 @@ def showGrid(grid):
 def resolve_part1():
     print()
     print(Ansi.red, "### PART 1 ###", Ansi.norm)
-    res = 0
+    
+    # showGrid(data.grid)
 
+    ret = addSand()
+    while ret == True:
+        #showGrid(data.grid)
+        #print()
+        ret = addSand()
     showGrid(data.grid)
+    print()
 
-    return res
+    return data.sandUnits
 
 
 def resolve_part2():
@@ -124,9 +165,9 @@ def resolve_part2():
 ### MAIN ###
 ############
 
-readInputFile("sample.txt")
+# readInputFile("sample.txt")
 # readInputFile("sample2.txt")
-# readInputFile()
+readInputFile()
 
 initData()
 
