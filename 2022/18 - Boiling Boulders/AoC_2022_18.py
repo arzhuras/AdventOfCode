@@ -192,5 +192,3 @@ startTime = time.time()
 res = resolve_part2()
 print()
 print(f"-> part 2 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
-
-# 4178 high
