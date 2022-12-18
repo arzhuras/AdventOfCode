@@ -80,32 +80,35 @@ def resolve_part1():
                 data.scanLine[sY + offset] = []
             radius = manhattan - offset
             data.scanLine[sY + offset].append((sX - radius, sX + radius, elt[0], manhattan))
+            # data.scanLine[sY + offset].append((sX - radius, sX + radius))
             # print(sY + offset, data.scanLine[sY + offset])
             if offset > 0:
                 if sY - offset not in data.scanLine:
                     data.scanLine[sY - offset] = []
                 data.scanLine[sY - offset].append((sX - radius, sX + radius, elt[0], manhattan))
+                # data.scanLine[sY - offset].append((sX - radius, sX + radius))
                 # print(sY - offset, data.scanLine[sY - offset])
+        # print()
 
     # print(7, data.scanLine[7])
     # print(10, data.scanLine[10])
-    tmpLst = sorted(data.scanLine[ROW], key=operator.itemgetter(0, 1))
-    print(tmpLst)
+    tmpLst = data.scanLine[ROW].sort(key=operator.itemgetter(0, 1))
+    # print(tmpLst)
     rangeSize = 0
     rangeStart, rangeEnd = tmpLst[0][0], tmpLst[0][1]
     for i in range(1, len(tmpLst)):
-        print(tmpLst[i][0], tmpLst[i][1])
+        print(tmpLst[i][0], tmpLst[i][1], end="")
 
         if tmpLst[i][0] > rangeEnd:  # nouvelle range
             rangeSize += rangeEnd - rangeStart
             rangeStart, rangeEnd = tmpLst[i][0], tmpLst[i][1]
-            print(Ansi.red, "new", Ansi.norm, rangeStart, rangeEnd, rangeSize, tmpLst[i])
+            print(Ansi.red, " new", Ansi.norm, rangeStart, rangeEnd, rangeSize, tmpLst[i])
         else:  # overlap
             if tmpLst[i][1] > rangeEnd:
                 rangeEnd = tmpLst[i][1]
-                print("overlap", rangeStart, rangeEnd, rangeSize)
+                # print(" overlap", rangeStart, rangeEnd, rangeSize)
             else:
-                print("skip", rangeStart, rangeEnd, rangeSize)
+                # print(" skip", rangeStart, rangeEnd, rangeSize)
                 pass
     rangeSize += rangeEnd - rangeStart
 
@@ -118,25 +121,28 @@ def resolve_part2():
     res = 0
 
     for j in range(LIMIT + 1):
-        tmpLst = sorted(data.scanLine[j], key=operator.itemgetter(0, 1))
-        # print(j, tmpLst)
+        # tmpLst = sorted(data.scanLine[j], key=operator.itemgetter(0, 1))
+        tmpLst = data.scanLine[j]
+        # print(j, "->", tmpLst)
         rangeStart, rangeEnd = tmpLst[0][0], tmpLst[0][1]
+        # print("  ", tmpLst[0][0], tmpLst[0][1])
         for i in range(1, len(tmpLst)):
-            # print(tmpLst[i][0], tmpLst[i][1])
+            # print("  ", tmpLst[i][0], tmpLst[i][1], end="")
 
             if tmpLst[i][0] > rangeEnd + 1:  # nouvelle range
+                print("    new    ", rangeStart, rangeEnd)
                 print(Ansi.red, "BINGO", Ansi.norm, rangeEnd + 1, j)
-                return (rangeEnd + 1) * 400000 + j
+                res = (rangeEnd + 1) * 4000000 + j
+                return res
             else:  # overlap
                 if tmpLst[i][1] > rangeEnd:
                     rangeEnd = tmpLst[i][1]
-                    # print("overlap", rangeStart, rangeEnd)
+                    # print("    overlap", rangeStart, rangeEnd)
                 else:
-                    # print("skip", rangeStart, rangeEnd)
+                    # print("    skip   ", rangeStart, rangeEnd)
                     pass
-        # print()
 
-    return None
+    return res
 
 
 ############
@@ -149,8 +155,8 @@ ROW = 10
 LIMIT = 20
 fileName = "sample.txt"
 
-# ROW = 2000000
-# LIMIT = 400000
+# ROW = 2_000_000
+# LIMIT = 4_000_000
 # fileName = "input.txt"
 
 
@@ -173,3 +179,5 @@ startTime = time.time()
 res = resolve_part2()
 print()
 print(f"-> part 2 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
+
+# low 1333794786981

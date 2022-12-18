@@ -24,6 +24,18 @@ def init_script():
     print(f"=== {SCRIPT_DIR}/{SCRIPT_NAME} ===")
 
 
+def readInputFile(argFile):
+    rawInput = []
+    print(f"-> read {argFile}:", end="")
+    with open(argFile, "r") as inputFile:
+        for line in inputFile:
+            line = line.rstrip("\n")
+            rawInput.append(line)
+    print(f" {len(rawInput)} lignes")
+    # print(rawInput)
+    return rawInput
+
+
 if __name__ == "__main__":
     init_script()
     print(Ansi.green, __name__, Ansi.norm)
