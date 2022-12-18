@@ -16,10 +16,6 @@ class Data:
 
     cubes = None
     adjacent = None
-    external = None
-
-    air = None
-    airAdjacent = None
 
     grid3d = None  # 3d list : "." = air inside, "#" = lava, " " = air exterior
 
@@ -29,17 +25,15 @@ data = Data()
 
 SCAN_SIZE = 22
 ADJACENT_OFFSET = [(1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)]
-# ADJACENT_OFFSET2 = [(-1, -1, 0), (0, -1, 0), (1, -1, 0), (-1, 0, 0), (1, 0, 0), (-1, 1, 0), (0, 1, 0), (1, 1, 0)]
 
 
 def initData():
     data.line = []
 
     data.cubes = []
-    data.air = []
     data.adjacent = {}
-    data.airAdjacent = {}
     data.grid3d = {}
+
     for line in data.rawInput:
         # line = line.replace(",", "")
         # line = line.replace(";","")
@@ -49,6 +43,7 @@ def initData():
         coord = tuple(map(int, line.split(",")))
         data.cubes.append(coord)  # (x,y,z)
         data.adjacent[coord] = []
+
     data.cubes.sort(key=operator.itemgetter(2, 1, 0))
     # fields = line.split()
 
