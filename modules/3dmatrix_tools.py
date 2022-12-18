@@ -31,6 +31,16 @@ def show3dmatrix(matrix):
     print()
 
 
+def show3dmatrixLine(matrix):
+    for z in range(len(matrix)):
+        print(f"[{z}]")
+        for y in range(len(matrix[z])):
+            for x in range(len(matrix[z][y])):
+                print(matrix[z][y][x], end="")
+            print()
+        print()
+
+
 def rotZ3dmatrix(matix):
     pass
 
