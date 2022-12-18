@@ -132,7 +132,7 @@ def resolve_part2():
 
     searchExterior()
 
-    show3dmatrix(data.grid3d)
+    # show3dmatrix(data.grid3d)
 
     totalSurf = 0
     for elt in data.cubes:
