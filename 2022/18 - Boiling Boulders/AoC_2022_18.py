@@ -1,4 +1,5 @@
 from tools import *
+from matrix3d import *
 import time
 from collections import deque
 import operator
@@ -76,16 +77,6 @@ def resolve_part1():
     return totalSurf
 
 
-def show3dmatrix(matrix):
-    for z in range(len(matrix)):
-        print(f"[{z}]")
-        for y in range(len(matrix[z])):
-            for x in range(len(matrix[z][y])):
-                print(matrix[z][y][x], end="")
-            print()
-        print()
-
-
 def searchExterior():
     # find external/internal position
     data.grid3d[0][0][0] = " "
@@ -127,7 +118,7 @@ def resolve_part2():
 
     searchExterior()
 
-    # show3dmatrix(data.grid3d)
+    showMatrix3dV(data.grid3d)
 
     totalSurf = 0
     for elt in data.cubes:
@@ -158,19 +149,13 @@ def resolve_part2():
 ### MAIN ###
 ############
 
-inputFile = "sample2.txt"
-
-# MAX_ROUND = 10
 inputFile = "sample.txt"
-
-# MAX_ROUND = 1000
 inputFile = "input.txt"
 
 data.rawInput = readInputFile(inputFile)
 
-
 initData()
-
+res = None
 
 ### PART 1 ###
 startTime = time.time()

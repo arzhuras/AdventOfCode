@@ -36,7 +36,7 @@ def initData():
         # fields = line.split()
 
     data.tetris = loadMatrix2d("tetris.txt")
-    data.tetrisFlipV = flipVLst(data.tetris)
+    data.tetrisFlipV = flipHLst(data.tetris)
 
     data.stack = [["+"] + ["-"] * 7 + ["+"]]
     data.tall = 0

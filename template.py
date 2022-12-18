@@ -54,8 +54,6 @@ def resolve_part2():
 ### MAIN ###
 ############
 
-inputFile = "sample2.txt"
-
 # MAX_ROUND = 10
 inputFile = "sample.txt"
 
@@ -64,8 +62,8 @@ inputFile = "input.txt"
 
 data.rawInput = readInputFile(inputFile)
 
-
 initData()
+res = None
 
 ### PART 1 ###
 startTime = time.time()

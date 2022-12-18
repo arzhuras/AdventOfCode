@@ -25,33 +25,33 @@ def showStack(stack):
 
 def loadMatrix2d(argFile):
     rawInput = readInputFile(argFile)
-    gridLst = []
-    tmpGrid = []
+    matrice2d = []
+    tmpLine = []
     for line in rawInput:
         if line == "":
-            gridLst.append(tmpGrid)
-            tmpGrid = []
+            matrice2d.append(tmpLine)
+            tmpLine = []
             continue
-        tmpGrid.append([car for car in line])
+        tmpLine.append([car for car in line])
 
-    gridLst.append(tmpGrid)
-    tmpGrid = []
+    matrice2d.append(tmpLine)
+    tmpLine = []
 
-    return gridLst
+    return matrice2d
 
 
-def flipV(grid):
+def flipH(grid):
     return list(reversed(grid))
 
 
-def flipVLst(gridLst):
+def flipHLst(gridLst):
     # lst = [[flipV(grid)] for grid in gridLst]
     # tmpLst = []
     # for grid in gridLst:
     # print(grid)
     # tmpLst.append(flipV(grid))
     # print(tmpLst)
-    return [flipV(grid) for grid in gridLst]
+    return [flipH(grid) for grid in gridLst]
 
 
 def isOverlap(grid, gridY, gridX, pieceGrid, empty):
@@ -90,6 +90,6 @@ if __name__ == "__main__":
         showStack(gridLst[i])
         print()
 
-    # flipVLst
-    gridLstFlipV = flipVLst(gridLst)
-    showGridLst(gridLstFlipV)
+    # flipHLst
+    gridLstFlipH = flipHLst(gridLst)
+    showGridLst(gridLstFlipH)
