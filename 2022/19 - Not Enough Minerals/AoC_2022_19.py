@@ -1,6 +1,10 @@
 from tools import *
+#from matrix2d import *
+#from matrix3d import *
+
 import time
-from collections import deque
+#from collections import deque
+#import operator
 
 #############################
 ### INITIALISATION & DATA ###
@@ -13,22 +17,49 @@ class Data:
     rawInput = None
     line = None
 
+    bluePrint = None # Dict list
 
 data = Data()
 
 
 def initData():
     data.line = []
+    data.bluePrint = []
+    tmpDict = {}
 
     for line in data.rawInput:
+        if line == "":
+            data.bluePrint.append(tmpDict)    
+            tmpDict = {}
+            continue
+
+        line = line.replace(".","")
+        line = line.replace(":","")
         # line = line.replace(",","")
         # line = line.replace(";","")
         # line = line.replace("="," ")
+        line = line.replace("Each","")
+        line = line.replace("robot costs","")
+        line = line.replace("and","")
         data.line.append(line)
 
-        # fields = line.split()
+        fields = line.split()
+        if fields[0] == "Blueprint" :
+            continue
+        
+        tmpDict[fields[0]] = {}
+        for i  in range(1, len(fields[1:]), 2):
+            tmpDict[fields[0]][fields[i+1]] = int(fields[i])
+    data.bluePrint.append(tmpDict)    
+    tmpDict = {}
+        
 
-    print("initData:", data.line)
+    #print("initData:", data.line)
+    for i in range(len(data.bluePrint)):
+        print(f"[{i}]")
+        bp = data.bluePrint[i]
+        for elt in bp.keys():
+            print(f"  {elt:8s} -> {bp[elt]}")
 
 
 ##################

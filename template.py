@@ -1,6 +1,10 @@
 from tools import *
+#from matrix2d import *
+#from matrix3d import *
+
 import time
-from collections import deque
+#from collections import deque
+#import operator
 
 #############################
 ### INITIALISATION & DATA ###
@@ -21,6 +25,7 @@ def initData():
     data.line = []
 
     for line in data.rawInput:
+        # line = line.replace(".","")
         # line = line.replace(",","")
         # line = line.replace(";","")
         # line = line.replace("="," ")
