@@ -18,6 +18,8 @@ class Data:
     line = None
 
     bluePrint = None # Dict list
+    robots = None # dict
+    ingredients = None # Dict
 
 data = Data()
 
@@ -25,6 +27,8 @@ data = Data()
 def initData():
     data.line = []
     data.bluePrint = []
+    data.robots = {}
+    data.ingredients = {}
     tmpDict = {}
 
     for line in data.rawInput:
@@ -48,11 +52,14 @@ def initData():
             continue
         
         tmpDict[fields[0]] = {}
+        if fields[0] not in data.robots:
+            data.robots[fields[0]] = 0
+            data.ingredients[fields[0]] = 0
         for i  in range(1, len(fields[1:]), 2):
             tmpDict[fields[0]][fields[i+1]] = int(fields[i])
     data.bluePrint.append(tmpDict)    
     tmpDict = {}
-        
+    data.robots["ore"] = 1
 
     #print("initData:", data.line)
     for i in range(len(data.bluePrint)):
@@ -60,6 +67,9 @@ def initData():
         bp = data.bluePrint[i]
         for elt in bp.keys():
             print(f"  {elt:8s} -> {bp[elt]}")
+    
+    print("robots", data.robots)
+    print("ingredients", data.ingredients)
 
 
 ##################
