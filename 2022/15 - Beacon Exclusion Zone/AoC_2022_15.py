@@ -91,8 +91,11 @@ def resolve_part1():
         # print()
 
     # print(7, data.scanLine[7])
-    # print(10, data.scanLine[10])
-    tmpLst = data.scanLine[ROW].sort(key=operator.itemgetter(0, 1))
+    print(ROW, data.scanLine[ROW])
+    data.scanLine[ROW].sort(key=operator.itemgetter(0, 1))
+    tmpLst = data.scanLine[ROW]
+    # tmpLst = sorted(data.scanLine[ROW], key=operator.itemgetter(0, 1))
+    # print(ROW, data.scanLine[ROW])
     # print(tmpLst)
     rangeSize = 0
     rangeStart, rangeEnd = tmpLst[0][0], tmpLst[0][1]
@@ -155,9 +158,9 @@ ROW = 10
 LIMIT = 20
 fileName = "sample.txt"
 
-# ROW = 2_000_000
-# LIMIT = 4_000_000
-# fileName = "input.txt"
+ROW = 2_000_000
+LIMIT = 4_000_000
+fileName = "input.txt"
 
 
 readInputFile(fileName)

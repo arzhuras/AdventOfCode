@@ -9,6 +9,8 @@ import time
 # import operator
 # opFunc = {"+": operator.add, "-": operator.sub, "*": operator.mul, "/": operator.truediv}
 
+import copy
+
 #############################
 ### INITIALISATION & DATA ###
 #############################
