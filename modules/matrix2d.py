@@ -1,6 +1,23 @@
 from tools import *
 
 
+class OFFSET:
+    # offset neihgbors (y,x)
+    NW = (-1, -1, "NW")
+    N = (-1, 0, "N")
+    NE = (-1, 1, "NE")
+    W = (0, -1, "W")
+    E = (0, +1, "E")
+    SW = (+1, -1, "SW")
+    S = (+1, 0, "S")
+    SE = (+1, 1, "SE")
+    AROUND = [NW, N, NE, W, E, SW, S, SE]
+    NORTH = [NW, N, NE]
+    EAST = [NE, E, SE]
+    WEST = [NW, W, SW]
+    SOUTH = [SW, S, SE]
+
+
 # Affiche une matrice
 def showGrid(grid):
     for y in range(len(grid)):
@@ -14,8 +31,117 @@ def showGridLst(gridLst):
         showGrid(gridLst[i])
         print()
 
+# Etend une grille si les côtés contiennent au moins un élement
+
+
+def extendGrid(grid, eltEmpty="."):
+
+    # première ligne
+    y = 0
+    boundX = len(grid[y])
+    for x in range(boundX):
+        if grid[y][x] != eltEmpty:
+            grid.insert(0, [eltEmpty for _ in range(boundX)])
+            break
+
+    # dernière ligne
+    y = len(grid) - 1
+    boundX = len(grid[y])
+    for x in range(boundX):
+        if grid[y][x] != eltEmpty:
+            grid.append([eltEmpty for _ in range(boundX)])
+            break
+
+    # première colonne
+    x = 0
+    boundY = len(grid)
+    for y in range(boundY):
+        if grid[y][x] != eltEmpty:
+            for y2 in range(boundY):
+                grid[y2].insert(0, eltEmpty)
+            break
+
+    # dernière colonne
+    x = len(grid[0]) - 1
+    boundY = len(grid)
+    for y in range(boundY):
+        if grid[y][x] != eltEmpty:
+            for y2 in range(boundY):
+                grid[y2].append(eltEmpty)
+            break
+
+# compact une grille en éliminent les côtés vides
+
+
+def shrinkGrid(grid, eltEmpty="."):
+
+    # première ligne
+    isEmpty = True
+    while isEmpty == True:
+        y = 0
+        boundX = len(grid[y])
+        for x in range(boundX):
+            if grid[y][x] != eltEmpty:
+                isEmpty = False
+                break
+        if isEmpty == True:
+            grid.pop(0)
+
+    # dernière ligne
+    isEmpty = True
+    while isEmpty == True:
+        y = len(grid) - 1
+        boundX = len(grid[y])
+        for x in range(boundX):
+            if grid[y][x] != eltEmpty:
+                isEmpty = False
+                break
+        if isEmpty == True:
+            grid.pop(y)
+
+    # première colonne
+    isEmpty = True
+    while isEmpty == True:
+        x = 0
+        boundY = len(grid)
+        for y in range(boundY):
+            if grid[y][x] != eltEmpty:
+                isEmpty = False
+                break
+        if isEmpty == True:
+            for y2 in range(boundY):
+                grid[y2].pop(0)
+
+    # dernière colonne
+    isEmpty = True
+    while isEmpty == True:
+        x = len(grid[0]) - 1
+        boundY = len(grid)
+        for y in range(boundY):
+            if grid[y][x] != eltEmpty:
+                isEmpty = False
+                break
+        if isEmpty == True:
+            for y2 in range(boundY):
+                grid[y2].pop(x)
+
+
+""""
+ 
+
+    # dernière colonne
+    x = len(grid[0]) - 1
+    boundY = len(grid)
+    for y in range(boundY):
+        if grid[y][x] != eltEmpty:
+            for y2 in range(boundY):
+                grid[y2].append(eltEmpty)
+            break
+"""
 
 # Affiche une matrice de bas en haut
+
+
 def showStack(stack):
     for y in range(len(stack) - 1, -1, -1):
         for x in range(len(stack[y])):
@@ -23,6 +149,7 @@ def showStack(stack):
         print()
 
 
+# Charge une ou plusieurs matrices 2D depuis un fichier
 def loadMatrix2d(argFile):
     rawInput = readInputFile(argFile)
     matrice2d = []
@@ -77,10 +204,10 @@ if __name__ == "__main__":
     # load2dMatrix
     print("@@ load2datrix() @@")
     gridLst = loadMatrix2d("tetris.txt")
-    print()
+    print(gridLst)
 
     # showGridLst
-    print("@@ showGrid() @@")
+    print("@@ showGridLst() @@")
     showGridLst(gridLst)
     print()
 
@@ -90,6 +217,19 @@ if __name__ == "__main__":
         showStack(gridLst[i])
         print()
 
+    # extendGrid
+    print("@@ extendGrid() @@")
+    for i in range(len(gridLst)):
+        extendGrid(gridLst[i])
+        showGrid(gridLst[i])
+        print()
+
+    # test pas d'extension
+    extendGrid(gridLst[0])
+    showGrid(gridLst[0])
+    print()
+
     # flipHLst
+    print("@@ flipHLst() @@")
     gridLstFlipH = flipHLst(gridLst)
     showGridLst(gridLstFlipH)
