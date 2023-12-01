@@ -65,7 +65,7 @@ def resolve_part1():
             digit1 = "0"
         if digit2 == None:
             digit2 = digit1
-        print(int(digit1 + digit2))
+        # print(int(digit1 + digit2))
         calibrationSum += int(digit1 + digit2)
 
     return calibrationSum
@@ -79,38 +79,30 @@ def resolve_part2():
               "five": "5", "six": "6", "seven": "7", "eight": "8", "nine": "9"}
     calibrationSum = 0
     for elt in data.line:
-        print(elt)
+        # print(elt)
         digit1 = None
         digit2 = None
-        carIdx = 0
-        while carIdx < len(elt):
-            if elt[carIdx] > "0" and elt[carIdx] <= "9":
+        for carIdx, car in enumerate(elt):
+            if car > "0" and car <= "9":
                 if digit1 == None:
-                    digit1 = elt[carIdx]
+                    digit1 = car
                 else:
-                    digit2 = elt[carIdx]
+                    digit2 = car
             else:
                 for key in number.keys():
-                    minIdx = -1
-                    curNum = None
                     idx = elt.find(key, carIdx)
-                    if idx != -1 and idx == carIdx:
-                        if minIdx == -1 or idx < minIdx:
-                            minIdx = idx
-                            curNum = key
-                        print("  found", key, minIdx)
-                    if minIdx != -1:
+                    if idx == carIdx:
                         if digit1 == None:
-                            digit1 = number[curNum]
+                            digit1 = number[key]
                         else:
-                            digit2 = number[curNum]
-            carIdx += 1
+                            digit2 = number[key]
+                        break
 
         if digit1 == None:
             digit1 = "0"
         if digit2 == None:
             digit2 = digit1
-        print("->", int(digit1 + digit2))
+        # print("->", int(digit1 + digit2))
         calibrationSum += int(digit1 + digit2)
 
     return calibrationSum
