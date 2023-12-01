@@ -84,31 +84,27 @@ def resolve_part2():
         digit2 = None
         carIdx = 0
         while carIdx < len(elt):
-            # print(carIdx, elt)
             if elt[carIdx] > "0" and elt[carIdx] <= "9":
                 if digit1 == None:
                     digit1 = elt[carIdx]
                 else:
                     digit2 = elt[carIdx]
-                carIdx += 1
-                continue
-
-            for key in number.keys():
-                minIdx = -1
-                curNum = None
-                idx = elt.find(key, carIdx)
-                if idx != -1 and idx == carIdx:
-                    if minIdx == -1 or idx < minIdx:
-                        minIdx = idx
-                        curNum = key
-                    print("  found", key, minIdx)
-                if minIdx != -1:
-                    if digit1 == None:
-                        digit1 = number[curNum]
-                    else:
-                        digit2 = number[curNum]
+            else:
+                for key in number.keys():
+                    minIdx = -1
+                    curNum = None
+                    idx = elt.find(key, carIdx)
+                    if idx != -1 and idx == carIdx:
+                        if minIdx == -1 or idx < minIdx:
+                            minIdx = idx
+                            curNum = key
+                        print("  found", key, minIdx)
+                    if minIdx != -1:
+                        if digit1 == None:
+                            digit1 = number[curNum]
+                        else:
+                            digit2 = number[curNum]
             carIdx += 1
-            # print(carIdx, elt)
 
         if digit1 == None:
             digit1 = "0"
