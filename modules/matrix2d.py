@@ -70,7 +70,7 @@ def extendGrid(grid, eltEmpty="."):
                 grid[y2].append(eltEmpty)
             break
 
-# compact une grille en éliminent les côtés vides
+# compact une grille en éliminant les côtés vides
 
 
 def shrinkGrid(grid, eltEmpty="."):
@@ -124,20 +124,6 @@ def shrinkGrid(grid, eltEmpty="."):
         if isEmpty == True:
             for y2 in range(boundY):
                 grid[y2].pop(x)
-
-
-""""
- 
-
-    # dernière colonne
-    x = len(grid[0]) - 1
-    boundY = len(grid)
-    for y in range(boundY):
-        if grid[y][x] != eltEmpty:
-            for y2 in range(boundY):
-                grid[y2].append(eltEmpty)
-            break
-"""
 
 # Affiche une matrice de bas en haut
 

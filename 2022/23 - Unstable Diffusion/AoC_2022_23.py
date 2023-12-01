@@ -29,7 +29,10 @@ data = Data()
 
 def initData():
     data.line = []
+
     data.grid = []
+    # il n'y a qu'une grille dans le fichier
+    data.grid = loadMatrix2d(inputFile)[0]
 
     for line in data.rawInput:
         # line = line.replace(".","")
@@ -40,7 +43,7 @@ def initData():
 
         # fields = line.split()
 
-    print("initData:", data.line)
+    # print("initData:", data.line)
 
 
 ##################
@@ -104,20 +107,6 @@ def resolve_part1():
         directions.append(directions.pop(0))
         # print(directions)
 
-    """
-    print()
-    showGrid(grid)
-    print()
-    grid.insert(0, ["." for _ in range(len(grid[0]))])
-    grid.append(["." for _ in range(len(grid[0]))])
-    for elt in grid:
-        elt.insert(0, ".")
-        elt.append(".")
-    for elt in grid:
-        elt.insert(0, ".")
-        elt.append(".")
-    showGrid(grid)
-    """
     print()
     shrinkGrid(grid)
     showGrid(grid)
@@ -219,10 +208,6 @@ res = None
 
 ### PART 1 ###
 
-# il n'y a qu'une grille dans le fichier
-data.grid = loadMatrix2d(inputFile)[0]
-showGrid(data.grid)
-
 startTime = time.time()
 res = resolve_part1()
 print()
@@ -233,10 +218,6 @@ initData()
 res = None
 
 ### PART 2 ###
-
-# il n'y a qu'une grille dans le fichier
-data.grid = loadMatrix2d(inputFile)[0]
-showGrid(data.grid)
 
 startTime = time.time()
 res = resolve_part2()

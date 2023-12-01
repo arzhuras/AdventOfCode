@@ -47,7 +47,8 @@ with open(SESSION_FILE_NAME, "r") as inputFile:
     session = inputFile.read()
 
 if len(session) != 128:
-    print(ANSI_RED, "invalid session cookie in .session file (bad length <> 128) :", ANSI_NORM, session)
+    print(ANSI_RED, "invalid session cookie in .session file (bad length <> 128) :",
+          ANSI_NORM, session)
     exit()
 print("session token:", session)
 
@@ -80,6 +81,8 @@ dayTitle = dayTitle.replace("-", "")
 dayTitle = dayTitle.replace("Day", "")
 dayTitle = dayTitle.replace(targetDay, "")
 dayTitle = dayTitle.replace(":", "")
+dayTitle = dayTitle.replace("?", "")
+dayTitle = dayTitle.replace("!", "")
 dayTitle = dayTitle.strip()
 # _, _, dayTitle = dayTitle.split()
 # print(dayTitle)
