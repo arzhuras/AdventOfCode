@@ -35,10 +35,10 @@ def initData():
     for line in data.rawInput:
         line = line.replace("Game ", "")
         gameid, gameGrab = line.split(":")
-        gameSet = gameGrab.split(";")
+        gameSets = gameGrab.split(";")
         # print(gameid, gameSet)
         setLst = []
-        for elt in gameSet:
+        for elt in gameSets:
             setDuo = []
             for duo in elt.split(","):
                 a, b = duo.split()
