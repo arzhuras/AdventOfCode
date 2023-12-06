@@ -171,26 +171,26 @@ def resolve_part1():
     locations = []
     for seed in data.seeds:
         curId = seed
-        print(Ansi.blue, f"Seed {curId}", Ansi.norm)
+        # print(Ansi.blue, f"Seed {curId}", Ansi.norm)
         for chainName in chainNames:
             matchFound = False
             for dst, src, span in data.chainMap[chainName]:
                 if (curId >= src and curId < src + span):
-                    print(
-                        f"     src {src} <= {Ansi.green}{curId}{Ansi.norm} < {src + span} ({span}): dst {dst} + delta {curId - src} = {Ansi.green}{dst + (curId - src)}{Ansi.norm}")
+                    # print(
+                    # f"     src {src} <= {Ansi.green}{curId}{Ansi.norm} < {src + span} ({span}): dst {dst} + delta {curId - src} = {Ansi.green}{dst + (curId - src)}{Ansi.norm}")
                     curId = dst + (curId - src)
                     matchFound = True
                     break
                 # else:
                     # print(
                     # f"     src {src} <= {Ansi.red}{curId}{Ansi.norm} < {src + span} ({span})")
-            if matchFound == False:
-                print(Ansi.yellow, "    Not found", Ansi.norm)
-            print(Ansi.green, f"  {curId} {chainName}", Ansi.norm)
+            # if matchFound == False:
+                # print(Ansi.yellow, "    Not found", Ansi.norm)
+            # print(Ansi.green, f"  {curId} {chainName}", Ansi.norm)
         locations.append(curId)
-        print()
+        # print()
 
-    print(len(locations), locations)
+    # print(len(locations), locations)
     return min(locations)
 
 
