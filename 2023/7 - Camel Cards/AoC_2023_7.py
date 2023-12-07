@@ -74,22 +74,23 @@ def resolve_part1():
     for hand in data.bids.keys():
         uniqueCardLst = list(set(hand))
         uniqueCardCnt = len(uniqueCardLst)
-        if uniqueCardCnt == 5: 
-            handType = HIGH_CARD
-        elif uniqueCardCnt == 4: 
-            handType = ONE_PAIR
-        elif uniqueCardCnt == 3:
-            if hand.count(uniqueCardLst[0]) == 2 or hand.count(uniqueCardLst[1]) == 2:
-                handType = TWO_PAIR
-            else:
-                handType = THREE_OF_A_KIND
-        elif uniqueCardCnt == 2:
-            if hand.count(uniqueCardLst[0]) == 1 or hand.count(uniqueCardLst[0]) == 4:
-                handType = FOUR_OF_A_KIND
-            else:
-                handType = FULL_HOUSE
-        elif uniqueCardCnt == 1: 
-            handType = FIVE_OF_A_KIND
+        match uniqueCardCnt:
+            case 5: 
+                handType = HIGH_CARD
+            case 4: 
+                handType = ONE_PAIR
+            case 3:
+                if hand.count(uniqueCardLst[0]) == 2 or hand.count(uniqueCardLst[1]) == 2:
+                    handType = TWO_PAIR
+                else:
+                    handType = THREE_OF_A_KIND
+            case 2:
+                if hand.count(uniqueCardLst[0]) == 1 or hand.count(uniqueCardLst[0]) == 4:
+                    handType = FOUR_OF_A_KIND
+                else:
+                    handType = FULL_HOUSE
+            case _:
+                handType = FIVE_OF_A_KIND
         handsType[handType].append(hand)
 
     score = 0
@@ -114,42 +115,43 @@ def resolve_part2():
         uniqueCardLst = list(set(hand))
         uniqueCardCnt = len(uniqueCardLst)
 
-        if uniqueCardCnt == 5:
-            if hand.count("1") == 1:
-                handType = ONE_PAIR # promote
-            else:
-                handType = HIGH_CARD
-        elif uniqueCardCnt == 4:
-            if hand.count("1") >= 1:
-                handType = THREE_OF_A_KIND # promote
-            else:
-                handType = ONE_PAIR
-        elif uniqueCardCnt == 3:
-            if hand.count(uniqueCardLst[0]) == 2 or hand.count(uniqueCardLst[1]) == 2:
+        match uniqueCardCnt:
+            case 5:
                 if hand.count("1") == 1:
-                    handType = FULL_HOUSE # promote
-                elif hand.count("1") == 2:
-                    handType = FOUR_OF_A_KIND # promote
+                    handType = ONE_PAIR # promote
                 else:
-                    handType = TWO_PAIR
-            else:
+                    handType = HIGH_CARD
+            case 4:
                 if hand.count("1") >= 1:
-                    handType = FOUR_OF_A_KIND # promote
+                    handType = THREE_OF_A_KIND # promote
                 else:
-                    handType = THREE_OF_A_KIND
-        elif uniqueCardCnt == 2:
-            if hand.count(uniqueCardLst[0]) == 1 or hand.count(uniqueCardLst[0]) == 4:
-                if hand.count("1") >= 1:
-                    handType = FIVE_OF_A_KIND # promote
+                    handType = ONE_PAIR
+            case 3:
+                if hand.count(uniqueCardLst[0]) == 2 or hand.count(uniqueCardLst[1]) == 2:
+                    if hand.count("1") == 1:
+                        handType = FULL_HOUSE # promote
+                    elif hand.count("1") == 2:
+                        handType = FOUR_OF_A_KIND # promote
+                    else:
+                        handType = TWO_PAIR
                 else:
-                    handType = FOUR_OF_A_KIND
-            else:
-                if hand.count("1") >= 1:
-                    handType = FIVE_OF_A_KIND # promote
+                    if hand.count("1") >= 1:
+                        handType = FOUR_OF_A_KIND # promote
+                    else:
+                        handType = THREE_OF_A_KIND
+            case 2:
+                if hand.count(uniqueCardLst[0]) == 1 or hand.count(uniqueCardLst[0]) == 4:
+                    if hand.count("1") >= 1:
+                        handType = FIVE_OF_A_KIND # promote
+                    else:
+                        handType = FOUR_OF_A_KIND
                 else:
-                    handType = FULL_HOUSE
-        elif uniqueCardCnt == 1:
-            handType = FIVE_OF_A_KIND
+                    if hand.count("1") >= 1:
+                        handType = FIVE_OF_A_KIND # promote
+                    else:
+                        handType = FULL_HOUSE
+            case _:
+                handType = FIVE_OF_A_KIND
         handsType[handType].append(hand)
 
     score = 0
