@@ -22,7 +22,8 @@ class Data:
     rawInput = None
     line = None
 
-    hands = None
+    bids = None
+    bids2 = None
 
 
 data = Data()
@@ -30,21 +31,26 @@ data = Data()
 
 def initData():
     data.line = []
-    data.hands = {}
+    data.bids = {}
+    data.bids2 = {}
 
     for line in data.rawInput:
-        # line = line.replace(".","")
-        # line = line.replace(",","")
-        # line = line.replace(";","")
-        # line = line.replace("="," ")
         data.line.append(line)
 
         hand, bid = line.split()
-        data.hands[hand] = bid
+        hand = hand.replace("A","E")
+        hand = hand.replace("K","D")
+        hand = hand.replace("Q","C")
+        hand = hand.replace("J","B")
+        hand = hand.replace("T","A")
+        data.bids[hand] = int(bid)
+    
+        # On remplace les jokers par des 1 pour la part2
+        hand = hand.replace("B","1")
+        data.bids2[hand] = int(bid)
 
-    print(data.hands)
-    # print("initData:", data.line)
-
+    #print(data.bids)
+    #print(data.bids2)
 
 ##################
 ### PROCEDURES ###
@@ -64,47 +70,109 @@ def resolve_part1():
     print(Ansi.red, "### PART 1 ###", Ansi.norm)
 
     handsType = [[] for _ in range(7)]
-    for hand in data.hands.keys():
-        uniqueCard = set(hand)
-        uniqueCardLen = len(uniqueCard)
-        print(uniqueCard.pop())
-
-        if uniqueCardLen == 5:
+    for hand in data.bids.keys():
+        uniqueCardLst = list(set(hand))
+        uniqueCardCnt = len(uniqueCardLst)
+        if uniqueCardCnt == 5:
             handsType[HIGH_CARD].append(hand)
-        elif uniqueCardLen == 4:
+        elif uniqueCardCnt == 4:
             handsType[ONE_PAIR].append(hand)
-        elif uniqueCardLen == 3:
-            card = uniqueCard.pop()
-            if card == 3:
+        elif uniqueCardCnt == 3:
+            if hand.count(uniqueCardLst[0]) == 3:
                 handsType[THREE_OF_A_KIND].append(hand)
-            elif card == 2:
+            elif hand.count(uniqueCardLst[0]) == 2:
+                handsType[TWO_PAIR].append(hand)
+            elif hand.count(uniqueCardLst[1]) == 2:
                 handsType[TWO_PAIR].append(hand)
             else:
-                card = uniqueCard.pop()
-                if card == 2:
-                    handsType[TWO_PAIR].append(hand)
-                else:
-                    handsType[THREE_OF_A_KIND].append(hand)
-        elif uniqueCardLen == 2:
-            card = uniqueCard.pop()
-            if card == 1:
+                handsType[THREE_OF_A_KIND].append(hand)
+        elif uniqueCardCnt == 2:
+            if hand.count(uniqueCardLst[0]) == 1:
                 handsType[FOUR_OF_A_KIND].append(hand)
-            elif card == 4:
+            elif hand.count(uniqueCardLst[0]) == 4:
                 handsType[FOUR_OF_A_KIND].append(hand)
             else:
                 handsType[FULL_HOUSE].append(hand)
-        elif uniqueCardLen == 1:
+        elif uniqueCardCnt == 1:
             handsType[FIVE_OF_A_KIND].append(hand)
 
-    print(handsType)
-    return None
+    #print(handsType)
+    score = 0
+    rank = 1
+    for hands in handsType:
+        hands.sort()
+        for hand in hands:
+            #print(score, data.bids[hand], rank)
+            score += data.bids[hand] * rank
+            rank += 1
+
+    return score
 
 
 def resolve_part2():
     print()
     print(Ansi.red, "### PART 2 ###", Ansi.norm)
 
-    return None
+    handsType = [[] for _ in range(7)]
+    for hand in data.bids2.keys():
+
+        uniqueCardLst = list(set(hand))
+        uniqueCardCnt = len(uniqueCardLst)
+
+        if uniqueCardCnt == 5:
+            if hand.count("1") == 1:
+                handsType[ONE_PAIR].append(hand) # promote
+            else:
+                handsType[HIGH_CARD].append(hand)
+        elif uniqueCardCnt == 4:
+            if hand.count("1") >= 1:
+                handsType[THREE_OF_A_KIND].append(hand) # promote
+            else:
+                handsType[ONE_PAIR].append(hand)
+        elif uniqueCardCnt == 3:
+            if hand.count(uniqueCardLst[0]) == 3:
+                if hand.count("1") >= 1:
+                    handsType[FOUR_OF_A_KIND].append(hand) # promote
+                else:
+                    handsType[THREE_OF_A_KIND].append(hand)
+            elif hand.count(uniqueCardLst[0]) == 2 or hand.count(uniqueCardLst[1]) == 2:
+                if hand.count("1") == 1:
+                    handsType[FULL_HOUSE].append(hand) # promote
+                elif hand.count("1") == 2:
+                    handsType[FOUR_OF_A_KIND].append(hand) # promote
+                else:
+                    handsType[TWO_PAIR].append(hand)
+            else:
+                if hand.count("1") >= 1:
+                    handsType[FOUR_OF_A_KIND].append(hand) # promote
+                else:
+                    handsType[THREE_OF_A_KIND].append(hand)
+        elif uniqueCardCnt == 2:
+            if hand.count(uniqueCardLst[0]) == 1 or hand.count(uniqueCardLst[0]) == 4:
+                if hand.count("1") >= 1:
+                    handsType[FIVE_OF_A_KIND].append(hand) # promote
+                else:
+                    handsType[FOUR_OF_A_KIND].append(hand)
+            else:
+                if hand.count("1") >= 1:
+                    handsType[FIVE_OF_A_KIND].append(hand) # promote
+                else:
+                    handsType[FULL_HOUSE].append(hand)
+        elif uniqueCardCnt == 1:
+            handsType[FIVE_OF_A_KIND].append(hand)
+
+    #print(handsType)
+    score = 0
+    rank = 1
+    for hands in handsType:
+        hands.sort()
+        for hand in hands:
+            #print(score, data.bids[hand], rank)
+            #print(score, hand, hands, rank)
+            score += data.bids2[hand] * rank
+            rank += 1
+
+    return score
 
 
 ############
@@ -115,7 +183,7 @@ def resolve_part2():
 inputFile = "sample.txt"
 
 # MAX_ROUND = 1000
-# inputFile = "input.txt"
+inputFile = "input.txt"
 
 data.rawInput = readInputFile(inputFile)
 
@@ -129,7 +197,7 @@ print()
 print(
     f"-> part 1 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
 
-exit()
+#exit()
 
 initData()
 
