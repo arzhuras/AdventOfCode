@@ -70,25 +70,27 @@ def resolve_part1():
     print(Ansi.red, "### PART 1 ###", Ansi.norm)
 
     handsType = [[] for _ in range(7)]
+    handType = 0
     for hand in data.bids.keys():
         uniqueCardLst = list(set(hand))
         uniqueCardCnt = len(uniqueCardLst)
-        if uniqueCardCnt == 5:
-            handsType[HIGH_CARD].append(hand)
-        elif uniqueCardCnt == 4:
-            handsType[ONE_PAIR].append(hand)
+        if uniqueCardCnt == 5: 
+            handType = HIGH_CARD
+        elif uniqueCardCnt == 4: 
+            handType = ONE_PAIR
         elif uniqueCardCnt == 3:
             if hand.count(uniqueCardLst[0]) == 2 or hand.count(uniqueCardLst[1]) == 2:
-                handsType[TWO_PAIR].append(hand)
+                handType = TWO_PAIR
             else:
-                handsType[THREE_OF_A_KIND].append(hand)
+                handType = THREE_OF_A_KIND
         elif uniqueCardCnt == 2:
             if hand.count(uniqueCardLst[0]) == 1 or hand.count(uniqueCardLst[0]) == 4:
-                handsType[FOUR_OF_A_KIND].append(hand)
+                handType = FOUR_OF_A_KIND
             else:
-                handsType[FULL_HOUSE].append(hand)
-        elif uniqueCardCnt == 1:
-            handsType[FIVE_OF_A_KIND].append(hand)
+                handType = FULL_HOUSE
+        elif uniqueCardCnt == 1: 
+            handType = FIVE_OF_A_KIND
+        handsType[handType].append(hand)
 
     score = 0
     rank = 1
@@ -106,6 +108,7 @@ def resolve_part2():
     print(Ansi.red, "### PART 2 ###", Ansi.norm)
 
     handsType = [[] for _ in range(7)]
+    handType = 0
     for hand in data.bids2.keys():
 
         uniqueCardLst = list(set(hand))
@@ -113,40 +116,41 @@ def resolve_part2():
 
         if uniqueCardCnt == 5:
             if hand.count("1") == 1:
-                handsType[ONE_PAIR].append(hand) # promote
+                handType = ONE_PAIR # promote
             else:
-                handsType[HIGH_CARD].append(hand)
+                handType = HIGH_CARD
         elif uniqueCardCnt == 4:
             if hand.count("1") >= 1:
-                handsType[THREE_OF_A_KIND].append(hand) # promote
+                handType = THREE_OF_A_KIND # promote
             else:
-                handsType[ONE_PAIR].append(hand)
+                handType = ONE_PAIR
         elif uniqueCardCnt == 3:
             if hand.count(uniqueCardLst[0]) == 2 or hand.count(uniqueCardLst[1]) == 2:
                 if hand.count("1") == 1:
-                    handsType[FULL_HOUSE].append(hand) # promote
+                    handType = FULL_HOUSE # promote
                 elif hand.count("1") == 2:
-                    handsType[FOUR_OF_A_KIND].append(hand) # promote
+                    handType = FOUR_OF_A_KIND # promote
                 else:
-                    handsType[TWO_PAIR].append(hand)
+                    handType = TWO_PAIR
             else:
                 if hand.count("1") >= 1:
-                    handsType[FOUR_OF_A_KIND].append(hand) # promote
+                    handType = FOUR_OF_A_KIND # promote
                 else:
-                    handsType[THREE_OF_A_KIND].append(hand)
+                    handType = THREE_OF_A_KIND
         elif uniqueCardCnt == 2:
             if hand.count(uniqueCardLst[0]) == 1 or hand.count(uniqueCardLst[0]) == 4:
                 if hand.count("1") >= 1:
-                    handsType[FIVE_OF_A_KIND].append(hand) # promote
+                    handType = FIVE_OF_A_KIND # promote
                 else:
-                    handsType[FOUR_OF_A_KIND].append(hand)
+                    handType = FOUR_OF_A_KIND
             else:
                 if hand.count("1") >= 1:
-                    handsType[FIVE_OF_A_KIND].append(hand) # promote
+                    handType = FIVE_OF_A_KIND # promote
                 else:
-                    handsType[FULL_HOUSE].append(hand)
+                    handType = FULL_HOUSE
         elif uniqueCardCnt == 1:
-            handsType[FIVE_OF_A_KIND].append(hand)
+            handType = FIVE_OF_A_KIND
+        handsType[handType].append(hand)
 
     score = 0
     rank = 1
