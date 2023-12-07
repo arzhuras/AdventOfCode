@@ -78,31 +78,23 @@ def resolve_part1():
         elif uniqueCardCnt == 4:
             handsType[ONE_PAIR].append(hand)
         elif uniqueCardCnt == 3:
-            if hand.count(uniqueCardLst[0]) == 3:
-                handsType[THREE_OF_A_KIND].append(hand)
-            elif hand.count(uniqueCardLst[0]) == 2:
-                handsType[TWO_PAIR].append(hand)
-            elif hand.count(uniqueCardLst[1]) == 2:
+            if hand.count(uniqueCardLst[0]) == 2 or hand.count(uniqueCardLst[1]) == 2:
                 handsType[TWO_PAIR].append(hand)
             else:
                 handsType[THREE_OF_A_KIND].append(hand)
         elif uniqueCardCnt == 2:
-            if hand.count(uniqueCardLst[0]) == 1:
-                handsType[FOUR_OF_A_KIND].append(hand)
-            elif hand.count(uniqueCardLst[0]) == 4:
+            if hand.count(uniqueCardLst[0]) == 1 or hand.count(uniqueCardLst[0]) == 4:
                 handsType[FOUR_OF_A_KIND].append(hand)
             else:
                 handsType[FULL_HOUSE].append(hand)
         elif uniqueCardCnt == 1:
             handsType[FIVE_OF_A_KIND].append(hand)
 
-    #print(handsType)
     score = 0
     rank = 1
     for hands in handsType:
         hands.sort()
         for hand in hands:
-            #print(score, data.bids[hand], rank)
             score += data.bids[hand] * rank
             rank += 1
 
@@ -130,12 +122,7 @@ def resolve_part2():
             else:
                 handsType[ONE_PAIR].append(hand)
         elif uniqueCardCnt == 3:
-            if hand.count(uniqueCardLst[0]) == 3:
-                if hand.count("1") >= 1:
-                    handsType[FOUR_OF_A_KIND].append(hand) # promote
-                else:
-                    handsType[THREE_OF_A_KIND].append(hand)
-            elif hand.count(uniqueCardLst[0]) == 2 or hand.count(uniqueCardLst[1]) == 2:
+            if hand.count(uniqueCardLst[0]) == 2 or hand.count(uniqueCardLst[1]) == 2:
                 if hand.count("1") == 1:
                     handsType[FULL_HOUSE].append(hand) # promote
                 elif hand.count("1") == 2:
@@ -161,14 +148,11 @@ def resolve_part2():
         elif uniqueCardCnt == 1:
             handsType[FIVE_OF_A_KIND].append(hand)
 
-    #print(handsType)
     score = 0
     rank = 1
     for hands in handsType:
         hands.sort()
         for hand in hands:
-            #print(score, data.bids[hand], rank)
-            #print(score, hand, hands, rank)
             score += data.bids2[hand] * rank
             rank += 1
 
