@@ -98,7 +98,7 @@ def resolve_part2():
     # for keyIdx, key in [(0, keys[0])]:
     cycle = []
     for keyIdx, key in enumerate(keys):
-        print(key, keyIdx)
+        #print(key, keyIdx)
         finished = False
         round = 0
         curKey = key
@@ -117,23 +117,10 @@ def resolve_part2():
                 # print(round, curKey)
 
             if curKey[2] == "Z":
-                print(round, key, instruct[key], data.path[0],
-                      curKey, instruct[curKey], choice)
-                print()
+                print(round, len(data.path), round/len(data.path), "start: ", key, instruct[key], data.path[0],
+                      "exit: ", curKey, instruct[curKey], choice)
                 cycle.append(round)
                 finished = True
-            """
-            zCnt = 0
-            for key in keys:
-                if key[2] == "Z":
-                    zCnt += 1
-                # print(key, zCnt, len(keys))
-            if zCnt > 0:
-                print(round, keys, zCnt)
-            if zCnt == len(keys):
-                finished = True
-            """
-    print(cycle, ppcmMultiple(*cycle))
 
     return round
 
