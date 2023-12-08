@@ -87,35 +87,22 @@ def resolve_part2():
     for key in instruct.keys():
         if key[2] == "A":
             keys.append(key)
-            # print("->", key, instruct[key])
     print("START KEYS", keys)
     print()
 
-    # for key in instruct.keys():
-    # if key[2] == "Z":
-    # print("->", key, instruct[key])
-    # print()
-
-    # for keyIdx, key in [(0, keys[0])]:
     cycle = []
-    for keyIdx, key in enumerate(keys):
-        #print(key, keyIdx)
+    for key in keys:
         finished = False
         round = 0
         curKey = key
         while not finished:
-            # if round > 10000:
-            # print("infinite loop")
-            # exit()
             for choice in data.path:
-                # print(curKey, instruct[curKey], choice)
                 choiceIdx = 0
                 if choice == "R":
                     choiceIdx = 1
 
                 curKey = instruct[curKey][choiceIdx]
                 round += 1
-                # print(round, curKey)
 
             if curKey[2] == "Z":
                 print(round, len(data.path), round/len(data.path), "start: ", key, instruct[key], data.path[0],
