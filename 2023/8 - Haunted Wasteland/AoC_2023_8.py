@@ -4,6 +4,7 @@ from tools import *
 # from matrix3d import *
 
 import time
+import math
 
 # from collections import deque
 # import operator
@@ -122,58 +123,7 @@ def resolve_part2():
                 cycle.append(round)
                 finished = True
 
-    return round
-
-
-def decomp(n):
-    L = dict()
-    k = 2
-    while n != 1:
-        exp = 0
-        while n % k == 0:
-            n = n // k
-            exp += 1
-        if exp != 0:
-            L[k] = exp
-        k = k + 1
-
-    return L
-
-
-def ppcm(a, b):
-    Da = decomp(a)
-    Db = decomp(b)
-    p = 1
-    for facteur, exposant in Da.items():
-        if facteur in Db:
-            exp = max(exposant, Db[facteur])
-        else:
-            exp = exposant
-
-        p *= facteur**exp
-
-    for facteur, exposant in Db.items():
-        if facteur not in Da:
-            p *= facteur**exposant
-
-    return p
-
-
-def ppcmMultiple(*args):
-    L = list(args)
-    if len(L) == 2:
-        return ppcm(L[0], L[1])
-    else:
-        n = len(L)
-        i = 0
-        A = []
-        while i <= n-2:
-            A.append(ppcm(L[i], L[i+1]))
-            i += 2
-        if n % 2 != 0:
-            A.append(L[n-1])
-
-        return ppcmMultiple(*A)
+    return math.lcm(*cycle)
 
 ############
 ### MAIN ###
@@ -183,7 +133,7 @@ def ppcmMultiple(*args):
 # MAX_ROUND = 10
 inputFile = "sample.txt"
 inputFile = "sample2.txt"
-inputFile = "sample3.txt"
+#inputFile = "sample3.txt"
 
 # MAX_ROUND = 1000
 inputFile = "input.txt"
@@ -195,7 +145,7 @@ res = None
 
 ### PART 1 ###
 startTime = time.time()
-# res = resolve_part1()
+res = resolve_part1()
 print()
 print(
     f"-> part 1 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
@@ -210,5 +160,3 @@ res = resolve_part2()
 print()
 print(
     f"-> part 2 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
-
-print(ppcmMultiple(12, 8, 42))
