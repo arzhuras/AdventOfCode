@@ -6,7 +6,7 @@ import copy
 # import operator
 # opFunc = {"+": operator.add, "-": operator.sub, "*": operator.mul, "/": operator.truediv}
 
-###  /modules libraries ###
+###  \modules libraries ###
 from tools import *
 # from matrix2d import *
 # from matrix3d import *
