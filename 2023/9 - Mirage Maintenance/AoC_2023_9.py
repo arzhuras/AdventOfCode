@@ -3,10 +3,13 @@ from tools import *
 # from matrix2d import *
 # from matrix3d import *
 
+from functools import reduce
+import itertools
+
 import time
 
 # from collections import deque
-# import operator
+import operator
 # opFunc = {"+": operator.add, "-": operator.sub, "*": operator.mul, "/": operator.truediv}
 
 import copy
@@ -22,42 +25,72 @@ class Data:
     rawInput = None
     line = None
 
+    history = None
+
 
 data = Data()
 
 
 def initData():
     data.line = []
+    data.history = []
 
     for line in data.rawInput:
         # line = line.replace(".","")
         # line = line.replace(",","")
         # line = line.replace(";","")
         # line = line.replace("="," ")
-        data.line.append(line)
+        # data.line.append(line)
 
         # fields = line.split()
+        data.history.append(list(map(int, line.split())))
 
-    print("initData:", data.line)
+    # print(data.history)
 
 
 ##################
 ### PROCEDURES ###
 ##################
 
+def comput(hist: list) -> int:
+
+    # print("###", hist)
+    curNext = hist[-1]
+    # lastHist = [curNext]
+    while sum(hist) != 0:
+        tmpHist = []
+        for i in range(len(hist)-1):
+            curVal = hist[i+1] - hist[i]
+            tmpHist.append(curVal)
+        # lastHist.append(curVal)
+        curNext += curVal
+        hist = tmpHist
+        # print(curNext, hist, lastHist)
+    # print(curNext)
+    return (curNext)
+
 
 def resolve_part1():
     print()
     print(Ansi.red, "### PART 1 ###", Ansi.norm)
 
-    return None
+    sumNextOasis = 0
+    for oasis in data.history:
+        sumNextOasis += comput(oasis)
+
+    return sumNextOasis
 
 
 def resolve_part2():
     print()
     print(Ansi.red, "### PART 2 ###", Ansi.norm)
 
-    return None
+    sumPrevOasis = 0
+    for oasis in data.history:
+        oasis.reverse()
+        sumPrevOasis += comput(oasis)
+
+    return sumPrevOasis
 
 
 ############
@@ -68,7 +101,7 @@ def resolve_part2():
 inputFile = "sample.txt"
 
 # MAX_ROUND = 1000
-# inputFile = "input.txt"
+inputFile = "input.txt"
 
 data.rawInput = readInputFile(inputFile)
 
@@ -79,9 +112,10 @@ res = None
 startTime = time.time()
 res = resolve_part1()
 print()
-print(f"-> part 1 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
+print(
+    f"-> part 1 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
 
-exit()
+# exit()
 
 initData()
 
@@ -89,4 +123,5 @@ initData()
 startTime = time.time()
 res = resolve_part2()
 print()
-print(f"-> part 2 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
+print(
+    f"-> part 2 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
