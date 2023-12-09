@@ -36,13 +36,6 @@ def initData():
     data.history = []
 
     for line in data.rawInput:
-        # line = line.replace(".","")
-        # line = line.replace(",","")
-        # line = line.replace(";","")
-        # line = line.replace("="," ")
-        # data.line.append(line)
-
-        # fields = line.split()
         data.history.append(list(map(int, line.split())))
 
     # print(data.history)

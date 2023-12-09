@@ -12,7 +12,6 @@ from tools import *
 # from matrix3d import *
 
 
-
 #############################
 ### INITIALISATION & DATA ###
 #############################
@@ -22,25 +21,24 @@ init_script()
 
 class Data:
     rawInput = None
-    line = None
+    fields = None
 
 
 data = Data()
 
 
 def initData():
-    data.line = []
+    data.fields = []
 
     for line in data.rawInput:
         # line = line.replace(".","")
         # line = line.replace(",","")
         # line = line.replace(";","")
         # line = line.replace("="," ")
-        data.line.append(line)
+        # intFields = list(map(int,line.split()))
+        data.fields = line.split()
 
-        # fields = line.split()
-
-    print("initData:", data.line)
+    print("fields:", data.fields)
 
 
 ##################
@@ -81,7 +79,8 @@ res = None
 startTime = time.time()
 res = resolve_part1()
 print()
-print(f"-> part 1 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
+print(
+    f"-> part 1 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
 
 exit()
 
@@ -91,4 +90,5 @@ initData()
 startTime = time.time()
 res = resolve_part2()
 print()
-print(f"-> part 2 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
+print(
+    f"-> part 2 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
