@@ -5,6 +5,8 @@ import copy
 # from collections import deque
 # import operator
 # opFunc = {"+": operator.add, "-": operator.sub, "*": operator.mul, "/": operator.truediv}
+# from functools import reduce
+# import itertools
 
 ###  /modules libraries ###
 from tools import *
