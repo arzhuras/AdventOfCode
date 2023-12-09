@@ -46,10 +46,8 @@ if not os.path.exists(SESSION_FILE_NAME):
 with open(SESSION_FILE_NAME, "r") as inputFile:
     session = inputFile.read().strip()
 
-print(len(session))
 if len(session) != 128:
-    print(ANSI_RED, "invalid session cookie in .session file (bad length <> 128) :",
-          ANSI_NORM, session)
+    print(ANSI_RED, "invalid session cookie in .session file (bad length <> 128) :", len(session), session, ANSI_NORM, session)
     exit()
 print("session token:", session)
 

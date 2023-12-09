@@ -1,15 +1,17 @@
-from tools import *
-
-# from matrix2d import *
-# from matrix3d import *
-
 import time
+import math
+import copy
 
 # from collections import deque
 # import operator
 # opFunc = {"+": operator.add, "-": operator.sub, "*": operator.mul, "/": operator.truediv}
 
-import copy
+###  /modules libraries ###
+from tools import *
+# from matrix2d import *
+# from matrix3d import *
+
+
 
 #############################
 ### INITIALISATION & DATA ###
