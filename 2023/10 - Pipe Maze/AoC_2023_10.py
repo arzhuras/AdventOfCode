@@ -150,7 +150,7 @@ def resolve_part2():
     # On rajoute une couronne vide autour pour faire communiquer toute les zones externes
     extendGrid(grid)
     print("EXTEND")
-    showGrid(grid)
+    # showGrid(grid)
 
     # astuce: on rajoute des lignes et des colonnes intercalaires pour remettre en connexion les zones "squeezes"
     grid2 = []
@@ -165,7 +165,7 @@ def resolve_part2():
                 if grid[y][x] in ("|", "F", "7"):
                     grid2[2*y+1][2*x] = "|"
     print("COL/LIGNE INTERCALAIRES")
-    showGrid(grid2)
+    # showGrid(grid2)
 
     # recherche des cases intérieurs/extérieurs
     bag = [(0, 0)]
@@ -183,7 +183,7 @@ def resolve_part2():
                 continue
             if grid2[newY][newX] == ".":
                 bag.append((curCell[0] + offset[0], curCell[1] + offset[1]))
-    print("OUTSIDE")
+    print("FINAL WITH OUTSIDE")
     showGrid(grid2)
 
     # Compte les cases restantes -> zone interne
@@ -192,10 +192,6 @@ def resolve_part2():
         for x in range(0, maxX, 2):
             if grid2[y][x] == ".":
                 insideCount += 1
-
-    print()
-    print("RESULT")
-    showGrid(grid2)
 
     return int(insideCount)
 
