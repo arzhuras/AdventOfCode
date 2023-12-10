@@ -12,10 +12,12 @@ class OFFSET:
     S = (+1, 0, "S")
     SE = (+1, 1, "SE")
     AROUND = [NW, N, NE, W, E, SW, S, SE]
+    CROSS = [N, E, S, W]
     NORTH = [NW, N, NE]
     EAST = [NE, E, SE]
     WEST = [NW, W, SW]
     SOUTH = [SW, S, SE]
+    OPPOSITE = {NW: SE, N: S, NE: SW, W: E, E: W, SW: NE, S: N, SE: NW}
 
 
 # Affiche une matrice
@@ -69,6 +71,33 @@ def extendGrid(grid, eltEmpty="."):
             for y2 in range(boundY):
                 grid[y2].append(eltEmpty)
             break
+
+# Etend une grille sur tous les cotes systematiquement
+
+
+def extendGridForce(grid, eltEmpty="."):
+
+    # première ligne
+    y = 0
+    boundX = len(grid[y])
+    grid.insert(0, [eltEmpty for _ in range(boundX)])
+
+    # dernière ligne
+    y = len(grid) - 1
+    boundX = len(grid[y])
+    grid.append([eltEmpty for _ in range(boundX)])
+
+    # première colonne
+    x = 0
+    boundY = len(grid)
+    for y in range(boundY):
+        grid[y].insert(0, eltEmpty)
+
+    # dernière colonne
+    x = len(grid[0]) - 1
+    boundY = len(grid)
+    for y in range(boundY):
+        grid[y].append(eltEmpty)
 
 # compact une grille en éliminant les côtés vides
 
