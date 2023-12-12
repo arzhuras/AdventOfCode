@@ -54,6 +54,8 @@ def resolve_part1():
 
 
 def resolve_part2():
+    print()
+    print(Ansi.red, "### PART 2 ###", Ansi.norm)
 
     return None
 
