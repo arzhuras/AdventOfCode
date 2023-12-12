@@ -25,37 +25,77 @@ class Data:
     rawInput = None
     fields = None
 
+    springCondition = None
+
 
 data = Data()
 
 
 def initData():
     data.fields = []
+    data.springCondition = []
 
     for line in data.rawInput:
-        # line = line.replace(".","")
-        # line = line.replace(",","")
-        # line = line.replace(";","")
-        # line = line.replace("="," ")
-        # intFields = list(map(int,line.split()))
-        data.fields.append(line.split())
+        fields = line.split()
+        data.springCondition.append((
+            list(fields[0]),
+            list(map(int, fields[1].split(",")))))
 
-    print("fields:".append(data.fields))
+    # print("data.springCondition:", data.springCondition)
 
 
 ##################
 ### PROCEDURES ###
 ##################
 
+def countGroup(conditions):
+    idx = 0
+    groups = []
+    while idx < len(conditions):
+        groupLen = 0
+        while idx < len(conditions) and conditions[idx] == "#":
+            groupLen += 1
+            idx += 1
+        if groupLen > 0:
+            groups.append(groupLen)
+        idx += 1
+    # print(Ansi.yellow, conditions, groups, Ansi.norm)
+    return groups
+
+
+def checkConditions(idx: int, conditions: list, groups: list) -> int:
+    # print(" " * idx, idx, conditions, groups)
+
+    while idx < len(conditions) and conditions[idx] != "?":
+        idx += 1
+
+    if idx == len(conditions):
+        resGroups = countGroup(conditions)
+        if resGroups == groups:
+            # print(Ansi.green, "MATCH", Ansi.norm)
+            return 1
+        return 0
+
+    res = 0
+    for car in ".", "#":
+        curConditions = conditions.copy()
+        curConditions[idx] = car
+        res += checkConditions(idx + 1, curConditions, groups)
+
+    return res
+
 
 def resolve_part1():
 
-    return None
+    res = 0
+    for conditions, groups in data.springCondition:
+        res += checkConditions(0, conditions, groups)
+        # print(Ansi.blue, conditions, res, Ansi.norm)
+        # print()
+    return res
 
 
 def resolve_part2():
-    print()
-    print(Ansi.red, "### PART 2 ###", Ansi.norm)
 
     return None
 
@@ -68,7 +108,7 @@ def resolve_part2():
 inputFile = "sample.txt"
 
 # MAX_ROUND = 1000
-# inputFile = "input.txt"
+inputFile = "input.txt"
 
 data.rawInput = readInputFile(inputFile)
 
