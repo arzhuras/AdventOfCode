@@ -38,9 +38,9 @@ def initData():
         # line = line.replace(";","")
         # line = line.replace("="," ")
         # intFields = list(map(int,line.split()))
-        data.fields = line.split()
+        data.fields.append(line.split())
 
-    print("fields:", data.fields)
+    print("fields:".append(data.fields))
 
 
 ##################
@@ -49,8 +49,6 @@ def initData():
 
 
 def resolve_part1():
-    print()
-    print(Ansi.red, "### PART 1 ###", Ansi.norm)
 
     return None
 
@@ -79,6 +77,8 @@ res = None
 
 ### PART 1 ###
 startTime = time.time()
+print()
+print(Ansi.red, "### PART 1 ###", Ansi.norm)
 res = resolve_part1()
 print()
 print(
@@ -90,6 +90,8 @@ initData()
 
 ### PART 2 ###
 startTime = time.time()
+print()
+print(Ansi.red, "### PART 2 ###", Ansi.norm)
 res = resolve_part2()
 print()
 print(
