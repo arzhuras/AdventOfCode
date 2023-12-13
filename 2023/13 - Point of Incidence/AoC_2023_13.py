@@ -95,6 +95,7 @@ def resolve():
         print("->", gridIdx)
         # showGrid(grid)
         # check col reflection
+
         col = 0  # left sided reflection
         for colReflected in range(col+1, len(grid[0]), 2):
             diffs = checkColDiff(grid, col, colReflected)
