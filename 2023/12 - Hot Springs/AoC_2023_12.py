@@ -6,6 +6,7 @@ import copy
 # import operator
 # opFunc = {"+": operator.add, "-": operator.sub, "*": operator.mul, "/": operator.truediv}
 # from functools import reduce
+import functools
 # import itertools
 
 ###  /modules libraries ###
@@ -48,6 +49,7 @@ def initData():
 ### PROCEDURES ###
 ##################
 
+@functools.lru_cache(maxsize=None)
 def countGroup(conditions):
     idx = 0
     groups = []
@@ -90,20 +92,28 @@ def resolve_part1():
     res = 0
     for conditions, groups in data.springCondition:
         res += checkConditions(0, conditions, groups)
-        # print(Ansi.blue, conditions, res, Ansi.norm)
-        # print()
+    # print(Ansi.blue, conditions, res, Ansi.norm)
+    # print()
     return res
 
 
 def resolve_part2():
 
-    return None
+    res = 0
+    for conditions, groups in data.springCondition:
+        # print(conditions, groups)
+        conditions += (["?"] + conditions) * 4
+        groups += groups * 4
+        print(conditions, groups)
+        # res += checkConditions(0, conditions, groups)
+        # print(Ansi.blue, conditions, res, Ansi.norm)
+        print()
+    return res
 
 
 ############
 ### MAIN ###
 ############
-
 # MAX_ROUND = 10
 inputFile = "sample.txt"
 
@@ -124,15 +134,16 @@ print()
 print(
     f"-> part 1 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
 
-exit()
+# exit()
 
 initData()
+res = None
 
 ### PART 2 ###
 startTime = time.time()
 print()
 print(Ansi.red, "### PART 2 ###", Ansi.norm)
-res = resolve_part2()
+# res = resolve_part2()
 print()
 print(
     f"-> part 2 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")

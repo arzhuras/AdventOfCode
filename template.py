@@ -85,6 +85,7 @@ print(
 exit()
 
 initData()
+res = None
 
 ### PART 2 ###
 startTime = time.time()
