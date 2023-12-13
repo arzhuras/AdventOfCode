@@ -40,7 +40,7 @@ def initData():
         # intFields = list(map(int,line.split()))
         data.fields.append(line.split())
 
-    print("fields:".append(data.fields))
+    print("fields:", data.fields)
 
 
 ##################
