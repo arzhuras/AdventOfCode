@@ -10,7 +10,7 @@ import copy
 
 ###  /modules libraries ###
 from tools import *
-# from matrix2d import *
+from matrix2d import *
 # from matrix3d import *
 
 
@@ -25,30 +25,17 @@ class Data:
     rawInput = None
     fields = None
 
-    #grid = None
+    grid = None
+
 
 data = Data()
 
 
 def initData():
-    data.fields = []
-    #data.grid = []
-    #data.grids = []
+    data.grid = []
 
-    for line in data.rawInput:
-        # line = line.replace(".","")
-        # line = line.replace(",","")
-        # line = line.replace(";","")
-        # line = line.replace("="," ")
-        # intFields = list(map(int,line.split()))
-        data.fields.append(line.split())
+    data.grid = loadMatrix2d(inputFile)[0]
 
-    print("fields:", data.fields)
-
-
-    # data.grid = loadMatrix2d(inputFile)[0]
-    # data.grids = loadMatrix2d(inputFile)
-    # showGrid(data.grid)
 
 ##################
 ### PROCEDURES ###
@@ -79,6 +66,7 @@ data.rawInput = readInputFile(inputFile)
 
 initData()
 res = None
+showGrid(data.grid)
 
 ### PART 1 ###
 startTime = time.time()
