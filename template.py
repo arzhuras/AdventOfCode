@@ -25,15 +25,16 @@ class Data:
     rawInput = None
     fields = None
 
-    #grid = None
+    # grid = None
+
 
 data = Data()
 
 
 def initData():
     data.fields = []
-    #data.grid = []
-    #data.grids = []
+    # data.grid = []
+    # data.grids = []
 
     for line in data.rawInput:
         # line = line.replace(".","")
@@ -41,10 +42,9 @@ def initData():
         # line = line.replace(";","")
         # line = line.replace("="," ")
         # intFields = list(map(int,line.split()))
-        data.fields.append(line.split())
+        data.fields = line.split()
 
     print("fields:", data.fields)
-
 
     # data.grid = loadMatrix2d(inputFile)[0]
     # data.grids = loadMatrix2d(inputFile)

@@ -49,6 +49,7 @@ def initData():
 ### PROCEDURES ###
 ##################
 
+# https://www.reddit.com/r/adventofcode/comments/18hbbxe/2023_day_12python_stepbystep_tutorial_with_bonus/
 @functools.lru_cache(maxsize=None)
 def countGroup(conditions):
     idx = 0
