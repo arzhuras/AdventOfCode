@@ -38,40 +38,37 @@ def initData():
 
     data.grid = loadMatrix2d(inputFile)[0]
     # data.grids = loadMatrix2d(inputFile)
-    showGrid(data.grid)
+    # showGrid(data.grid)
 
 ##################
 ### PROCEDURES ###
 ##################
 
 
-def followPath(grid, visited, cell, direction, level=0):
+def followPath(grid: list, visited: dict, cell: tuple, direction: tuple, level=0) -> None:
     tab = "  " * level
-    # print(tab, level, "followPath", cell, direction)
+    # print(tab, level, "followPath", cell, direction, visited)
     if level == 1000:
         print("INFINITE")
         exit()
+
     maxY = len(grid)
     maxX = len(grid[0])
     y = cell[0]
     x = cell[1]
-    while y >= 0 and y < maxY and x >= 0 and x < maxX and (y, x, direction[2]) not in visited:
-        # print(tab, "  @", y, x, grid[y][x], visited)
+    while y >= 0 and y < maxY and x >= 0 and x < maxX and ((y, x) not in visited or direction[2] not in visited[(y, x)]):
+        # print(tab, "  @", y, x, grid[y][x])
+        if (y, x) not in visited:
+            visited[(y, x)] = [direction[2]]
+        else:
+            visited[(y, x)].append(direction[2])
         match grid[y][x]:
             case  ".":
                 # print(tab, "  .", y, x, direction)
-                grid[y][x] = "#"
-                visited.append((y, x, direction[2]))
-                y += direction[0]
-                x += direction[1]
-            case  "#":
-                # print(tab, "  #", y, x, direction)
-                visited.append((y, x, direction[2]))
                 y += direction[0]
                 x += direction[1]
             case  "-":
                 # print(tab, "  -", y, x, direction)
-                visited.append((y, x, direction[2]))
                 if direction == OFFSET.E or direction == OFFSET.W:
                     y += direction[0]
                     x += direction[1]
@@ -83,7 +80,6 @@ def followPath(grid, visited, cell, direction, level=0):
                     break
             case  "|":
                 # print(tab, "  |", y, x, direction)
-                visited.append((y, x, direction[2]))
                 if direction == OFFSET.N or direction == OFFSET.S:
                     y += direction[0]
                     x += direction[1]
@@ -95,7 +91,6 @@ def followPath(grid, visited, cell, direction, level=0):
                     break
             case  "/":
                 # print(tab, "  /", y, x, direction)
-                visited.append((y, x, direction[2]))
                 match direction:
                     case OFFSET.E:
                         direction = OFFSET.N
@@ -109,7 +104,6 @@ def followPath(grid, visited, cell, direction, level=0):
                 x += direction[1]
             case  "\\":
                 # print(tab, "  \\", y, x, direction)
-                visited.append((y, x, direction[2]))
                 match direction:
                     case OFFSET.E:
                         direction = OFFSET.S
@@ -122,78 +116,40 @@ def followPath(grid, visited, cell, direction, level=0):
                 y += direction[0]
                 x += direction[1]
 
+    return len(visited)
+
 
 def resolve_part1():
 
     grid = data.grid
-    visited = []
 
-    followPath(grid, visited, (0, 0), OFFSET.E)
-    showGrid(grid)
-    print()
-
-    # print(visited)
-    for y in range(len(grid)):
-        for x in range(len(grid[y])):
-            grid[y][x] = "."
-    for cell in visited:
-        grid[cell[0]][cell[1]] = "#"
-    visitedCnt = 0
-    for y in range(len(grid)):
-        for x in range(len(grid[y])):
-            if grid[y][x] == "#":
-                visitedCnt += 1
-    showGrid(grid)
-
-    return visitedCnt
-
-
-def countVisited(grid, visited, cell, direction):
-    followPath(grid, visited, (cell[0], cell[1]), direction)
+    visitedCnt = followPath(grid, {}, (0, 0), OFFSET.E)
     # showGrid(grid)
+    # print()
 
-    # print(visited)
-    for y in range(len(grid)):
-        for x in range(len(grid[y])):
-            grid[y][x] = "."
-    for cell in visited:
-        grid[cell[0]][cell[1]] = "#"
-    visitedCnt = 0
-    for y in range(len(grid)):
-        for x in range(len(grid[y])):
-            if grid[y][x] == "#":
-                visitedCnt += 1
-    # showGrid(grid)
     return visitedCnt
 
 
 def resolve_part2():
     grid = data.grid
-    showGrid(grid)
 
     visitedCnt = []
 
     for y, direction in [(0, OFFSET.S), (len(grid) - 1, OFFSET.N)]:
         for x in range(len(grid[0])):
             workGrid = copy.deepcopy(grid)
-            visited = []
-            visitedCnt.append(countVisited(
-                workGrid, visited, (y, x), direction))
-            print(Ansi.blue, direction[2], y, x, visitedCnt[-1], Ansi.norm)
-            # showGrid(workGrid)
-            # print()
+            visitedCnt.append(followPath(
+                workGrid, {}, (y, x), direction))
+            # print(Ansi.blue, direction[2], y, x, visitedCnt[-1], Ansi.norm)
 
     for x, direction in [(0, OFFSET.E), (len(grid[y]) - 1, OFFSET.W)]:
         for y in range(len(grid)):
             workGrid = copy.deepcopy(grid)
-            visited = []
-            visitedCnt.append(countVisited(
-                workGrid, visited, (y, x), direction))
-            print(Ansi.blue, direction[2], y, x, visitedCnt[-1], Ansi.norm)
-            # showGrid(workGrid)
-            # print()
+            visitedCnt.append(followPath(
+                workGrid, {}, (y, x), direction))
+            # print(Ansi.blue, direction[2], y, x, visitedCnt[-1], Ansi.norm)
 
-    print(visitedCnt)
+    # print(visitedCnt)
     return max(visitedCnt)
 
 
