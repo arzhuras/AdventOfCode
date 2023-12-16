@@ -47,7 +47,8 @@ with open(SESSION_FILE_NAME, "r") as inputFile:
     session = inputFile.read().strip()
 
 if len(session) != 128:
-    print(ANSI_RED, "invalid session cookie in .session file (bad length <> 128) :", len(session), session, ANSI_NORM, session)
+    print(ANSI_RED, "invalid session cookie in .session file (bad length <> 128) :", len(
+        session), session, ANSI_NORM, session)
     exit()
 print("session token:", session)
 
@@ -87,7 +88,7 @@ dayTitle = dayTitle.strip()
 # print(dayTitle)
 
 # Create current day directory
-DAY_PATH = f"{targetYear}/{targetDay} - {dayTitle}"
+DAY_PATH = f"{targetYear}/{targetDay:02} - {dayTitle}"
 print(ANSI_BLUE, DAY_PATH, ANSI_NORM)
 os.makedirs(DAY_PATH, exist_ok=True)
 
