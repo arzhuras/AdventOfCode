@@ -125,16 +125,14 @@ def resolve_part2():
 
     for y, direction in [(0, OFFSET.S), (len(grid) - 1, OFFSET.N)]:
         for x in range(len(grid[0])):
-            workGrid = copy.deepcopy(grid)
             visitedCnt.append(followPath(
-                workGrid, {}, (y, x), direction))
+                grid, {}, (y, x), direction))
             # print(Ansi.blue, direction[2], y, x, visitedCnt[-1], Ansi.norm)
 
     for x, direction in [(0, OFFSET.E), (len(grid[y]) - 1, OFFSET.W)]:
         for y in range(len(grid)):
-            workGrid = copy.deepcopy(grid)
             visitedCnt.append(followPath(
-                workGrid, {}, (y, x), direction))
+                grid, {}, (y, x), direction))
             # print(Ansi.blue, direction[2], y, x, visitedCnt[-1], Ansi.norm)
 
     # print(visitedCnt)
