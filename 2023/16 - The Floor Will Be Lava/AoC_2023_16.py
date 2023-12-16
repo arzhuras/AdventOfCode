@@ -45,7 +45,7 @@ def initData():
 ##################
 
 
-def followPath(grid: list, visited: dict, cell: tuple, direction: tuple, level=0) -> None:
+def followPath(grid: list, visited: dict, cell: tuple, direction: tuple, level=0) -> int:
     tab = "  " * level
     # print(tab, level, "followPath", cell, direction, visited)
     if level == 1000:
@@ -63,16 +63,9 @@ def followPath(grid: list, visited: dict, cell: tuple, direction: tuple, level=0
         else:
             visited[(y, x)].append(direction[2])
         match grid[y][x]:
-            case  ".":
-                # print(tab, "  .", y, x, direction)
-                y += direction[0]
-                x += direction[1]
             case  "-":
                 # print(tab, "  -", y, x, direction)
-                if direction == OFFSET.E or direction == OFFSET.W:
-                    y += direction[0]
-                    x += direction[1]
-                else:
+                if direction == OFFSET.N or direction == OFFSET.S:
                     followPath(
                         grid, visited, (y+OFFSET.W[0], x+OFFSET.W[1]), OFFSET.W, level + 1)
                     followPath(
@@ -80,10 +73,7 @@ def followPath(grid: list, visited: dict, cell: tuple, direction: tuple, level=0
                     break
             case  "|":
                 # print(tab, "  |", y, x, direction)
-                if direction == OFFSET.N or direction == OFFSET.S:
-                    y += direction[0]
-                    x += direction[1]
-                else:
+                if direction == OFFSET.W or direction == OFFSET.E:
                     followPath(
                         grid, visited, (y+OFFSET.N[0], x+OFFSET.N[1]), OFFSET.N, level + 1)
                     followPath(
@@ -100,8 +90,6 @@ def followPath(grid: list, visited: dict, cell: tuple, direction: tuple, level=0
                         direction = OFFSET.E
                     case OFFSET.W:
                         direction = OFFSET.S
-                y += direction[0]
-                x += direction[1]
             case  "\\":
                 # print(tab, "  \\", y, x, direction)
                 match direction:
@@ -113,8 +101,8 @@ def followPath(grid: list, visited: dict, cell: tuple, direction: tuple, level=0
                         direction = OFFSET.W
                     case OFFSET.W:
                         direction = OFFSET.N
-                y += direction[0]
-                x += direction[1]
+        y += direction[0]
+        x += direction[1]
 
     return len(visited)
 
