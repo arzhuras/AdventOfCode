@@ -3,7 +3,7 @@ from tools import *
 import time
 import math
 import copy
-from  datetime import datetime
+from datetime import datetime
 
 # from collections import deque
 # import operator
@@ -47,13 +47,13 @@ def initData():
         span = int(span)
         data.fields.append((move, span))
 
-        #part 2
+        # part 2
         move2 = moveMap[int(color[-1])]
         span2 = int(color[:-1], base=16)
         data.fields2.append((move2, span2))
-        
-    #print("fields:", data.fields)
-    #print("fields2:", data.fields2)
+
+    # print("fields:", data.fields)
+    # print("fields2:", data.fields2)
 
 ##################
 ### PROCEDURES ###
@@ -113,7 +113,7 @@ def resolve_part1():
                     grid[y][x] = "#"
     print()
     extendGrid(grid)
-    #showGrid(grid)
+    # showGrid(grid)
 
     # recherche des cases intérieurs/extérieurs
     bag = [(0, 0)]
@@ -139,22 +139,22 @@ def resolve_part1():
                 grid[y][x] = "#"
                 sumLava += 1
 
-    #print()
-    #showGrid(grid)
+    # print()
+    # showGrid(grid)
 
     return sumLava
 
 
 def resolve_part2():
     fields = data.fields
-    #fields = data.fields2
+    fields = data.fields2
 
     # On reporte la première et dernière ligne pour se faciliter la vie après
     fields.insert(0, fields[-1])
     fields.append(fields[1])
 
-    #fields = fields[:10]
-    #print(fields)
+    # fields = fields[:10]
+    # print(fields)
 
     x = 0
     maxWidth = 0
@@ -163,42 +163,43 @@ def resolve_part2():
     minHeight = 0
     maxHeight = 0
 
-    cols = [] # (ytop, ybot, x, span), on ne stocke pas le premier et le dernier élément d'une colonne
+    # (ytop, ybot, x, span, True si sommet), on ne stocke pas le premier et le dernier élément d'une colonne
+    cols = []
     sumLava = 0
     for fieldIdx in range(1, len(fields)-1):
         move, span = fields[fieldIdx]
         print(move, span, "    y", y, "x", x, end=" ")
         match move:
             case "D":
-                cols.append((y+1, y + span-1, x, 0))
+                cols.append((y+1, y + span-1, x, 0, False))
                 print(cols[-1])
                 y += span
                 if y > maxHeight:
                     maxHeight = y
             case "U":
-                cols.append((y - span + 1, y -1, x, 0))
+                cols.append((y - span + 1, y - 1, x, 0, False))
                 print(cols[-1])
                 y -= span
                 if y < minHeight:
                     minHeight = y
             case "R":
-                # on regarde si le bloc est un sommet/creux ou non. Si sommet, on l'ignore
+                # on regarde si le bloc est un sommet/creux ou non. Si sommet, on le flag
                 if (fields[fieldIdx-1][0] == "U" and fields[fieldIdx+1][0] == "D") or (fields[fieldIdx-1][0] == "D" and fields[fieldIdx+1][0] == "U"):
-                    print("SKIP")
-                    pass
+                    print("SOMMET")
+                    cols.append((y, y, x, span, True))
                 else:
-                    cols.append((y, y, x, span))
+                    cols.append((y, y, x, span, False))
                     print(cols[-1])
                 x += span
                 if x > maxWidth:
                     maxWidth = x
             case "L":
-                # on regarde si le bloc est un sommet/creux ou non. Si sommet, on l'ignore
+                # on regarde si le bloc est un sommet/creux ou non. Si sommet, on le flag
                 if (fields[fieldIdx-1][0] == "U" and fields[fieldIdx+1][0] == "D") or (fields[fieldIdx-1][0] == "D" and fields[fieldIdx+1][0] == "U"):
-                    print("SKIP")
-                    pass
+                    print("SOMMET")
+                    cols.append((y, y, x - span, span, True))
                 else:
-                    cols.append((y, y, x - span, span))
+                    cols.append((y, y, x - span, span, False))
                     print(cols[-1])
                 x -= span
                 if x < minWidth:
@@ -216,25 +217,46 @@ def resolve_part2():
     for y in range(minHeight, maxHeight):
         if y % 100000 == 0:
             print(y, minHeight, maxHeight, datetime.now())
+            pass
+
         # cherche les blocs sur la ligne courante
         blocks = []
         colIdx = startingcolIdx
         while colIdx < len(cols):
             block = cols[colIdx]
-            #print(block)
+            # print("block", block)
             if y >= block[0] and y <= block[1]:
                 blocks.append(block)
-                #print("MATCH", block)
-            #if y >= block[1]:
-                #startingcolIdx = colIdx
+                # print("MATCH", block)
+            else:
+                if y < block[0]:
+                    # print("BREAK", y)
+                    break
+                # startingcolIdx = colIdx
             colIdx += 1
         blocks.sort(key=lambda e: (e[2]))
-        print(y, "blocks", blocks)
+        # print(y, "blocks", blocks)
+
+        # check les sommets/creux internes (duplicate) ou externes (skip)
+        blockIdx = 0
+        while blockIdx < len(blocks):
+            block = blocks[blockIdx]
+            if block[4] == True:
+                if blockIdx % 2 == 0:
+                    print("SKIP SOMMET")
+                    del blocks[blockIdx]
+                    blockIdx -= 1
+                else:
+                    print("DUPLICATE SOMMET")
+                    blocks.insert(blockIdx + 1, block)
+                    blockIdx += 1
+            blockIdx += 1
 
         for blockIdx in range(0, len(blocks), 2):
-            lava = blocks[blockIdx+1][2] - (blocks[blockIdx][2] + blocks[blockIdx][3]) -1
+            lava = blocks[blockIdx+1][2] - \
+                (blocks[blockIdx][2] + blocks[blockIdx][3]) - 1
             sumLava += lava
-            #print("  ", y, lava, sumLava)
+            # print("  ", y, lava, sumLava)
 
     return sumLava
 
@@ -263,7 +285,7 @@ print()
 print(
     f"-> part 1 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
 
-#exit()
+# exit()
 
 initData()
 res = None
