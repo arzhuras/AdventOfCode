@@ -3,6 +3,7 @@ from tools import *
 import time
 import math
 import copy
+from  datetime import datetime
 
 # from collections import deque
 # import operator
@@ -21,6 +22,7 @@ init_script()
 class Data:
     rawInput = None
     fields = None
+    fields2 = None
 
     # grid = None
 
@@ -50,8 +52,8 @@ def initData():
         span2 = int(color[:-1], base=16)
         data.fields2.append((move2, span2))
         
-    print("fields:", data.fields)
-    print("fields2:", data.fields2)
+    #print("fields:", data.fields)
+    #print("fields2:", data.fields2)
 
 ##################
 ### PROCEDURES ###
@@ -144,11 +146,15 @@ def resolve_part1():
 
 
 def resolve_part2():
-
     fields = data.fields
+    #fields = data.fields2
+
     # On reporte la première et dernière ligne pour se faciliter la vie après
     fields.insert(0, fields[-1])
     fields.append(fields[1])
+
+    #fields = fields[:10]
+    #print(fields)
 
     x = 0
     maxWidth = 0
@@ -157,20 +163,20 @@ def resolve_part2():
     minHeight = 0
     maxHeight = 0
 
-    cols = [] # (ytop, ybot, x), on ne stocke pas le premier et le dernier élément d'une colonne
+    cols = [] # (ytop, ybot, x, span), on ne stocke pas le premier et le dernier élément d'une colonne
     sumLava = 0
     for fieldIdx in range(1, len(fields)-1):
         move, span = fields[fieldIdx]
-        print(move, span, "    y", y, "x", x)
+        print(move, span, "    y", y, "x", x, end=" ")
         match move:
             case "D":
-                cols.append((y+1, y + span-1, x))
+                cols.append((y+1, y + span-1, x, 0))
                 print(cols[-1])
                 y += span
                 if y > maxHeight:
                     maxHeight = y
             case "U":
-                cols.append((y - span + 1, y -1, x))
+                cols.append((y - span + 1, y -1, x, 0))
                 print(cols[-1])
                 y -= span
                 if y < minHeight:
@@ -179,8 +185,9 @@ def resolve_part2():
                 # on regarde si le bloc est un sommet/creux ou non. Si sommet, on l'ignore
                 if (fields[fieldIdx-1][0] == "U" and fields[fieldIdx+1][0] == "D") or (fields[fieldIdx-1][0] == "D" and fields[fieldIdx+1][0] == "U"):
                     print("SKIP")
+                    pass
                 else:
-                    cols.append((y, y, x))
+                    cols.append((y, y, x, span))
                     print(cols[-1])
                 x += span
                 if x > maxWidth:
@@ -189,18 +196,45 @@ def resolve_part2():
                 # on regarde si le bloc est un sommet/creux ou non. Si sommet, on l'ignore
                 if (fields[fieldIdx-1][0] == "U" and fields[fieldIdx+1][0] == "D") or (fields[fieldIdx-1][0] == "D" and fields[fieldIdx+1][0] == "U"):
                     print("SKIP")
+                    pass
                 else:
-                    cols.append((y, y, x - span))
+                    cols.append((y, y, x - span, span))
                     print(cols[-1])
                 x -= span
                 if x < minWidth:
                     minWidth = x
         sumLava += span
-    x = maxWidth - minWidth + 1
-    y = maxHeight - minHeight + 1
-    print("width", x, minWidth, maxWidth)
-    print("height", y, minHeight, maxHeight)
-    print(cols)
+    print("sumLava", sumLava)
+    width = maxWidth - minWidth + 1
+    height = maxHeight - minHeight + 1
+    print("width", width, minWidth, maxWidth)
+    print("height", height, minHeight, maxHeight)
+    cols.sort(key=lambda e: (e[0], e[1], e[2]))
+    print(cols[:10])
+
+    startingcolIdx = 0
+    for y in range(minHeight, maxHeight):
+        if y % 100000 == 0:
+            print(y, minHeight, maxHeight, datetime.now())
+        # cherche les blocs sur la ligne courante
+        blocks = []
+        colIdx = startingcolIdx
+        while colIdx < len(cols):
+            block = cols[colIdx]
+            #print(block)
+            if y >= block[0] and y <= block[1]:
+                blocks.append(block)
+                #print("MATCH", block)
+            #if y >= block[1]:
+                #startingcolIdx = colIdx
+            colIdx += 1
+        blocks.sort(key=lambda e: (e[2]))
+        print(y, "blocks", blocks)
+
+        for blockIdx in range(0, len(blocks), 2):
+            lava = blocks[blockIdx+1][2] - (blocks[blockIdx][2] + blocks[blockIdx][3]) -1
+            sumLava += lava
+            #print("  ", y, lava, sumLava)
 
     return sumLava
 
@@ -213,7 +247,7 @@ def resolve_part2():
 inputFile = "sample.txt"
 
 # MAX_ROUND = 1000
-#inputFile = "input.txt"
+inputFile = "input.txt"
 
 data.rawInput = readInputFile(inputFile)
 
