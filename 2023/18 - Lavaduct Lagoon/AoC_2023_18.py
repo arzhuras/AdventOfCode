@@ -33,25 +33,25 @@ data = Data()
 
 def initData():
     data.fields = []
+    data.fields2 = []
+
+    moveMap = ["R", "D", "L", "U"]
 
     for line in data.rawInput:
         line = line.replace("(", "")
         line = line.replace(")", "")
-        # line = line.replace(";","")
-        # line = line.replace("="," ")
-        # intFields = list(map(int,line.split()))
+        line = line.replace("#", "")
         move, span, color = line.split()
         span = int(span)
-        data.fields.append((move, span, color))
+        data.fields.append((move, span))
+
+        #part 2
+        move2 = moveMap[int(color[-1])]
+        span2 = int(color[:-1], base=16)
+        data.fields2.append((move2, span2))
+        
     print("fields:", data.fields)
-
-    # data.grid = []
-    # data.grid = loadMatrix2d(inputFile)[0]
-
-    # data.grids = []
-    # data.grids = loadMatrix2d(inputFile)
-
-    # showGrid(data.grid)
+    print("fields2:", data.fields2)
 
 ##################
 ### PROCEDURES ###
@@ -66,7 +66,7 @@ def resolve_part1():
     minHeight = 0
     maxHeight = 0
 
-    for move, span, color in data.fields:
+    for move, span in data.fields:
         match move:
             case "D":
                 height += span
@@ -94,7 +94,7 @@ def resolve_part1():
     y = abs(minHeight)
     x = abs(minWidth)
     sumLava = 0
-    for move, span, color in data.fields:
+    for move, span in data.fields:
         sumLava += span
         match move:
             case "D":
@@ -111,7 +111,7 @@ def resolve_part1():
                     grid[y][x] = "#"
     print()
     extendGrid(grid)
-    showGrid(grid)
+    #showGrid(grid)
 
     # recherche des cases intérieurs/extérieurs
     bag = [(0, 0)]
@@ -137,15 +137,72 @@ def resolve_part1():
                 grid[y][x] = "#"
                 sumLava += 1
 
-    print()
-    showGrid(grid)
+    #print()
+    #showGrid(grid)
 
     return sumLava
 
 
 def resolve_part2():
 
-    return None
+    fields = data.fields
+    # On reporte la première et dernière ligne pour se faciliter la vie après
+    fields.insert(0, fields[-1])
+    fields.append(fields[1])
+
+    x = 0
+    maxWidth = 0
+    minWidth = 0
+    y = 0
+    minHeight = 0
+    maxHeight = 0
+
+    cols = [] # (ytop, ybot, x), on ne stocke pas le premier et le dernier élément d'une colonne
+    sumLava = 0
+    for fieldIdx in range(1, len(fields)-1):
+        move, span = fields[fieldIdx]
+        print(move, span, "    y", y, "x", x)
+        match move:
+            case "D":
+                cols.append((y+1, y + span-1, x))
+                print(cols[-1])
+                y += span
+                if y > maxHeight:
+                    maxHeight = y
+            case "U":
+                cols.append((y - span + 1, y -1, x))
+                print(cols[-1])
+                y -= span
+                if y < minHeight:
+                    minHeight = y
+            case "R":
+                # on regarde si le bloc est un sommet/creux ou non. Si sommet, on l'ignore
+                if (fields[fieldIdx-1][0] == "U" and fields[fieldIdx+1][0] == "D") or (fields[fieldIdx-1][0] == "D" and fields[fieldIdx+1][0] == "U"):
+                    print("SKIP")
+                else:
+                    cols.append((y, y, x))
+                    print(cols[-1])
+                x += span
+                if x > maxWidth:
+                    maxWidth = x
+            case "L":
+                # on regarde si le bloc est un sommet/creux ou non. Si sommet, on l'ignore
+                if (fields[fieldIdx-1][0] == "U" and fields[fieldIdx+1][0] == "D") or (fields[fieldIdx-1][0] == "D" and fields[fieldIdx+1][0] == "U"):
+                    print("SKIP")
+                else:
+                    cols.append((y, y, x - span))
+                    print(cols[-1])
+                x -= span
+                if x < minWidth:
+                    minWidth = x
+        sumLava += span
+    x = maxWidth - minWidth + 1
+    y = maxHeight - minHeight + 1
+    print("width", x, minWidth, maxWidth)
+    print("height", y, minHeight, maxHeight)
+    print(cols)
+
+    return sumLava
 
 
 ############
@@ -156,7 +213,7 @@ def resolve_part2():
 inputFile = "sample.txt"
 
 # MAX_ROUND = 1000
-inputFile = "input.txt"
+#inputFile = "input.txt"
 
 data.rawInput = readInputFile(inputFile)
 
@@ -172,7 +229,7 @@ print()
 print(
     f"-> part 1 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
 
-exit()
+#exit()
 
 initData()
 res = None
