@@ -37,7 +37,7 @@ def dijkstraAlgo(graph: dict, vertex: str) -> list:
 
 def dijkstraAlgoWithPath(graph: dict, vertex: str) -> list:
     """
-    Diskstra : recherche du plus court chemin depuis un noeud vers tous les noeuds accessibles
+    Dijkstra : recherche du plus court chemin depuis un noeud vers tous les noeuds accessibles
                dans un graphe pondéré
                renvoi pour chaque noeud la distance minimale + le chemin depuis la source
     """
@@ -64,7 +64,8 @@ if __name__ == "__main__":
 
     # Liste d'ajacence du graphe
     # graph = {"A": {"B": 135, "C": 4}, "B": {"E": 5}, "C": {"E": 161, "D": 2}, "D": {"E": 3}, "E": {}}
-    graph = {"A": {"B": 135, "C": 4}, "B": {"E": 5}, "C": {"E": 161, "D": 2}, "D": {"E": 3}, "E": {"D": 2}}
+    graph = {"A": {"B": 135, "C": 4}, "B": {"E": 5}, "C": {
+        "E": 161, "D": 2}, "D": {"E": 3}, "E": {"D": 2}}
     showGraph(graph)
     print()
 
