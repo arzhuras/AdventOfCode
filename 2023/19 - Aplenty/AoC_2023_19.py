@@ -6,7 +6,7 @@ import copy
 # from collections import deque
 import operator
 # opFunc = {"+": operator.add, "-": operator.sub, "*": operator.mul, "/": operator.truediv}
-# from functools import reduce
+from functools import reduce
 # import itertools
 
 
@@ -113,20 +113,20 @@ def resolve_part1():
 # accepted (minCatVal, maxCatVal, path)
 def applyWorkflow(workflow, minCatVal, maxCatVal, accepted, path=[], level=0):
     tab = "  " * level
-    print(tab, level, "  workflow", workflow,
-          "min", minCatVal, "max", maxCatVal, path)
+    # print(tab, level, "  workflow", workflow,
+    # "min", minCatVal, "max", maxCatVal, path)
 
     if workflow == "R":
-        print(tab, level, Ansi.red, "REJECTED", Ansi.norm)
+        # print(tab, level, Ansi.red, "REJECTED", Ansi.norm)
         return
 
     if workflow == "A":
         accepted.append((minCatVal, maxCatVal, path))
-        print(tab, level, Ansi.green, "ACCEPTED", accepted[-1], Ansi.norm)
+        # print(tab, level, Ansi.green, "ACCEPTED", accepted[-1], Ansi.norm)
         return
 
     path.append(workflow)
-    print(tab, level, "  rules", data.workflows[workflow])
+    # print(tab, level, "  rules", data.workflows[workflow])
 
     if level > 10:
         print("MAX REC DEPTH")
@@ -134,7 +134,7 @@ def applyWorkflow(workflow, minCatVal, maxCatVal, accepted, path=[], level=0):
 
     for ruleCat, ruleOp, ruleVal, ruleWorkflow in data.workflows[workflow]:
         if ruleCat == None:
-            print(tab, level, "    default ->", ruleWorkflow)
+            # print(tab, level, "    default ->", ruleWorkflow)
             applyWorkflow(ruleWorkflow, minCatVal.copy(),
                           maxCatVal.copy(), accepted, path.copy(), level + 1)
         else:
@@ -161,13 +161,10 @@ def resolve_part2():
 
     applyWorkflow("in", minCatVal, maxCatVal, accepted)
 
-    print()
     sumCombi = 0
     for elt in accepted:
-        print(elt)
         sumCombi += math.prod(map(lambda l: l[1] -
                               l[0] + 1, zip(elt[0], elt[1])))
-
     return sumCombi
 
 
