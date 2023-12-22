@@ -2,6 +2,15 @@ from tools import *
 from collections import deque
 
 
+"""
+site web pour tracer des graphes: https://graphonline.ru/fr/
+Utiliser Créer un graphique: edge list
+
+bibliothèque python graphviz a tester
+
+"""
+
+
 def showGraph(graph: dict) -> None:
     # print(graph)
     for key in sorted(graph):

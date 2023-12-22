@@ -22,7 +22,10 @@ class Data:
     fields = None
     modules = None
 
-    # grid = None
+    # part 2
+    rxAncestor = ""
+    inversorNames = []
+    inversorCycles = []
 
 
 data = Data()
@@ -48,16 +51,21 @@ CONJ_INPUT = 2
 
 def initData():
     data.modules = {}
+    data.rxAncestor = ""
+    data.inversorNames = []
+    data.inversorCycles = []
 
     conj = []
     for line in data.rawInput:
         line = line.replace("-", "")
         line = line.replace(">", "")
         line = line.replace(",", "")
-        # line = line.replace(";","")
-        # line = line.replace("="," ")
-        # intFields = list(map(int,line.split()))
         fields = line.split()
+
+        # recherche de l'ancestor de 'rx' pour la partie 2
+        if fields[1] == "rx":
+            data.rxAncestor = fields[0][1:]
+
         if fields[0][0] == "%":  # modType, dests, state
             data.modules[fields[0][1:]] = [
                 FLIP, list(fields[1:]), PULSE_OFF]
@@ -75,22 +83,40 @@ def initData():
             if dest in conj:
                 data.modules[dest][CONJ_INPUT][src] = PULSE_OFF
 
-    print("modules:", data.modules)
+        # recherche des inverseurs pour la partie 2
+        if data.rxAncestor in value[MOD_DESTS]:
+            data.inversorNames.append(src)
 
+    # print("modules:", data.modules)
+
+
+# construit une edge list à partir de l'input pour le site de dessin de graphe: https://graphonline.ru/fr/
+# il doit être aussi possible d'utiliser le module python graphviz
+def edgeList():
+    for moduleName, module in data.modules.items():
+        # print(moduleName, module[MOD_TYPE], module[MOD_DESTS])
+        for dest in module[MOD_DESTS]:
+            if moduleName == "broadcaster":
+                print(f"brd>{dest}")
+            else:
+                if module[MOD_TYPE] == FLIP:
+                    print(f"{moduleName}>{dest}")
+                else:
+                    print(f"{moduleName}>{dest}")
 
 ##################
 ### PROCEDURES ###
 ##################
 
-def resolve_part1():
-    # global BROADCASTER, FLIP, CONJ
+
+def resolve(buttonPress):
     modules = data.modules
+    # print(modules)
 
     pulseCnt = [0, 0]
-    for i in range(1000):
+    for buttonPressCnt in range(buttonPress):
         stack = deque([(BROADCASTER, PULSE_OFF, "button")])
         pulseCnt[PULSE_OFF] += 1
-        # print(modules)
         # print(f"{Ansi.blue}{i+1})\nbutton -low-> broadcaster{Ansi.norm} {pulseCnt}")
 
         while len(stack) > 0:
@@ -98,16 +124,13 @@ def resolve_part1():
             moduleName, inPulse, src = stack.popleft()
 
             if moduleName not in modules:
-                print("SKIP", moduleName)
-                # pulseCnt[inPulse] -= 1
+                # print("SKIP", moduleName, inPulse, src)
                 continue
 
             module = modules[moduleName]
             modType = module[MOD_TYPE]
             modDests = module[MOD_DESTS]
             # print(moduleName, inPulse, module, pulseCnt)
-
-            # module[MOD_LAST] = inPulse
 
             if modType == BROADCASTER:
                 outPulse = inPulse
@@ -129,19 +152,24 @@ def resolve_part1():
                         outPulse = PULSE_ON
                         break
 
+                # part 2: cycle monitoring of inversors
+                if moduleName in data.inversorNames:
+                    if outPulse == 1:
+                        print("cycle", moduleName, buttonPressCnt+1)
+                        data.inversorCycles.append(buttonPressCnt+1)
+
             for dest in modDests:
                 stack.append((dest, outPulse, moduleName))
                 pulseCnt[outPulse] += 1
                 # print(f"{Ansi.cyan}{modType} {
                 # moduleName} -{PULSE_MAP[outPulse]}-> {dest}{Ansi.norm} {pulseCnt}")
 
-    print(pulseCnt)
-    return math.prod(pulseCnt)
+            if len(data.inversorCycles) == 4:
+                break
 
-
-def resolve_part2():
-
-    return None
+    print("pulseCnt", pulseCnt)
+    print("inversorCycles", data.inversorCycles)
+    return (math.prod(pulseCnt), math.lcm(*data.inversorCycles))
 
 
 ############
@@ -158,18 +186,21 @@ inputFile = "input.txt"
 data.rawInput = readInputFile(inputFile)
 
 initData()
+
+edgeList()
+
 res = None
 
 ### PART 1 ###
 startTime = time.time()
 print()
 print(Ansi.red, "### PART 1 ###", Ansi.norm)
-res = resolve_part1()
+res = resolve(1000)
 print()
 print(
-    f"-> part 1 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
+    f"-> part 1 ({time.time() - startTime:.3f}s): {Ansi.blue}{res[0]}{Ansi.norm}")
 
-exit()
+# exit()
 
 initData()
 res = None
@@ -178,7 +209,9 @@ res = None
 startTime = time.time()
 print()
 print(Ansi.red, "### PART 2 ###", Ansi.norm)
-res = resolve_part2()
+print("rxAncestor", data.rxAncestor)
+print("inversorNames", data.inversorNames)
+res = resolve(10000)
 print()
 print(
-    f"-> part 2 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
+    f"-> part 2 ({time.time() - startTime:.3f}s): {Ansi.blue}{res[1]}{Ansi.norm}")

@@ -21,11 +21,20 @@ class OFFSET:
     NOTURNINGBACK = {S: [W, N, E], N: [W, S, E], W: [N, E, S], E: [N, W, S]}
 
 
+global MATRIX2D_COLORSET
+MATRIX2D_COLORSET = {"#": Ansi.cyan}
+
 # Affiche une matrice
-def showGrid(grid):
+
+
+def showGrid(grid, splitX=None, splitY=None, maxX=None, maxY=None):
     for y in range(len(grid)):
         for x in range(len(grid[y])):
-            print(grid[y][x], end="")
+            car = grid[y][x]
+            if car in MATRIX2D_COLORSET:
+                print(f"{MATRIX2D_COLORSET[car]}{car}{Ansi.norm}", end="")
+            else:
+                print(car, end="")
         print()
 
 

@@ -28,6 +28,7 @@ data = Data()
 
 ###  /modules libraries ###
 # from matrix2d import *
+# MATRIX2D_COLORSET = {"#": Ansi.cyan}
 # from matrix3d import *
 
 
@@ -46,11 +47,12 @@ def initData():
 
     # data.grid = []
     # data.grid = loadMatrix2d(inputFile)[0]
+    # showGrid(data.grid)
 
     # data.grids = []
     # data.grids = loadMatrix2d(inputFile)
+    # showGridLst(data.grid)
 
-    # showGrid(data.grid)
 
 ##################
 ### PROCEDURES ###
@@ -58,6 +60,7 @@ def initData():
 
 
 def resolve_part1():
+    # grid = data.grid
 
     return None
 

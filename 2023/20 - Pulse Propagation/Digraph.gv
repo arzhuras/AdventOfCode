@@ -1,0 +1,170 @@
+digraph {
+	cd [shape=box]
+	bk [shape=box]
+	px [shape=box]
+	tv [shape=box]
+	xc [shape=ellipse]
+	bd [shape=box]
+	bh [shape=ellipse]
+	dx [shape=box]
+	vv [shape=box]
+	broadcaster [shape=star]
+	rb [shape=box]
+	jf [shape=ellipse]
+	jd [shape=box]
+	cx [shape=box]
+	zs [shape=box]
+	hn [shape=box]
+	xr [shape=box]
+	mf [shape=ellipse]
+	zq [shape=box]
+	cn [shape=ellipse]
+	cs [shape=box]
+	fb [shape=box]
+	mm [shape=box]
+	sq [shape=box]
+	sz [shape=box]
+	xl [shape=box]
+	vm [shape=box]
+	jp [shape=box]
+	qr [shape=box]
+	bq [shape=box]
+	sh [shape=ellipse]
+	gz [shape=box]
+	qc [shape=box]
+	hg [shape=box]
+	dt [shape=box]
+	xj [shape=box]
+	qs [shape=box]
+	fz [shape=box]
+	qg [shape=box]
+	pp [shape=box]
+	zv [shape=box]
+	rh [shape=box]
+	gh [shape=ellipse]
+	th [shape=box]
+	mz [shape=ellipse]
+	bm [shape=box]
+	lk [shape=box]
+	jx [shape=box]
+	hz [shape=ellipse]
+	tc [shape=box]
+	mr [shape=box]
+	xd [shape=box]
+	pg [shape=box]
+	kg [shape=box]
+	gs [shape=box]
+	vx [shape=box]
+	cz [shape=box]
+	jk [shape=box]
+	cd -> jx
+	cd -> gh
+	bk -> jp
+	bk -> cn
+	px -> xc
+	px -> hg
+	tv -> gh
+	tv -> xl
+	xc -> bm
+	xc -> zq
+	xc -> jf
+	xc -> hg
+	xc -> bd
+	xc -> hn
+	bd -> px
+	bh -> mf
+	dx -> cn
+	dx -> rb
+	vv -> pp
+	vv -> gh
+	broadcaster -> cx
+	broadcaster -> zq
+	broadcaster -> tv
+	broadcaster -> rh
+	rb -> cn
+	rb -> qr
+	jf -> mf
+	jd -> mm
+	cx -> xd
+	cx -> cn
+	zs -> cz
+	hn -> bm
+	xr -> bd
+	xr -> xc
+	rx [shape=star]
+	mf -> rx
+	zq -> kg
+	zq -> xc
+	cn -> sh
+	cn -> jd
+	cn -> cx
+	cn -> tc
+	cn -> xd
+	cs -> xj
+	fb -> tc
+	fb -> cn
+	mm -> cn
+	mm -> bk
+	sq -> th
+	sq -> hz
+	sz -> vx
+	xl -> gh
+	xl -> sz
+	vm -> gh
+	vm -> vv
+	jp -> cn
+	qr -> cn
+	qr -> jd
+	bq -> xc
+	bq -> zv
+	sh -> mf
+	gz -> gs
+	gz -> hz
+	qc -> qg
+	qc -> xc
+	hg -> bq
+	dt -> sq
+	dt -> hz
+	xj -> fz
+	qs -> gh
+	fz -> hz
+	fz -> zs
+	qg -> xc
+	pp -> qs
+	pp -> gh
+	zv -> xc
+	zv -> qc
+	rh -> hz
+	rh -> mr
+	gh -> tv
+	gh -> lk
+	gh -> sz
+	gh -> bh
+	gh -> vx
+	th -> hz
+	mz -> mf
+	bm -> xr
+	lk -> pg
+	jx -> lk
+	jx -> gh
+	hz -> xj
+	hz -> cs
+	hz -> zs
+	hz -> rh
+	hz -> mz
+	tc -> dx
+	mr -> hz
+	mr -> gz
+	xd -> jk
+	pg -> vm
+	pg -> gh
+	kg -> hn
+	kg -> xc
+	gs -> cs
+	gs -> hz
+	vx -> cd
+	cz -> hz
+	cz -> dt
+	jk -> cn
+	jk -> fb
+}
