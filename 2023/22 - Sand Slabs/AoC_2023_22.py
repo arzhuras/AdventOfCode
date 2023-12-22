@@ -24,6 +24,7 @@ class Data:
     maxCoord = None
     bricksIsSupporting = None
     bricksSupportedBy = None
+    disintegrable = None
 
     grid = None
 
@@ -38,6 +39,7 @@ data = Data()
 def initData():
     data.bricks = []
     data.maxCoord = [0, 0, 0]
+    data.disintegrable = []
 
     for line in data.rawInput:
         line = line.replace(",", " ")
@@ -50,20 +52,13 @@ def initData():
 
         data.bricks.append(
             [intFields[3:], intFields[0:3]])
+    data.bricks.sort(key=lambda e: (e[0][0]))  # tri sur les z
 
     data.bricksIsSupporting = [[] for _ in range(len(data.bricks))]
     data.bricksSupportedBy = [[] for _ in range(len(data.bricks))]
 
     # print("bricks:", data.bricks)
     # print("maxCoord:", data.maxCoord)
-
-    # data.grid = []
-    # data.grid = loadMatrix2d(inputFile)[0]
-    # showGrid(data.grid)
-
-    # data.grids = []
-    # data.grids = loadMatrix2d(inputFile)
-    # showGridLst(data.grid)
 
 
 ##################
@@ -113,12 +108,27 @@ def getMinZ(grid3d, brickCoord):
     return (minZ, supportBrick)
 
 
+def chainReaction(brickIdx, disintegrated, level=0):
+    tab = "  " * level
+    # print(tab, level, "chainReaction", brickIdx, "supporting",
+    # data.bricksIsSupporting[brickIdx])
+    # print(tab, level, "disintegrated", disintegrated)
+
+    for brickIdx in data.bricksIsSupporting[brickIdx]:
+        if brickIdx not in disintegrated:
+            disintegrated.append(brickIdx)
+            chainReaction(brickIdx, disintegrated, level + 1)
+
+    return
+
+
 def resolve_part1():
     grid3d = data.grid
     bricks = data.bricks
     bricksIsSupporting = data.bricksIsSupporting
     bricksSupportedBy = data.bricksSupportedBy
     maxZ, maxY, maxX = data.maxCoord
+    nonDisintegrable = data.disintegrable
 
     """ Test la grille 3D
     grid3d = [[[(z, y, x) for x in range(maxX + 1)]
@@ -131,12 +141,12 @@ def resolve_part1():
                for y in range(maxY + 1)] for z in range(maxZ + 1)]
     for brickIdx, brickCoord in enumerate(bricks):
         putBrick(grid3d, brickCoord, brickIdx)
-    showMatrix3dV(grid3d[0:5], 5)
+    # showMatrix3dV(grid3d[0:5], 5)
 
     # fall brick
     for brickIdx, brickCoord in enumerate(bricks):
         minZ1, brickSupportedBy = getMinZ(grid3d, brickCoord)
-        # print(brickIdx, minZ1, brickSupportedBy)
+        # print(brickIdx, brickCoord, minZ1, brickSupportedBy)
 
         # update grid
         putBrick(grid3d, brickCoord, ".")
@@ -150,25 +160,42 @@ def resolve_part1():
         for supportedBrickIdx in brickSupportedBy:
             bricksIsSupporting[supportedBrickIdx].append(brickIdx)
 
-    # check disintegrable bricks
-    showMatrix3dV(grid3d, 5)
-    print()
-    disintegrableBrickCnt = 0
+    # showMatrix3dV(grid3d[0:2], 5)
+
+    # distinct brick
     for brickIdx in range(len(bricks)):
         bricksIsSupporting[brickIdx] = set(bricksIsSupporting[brickIdx])
         bricksSupportedBy[brickIdx] = set(bricksSupportedBy[brickIdx])
-        disintegrable = True
-        for brickIsSupportingIdx in bricksIsSupporting[brickIdx]:
-            # print(brickSupportingIdx, bricksSupporting[brickSupportingIdx])
-            if len(bricksSupportedBy[brickIsSupportingIdx]) < 2:
-                disintegrable = False
-                break
-        print(brickIdx, f"{disintegrable:5}", "supporting",
-              f"{str(bricksIsSupporting[brickIdx]):20}", "supportedBy", bricksSupportedBy[brickIdx])
-        if disintegrable == True:
-            disintegrableBrickCnt += 1
 
-    return disintegrableBrickCnt
+    # check disintegrable bricks
+    disintegrableBrickCnt = 0
+    nonDisintegrable = []
+    for brickIdx in range(len(bricks)):
+        isDisintegrable = True
+        for brickIsSupportingIdx in bricksIsSupporting[brickIdx]:
+            # print(brickIdx, brickIsSupportingIdx,bricksIsSupporting[brickIsSupportingIdx])
+            if len(bricksSupportedBy[brickIsSupportingIdx]) < 2:
+                # print(brickIdx, "DISINTEGRABLE")
+                isDisintegrable = False
+                break
+            # print(brickIdx, f"{isDisintegrable:5}", "supporting", f"{str(
+                # bricksIsSupporting[brickIdx]):20}", "supportedBy", bricksSupportedBy[brickIdx])
+        if isDisintegrable == True:
+            disintegrableBrickCnt += 1
+        else:
+            nonDisintegrable.append(brickIdx)
+
+    # for part 2: desintegration chain reaction
+    print("nonDisintegrable", len(nonDisintegrable),
+          disintegrableBrickCnt, len(bricks))
+    disintegratedcnt = 0
+    for brickIdx in nonDisintegrable:
+        disintegrated = [brickIdx]
+        chainReaction(brickIdx, disintegrated)
+        print("->", brickIdx, len(disintegrated) - 1)
+        disintegratedcnt += len(disintegrated) - 1
+
+    return len(nonDisintegrable), disintegratedcnt
 
 
 def resolve_part2():
