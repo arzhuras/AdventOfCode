@@ -21,6 +21,7 @@ def loadMatrix3d(argFile):
     return matrix3d
 
 
+"""
 def showMatrix3dH(matrix3d):
     size = len(matrix3d)
     for y in range(size):
@@ -30,14 +31,24 @@ def showMatrix3dH(matrix3d):
             print(" ", end="")
         print()
     print()
+"""
+
+# visualise les tranches (y,x) selon z
+#
+#  y
+#  ^
+#  | /z
+#  |/
+#  +---> x
+#
 
 
-def showMatrix3dV(matrix3d):
+def showMatrix3dV(matrix3d, span=1):
     for z in range(len(matrix3d)):
         print(f"[{z}]")
         for y in range(len(matrix3d[z])):
             for x in range(len(matrix3d[z][y])):
-                print(matrix3d[z][y][x], end="")
+                print(f"{matrix3d[z][y][x]:^{span}}", end="")
             print()
         print()
 
@@ -61,5 +72,5 @@ if __name__ == "__main__":
 
     # showMatrix3dH
     print("@@ showMatrix3dH() @@")
-    showMatrix3dH(matrix3d)
+    # showMatrix3dH(matrix3d)
     print()
