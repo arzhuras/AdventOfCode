@@ -42,6 +42,12 @@ def showMatrix3dH(matrix3d):
 #  +---> x
 #
 
+""" Test la grille 3D
+grid3d = [[[(z, y, x) for x in range(maxX + 1)]
+            for y in range(maxY + 1)] for z in range(maxZ + 1)]
+showMatrix3dV(grid3d[0:2])
+"""
+
 
 def showMatrix3dV(matrix3d, span=1):
     for z in range(len(matrix3d)):

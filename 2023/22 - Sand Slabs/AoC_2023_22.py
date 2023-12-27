@@ -38,7 +38,7 @@ data = Data()
 
 def initData():
     data.bricks = []
-    data.maxCoord = [0, 0, 0]
+    data.maxCoord = [0, 0, 0]  # max de z, y, x pour initialiser la grid
     data.disintegrable = []
 
     for line in data.rawInput:
@@ -108,35 +108,16 @@ def getMinZ(grid3d, brickCoord):
     return (minZ, supportBrick)
 
 
-def chainReaction(brickIdx, disintegrated, level=0):
-    tab = "  " * level
-    # print(tab, level, "chainReaction", brickIdx, "supporting",
-    # data.bricksIsSupporting[brickIdx])
-    # print(tab, level, "disintegrated", disintegrated)
-
-    for brickIdx in data.bricksIsSupporting[brickIdx]:
-        if brickIdx not in disintegrated:
-            disintegrated.append(brickIdx)
-            chainReaction(brickIdx, disintegrated, level + 1)
-
-    return
-
-
-def resolve_part1():
+def resolve():
     grid3d = data.grid
     bricks = data.bricks
+    # briques supportées par une brique donnée
     bricksIsSupporting = data.bricksIsSupporting
+    # briques supportant une brique donnée
     bricksSupportedBy = data.bricksSupportedBy
+
+    # init grid3d bases on max coord
     maxZ, maxY, maxX = data.maxCoord
-    nonDisintegrable = data.disintegrable
-
-    """ Test la grille 3D
-    grid3d = [[[(z, y, x) for x in range(maxX + 1)]
-               for y in range(maxY + 1)] for z in range(maxZ + 1)]
-    showMatrix3dV(grid3d[0:2])
-    """
-
-    # init grid
     grid3d = [[["." for x in range(maxX + 1)]
                for y in range(maxY + 1)] for z in range(maxZ + 1)]
     for brickIdx, brickCoord in enumerate(bricks):
@@ -162,7 +143,7 @@ def resolve_part1():
 
     # showMatrix3dV(grid3d[0:2], 5)
 
-    # distinct brick
+    # supprime les doublons avec un set
     for brickIdx in range(len(bricks)):
         bricksIsSupporting[brickIdx] = set(bricksIsSupporting[brickIdx])
         bricksSupportedBy[brickIdx] = set(bricksSupportedBy[brickIdx])
@@ -178,29 +159,33 @@ def resolve_part1():
                 # print(brickIdx, "DISINTEGRABLE")
                 isDisintegrable = False
                 break
-            # print(brickIdx, f"{isDisintegrable:5}", "supporting", f"{str(
-                # bricksIsSupporting[brickIdx]):20}", "supportedBy", bricksSupportedBy[brickIdx])
+        # print(brickIdx, f"{isDisintegrable:5}", "supporting", f"{str(
+            # bricksIsSupporting[brickIdx]):20}", "supportedBy", bricksSupportedBy[brickIdx])
         if isDisintegrable == True:
             disintegrableBrickCnt += 1
         else:
             nonDisintegrable.append(brickIdx)
 
     # for part 2: desintegration chain reaction
-    print("nonDisintegrable", len(nonDisintegrable),
-          disintegrableBrickCnt, len(bricks))
     disintegratedcnt = 0
     for brickIdx in nonDisintegrable:
-        disintegrated = [brickIdx]
-        chainReaction(brickIdx, disintegrated)
-        print("->", brickIdx, len(disintegrated) - 1)
+        disintegrated = {brickIdx}
+        candidate = [brickIdx]
+        while len(candidate) > 0:
+            candidateIdx = candidate.pop(0)
+            # print("->", candidateIdx, "supporting",
+            # bricksIsSupporting[candidateIdx], "supported by", bricksSupportedBy[candidateIdx])
+            for supportedIdx in bricksIsSupporting[candidateIdx]:
+                if bricksSupportedBy[supportedIdx].issubset(disintegrated):
+                    # print(supportedIdx, bricksSupportedBy[supportedIdx],
+                    # "SUBSET", disintegrated)
+                    candidate.append(supportedIdx)
+                    disintegrated.add(supportedIdx)
+
         disintegratedcnt += len(disintegrated) - 1
+        # print(brickIdx, disintegrated, "\n")
 
     return len(nonDisintegrable), disintegratedcnt
-
-
-def resolve_part2():
-
-    return None
 
 
 ############
@@ -222,10 +207,15 @@ res = None
 startTime = time.time()
 print()
 print(Ansi.red, "### PART 1 ###", Ansi.norm)
-res = resolve_part1()
+res = resolve()
 print()
 print(
-    f"-> part 1 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
+    f"-> part 1 ({time.time() - startTime:.3f}s): {Ansi.blue}{res[0]}{Ansi.norm}")
+print()
+
+print(Ansi.red, "### PART 2 ###", Ansi.norm)
+print(
+    f"-> part 2 ({time.time() - startTime:.3f}s): {Ansi.blue}{res[1]}{Ansi.norm}")
 
 exit()
 
