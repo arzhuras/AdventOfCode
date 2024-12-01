@@ -71,15 +71,7 @@ def resolve_part1():
 
 
 def resolve_part2():
-    similarity = []
-    left = data.left
-    right = data.right
-
-    for left_val in left:
-        similarity.append(left_val * right.count(left_val))
-
-    #print(similarity)
-    return sum(similarity)
+    return sum(list(map(lambda left: left * data.right.count(left), data.left)))
 
 
 ############
