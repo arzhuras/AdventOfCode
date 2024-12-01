@@ -60,9 +60,13 @@ date = datetime.date.today()
 
 if targetDay == "":
     targetDay = str(date.day)
+targetDay = int(targetDay)
 
 if targetYear == "":
     targetYear = str(date.year)
+targetYear=int(targetYear)
+
+#print(f"{targetDay} {targetYear} {URL_DAY.format(targetYear, targetDay)}")
 
 # Get current day puzzle
 r = s.get(URL_DAY.format(targetYear, targetDay))
@@ -79,7 +83,7 @@ soup = BeautifulSoup(r.text, "html.parser")
 dayTitle = soup.find("h2").text
 dayTitle = dayTitle.replace("-", "")
 dayTitle = dayTitle.replace("Day", "")
-dayTitle = dayTitle.replace(targetDay, "")
+dayTitle = dayTitle.replace(str(targetDay), "")
 dayTitle = dayTitle.replace(":", "")
 dayTitle = dayTitle.replace("?", "")
 dayTitle = dayTitle.replace("!", "")
@@ -89,6 +93,7 @@ dayTitle = dayTitle.strip()
 
 # Create current day directory
 DAY_PATH = f"{targetYear}/{targetDay:02} - {dayTitle}"
+#print(f"### {targetDay:02} {targetDay} {DAY_PATH}")
 print(ANSI_BLUE, DAY_PATH, ANSI_NORM)
 os.makedirs(DAY_PATH, exist_ok=True)
 
