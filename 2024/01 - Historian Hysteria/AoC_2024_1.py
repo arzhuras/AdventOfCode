@@ -67,7 +67,7 @@ def initData():
 ##################
 
 
-def resolve_part1():
+def resolve_part1b():
     distance = []
     left = data.left
     right = data.right
@@ -89,6 +89,15 @@ def resolve_part1():
         distance.append(abs(smaller_right_elt - smaller_left_elt))
         left.pop(smaller_left_idx)
         right.pop(smaller_right_idx)
+    #print(distance)
+    return sum(distance)
+
+def resolve_part1():
+    distance = []
+    left = sorted(data.left)
+    right = sorted(data.right)
+    for i in range(len(left)):
+        distance.append(abs(right[i] - left[i]))
     #print(distance)
     return sum(distance)
 
