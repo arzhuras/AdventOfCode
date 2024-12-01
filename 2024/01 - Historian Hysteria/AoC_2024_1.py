@@ -83,11 +83,7 @@ def resolve_part2():
     right = data.right
 
     for left_val in left:
-        right_count = 0
-        for right_val in right:
-            if right_val == left_val:
-                right_count += 1
-        similarity.append(left_val * right_count)
+        similarity.append(left_val * right.count(left_val))
 
     #print(similarity)
     return sum(similarity)
