@@ -66,15 +66,8 @@ def initData():
 ### PROCEDURES ###
 ##################
 
-
 def resolve_part1():
-    distance = []
-    left = sorted(data.left)
-    right = sorted(data.right)
-    for i in range(len(left)):
-        distance.append(abs(right[i] - left[i]))
-    #print(distance)
-    return sum(distance)
+    return sum(list(map(lambda left,right: abs(right-left), sorted(data.left), sorted(data.right))))
 
 
 def resolve_part2():
