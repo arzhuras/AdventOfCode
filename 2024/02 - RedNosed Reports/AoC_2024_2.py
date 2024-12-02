@@ -131,7 +131,7 @@ def resolve_part2():
 inputFile = "sample.txt"
 
 # MAX_ROUND = 1000
-#inputFile = "input.txt"
+inputFile = "input.txt"
 
 data.rawInput = readInputFile(inputFile)
 
