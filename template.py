@@ -92,7 +92,7 @@ print(Ansi.red, "### PART 1 ###", Ansi.norm)
 res = resolve_part1()
 print()
 print(
-    f"-> part 1 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
+    f"-> part 1 ({time.time() - startTime:.6f}s): {Ansi.blue}{res}{Ansi.norm}")
 
 exit()
 
@@ -106,4 +106,4 @@ print(Ansi.red, "### PART 2 ###", Ansi.norm)
 res = resolve_part2()
 print()
 print(
-    f"-> part 2 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
+    f"-> part 2 ({time.time() - startTime:.6f}s): {Ansi.blue}{res}{Ansi.norm}")

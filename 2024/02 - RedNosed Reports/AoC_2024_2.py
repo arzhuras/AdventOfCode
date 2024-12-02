@@ -82,6 +82,8 @@ def checkReport(report):
 
 
 def resolve_part1():
+    return(sum(is_safe(report) for report in data.fields))
+
     safeCount = 0
 
     for reportIdx, report in enumerate(data.fields):
@@ -129,12 +131,21 @@ def resolve_part2():
 inputFile = "sample.txt"
 
 # MAX_ROUND = 1000
-inputFile = "input.txt"
+#inputFile = "input.txt"
 
 data.rawInput = readInputFile(inputFile)
 
 initData()
 res = None
+
+
+# part1 avec des sets!!!
+def is_safe(row):
+    inc = {row[i + 1] - row[i] for i in range(len(row) - 1)}
+    return inc <= {1, 2, 3} or inc <= {-1, -2, -3}
+
+print(type(is_safe(report) for report in data.fields))
+print(sum(is_safe(report) for report in data.fields))
 
 ### PART 1 ###
 startTime = time.time()
@@ -142,8 +153,7 @@ print()
 print(Ansi.red, "### PART 1 ###", Ansi.norm)
 res = resolve_part1()
 print()
-print(
-    f"-> part 1 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
+print(f"-> part 1 ({time.time() - startTime:.6f}s): {Ansi.blue}{res}{Ansi.norm}")
 
 #exit()
 
@@ -156,5 +166,4 @@ print()
 print(Ansi.red, "### PART 2 ###", Ansi.norm)
 res = resolve_part2()
 print()
-print(
-    f"-> part 2 ({time.time() - startTime:.3f}s): {Ansi.blue}{res}{Ansi.norm}")
+print(f"-> part 2 ({time.time() - startTime:.6f}s): {Ansi.blue}{res}{Ansi.norm}")
