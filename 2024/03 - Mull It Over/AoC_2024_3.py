@@ -2,7 +2,7 @@ from tools import *
 import time
 import math
 import copy
-# import re
+import re
 
 # from collections import deque
 # import operator
@@ -21,6 +21,7 @@ init_script()
 class Data:
     rawInput = None
     fields = None
+    line = None
 
     # grid = None
 
@@ -35,35 +36,7 @@ data = Data()
 
 def initData():
     data.fields = []
-
-    for line in data.rawInput:
-        # line = line.replace(".","")
-        # line = line.replace(",","")
-        # line = line.replace(";","")
-        # line = line.replace("="," ")
-        # intFields = list(map(int,line.split()))
-        data.fields.append([line.split()])
-
-    print("fields:", data.fields)
-
-    # data.grid = []
-    # data.grid = loadMatrix2d(inputFile)[0]
-    # showGrid(data.grid)
-
-    # data.grids = []
-    # data.grids = loadMatrix2d(inputFile)
-    # showGridLst(data.grid)
-
-    # REGEXP https://pynative.com/python-regex-findall-finditer/
-    # line = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))"
-    # res = re.finditer(r"mul\((?P<a>\d+),(?P<b>\d+)\)|(do\(\))|(don\'t\(\))",data.line)
-    # for match in res:
-        # print(match)
-        # print(match.group())
-        # print(match.group(1))
-        # print(match.group(2))
-        # print(match.group("a"))
-        # print(match.group("b"))
+    data.line = "".join(data.rawInput)
 
 
 ##################
@@ -72,14 +45,22 @@ def initData():
 
 
 def resolve_part1():
-    # grid = data.grid
-
-    return None
-
+    return sum(map(lambda elt: elt[0] * elt[1], [(int(match.group("a")), int(match.group("b"))) for match in re.finditer(r"mul\((?P<a>\d+),(?P<b>\d+)\)",data.line)]))
 
 def resolve_part2():
+    flagMulEnabled = True
+    mulList = []
+    res = re.finditer(r"mul\((?P<a>\d+),(?P<b>\d+)\)|(do\(\))|(don\'t\(\))",data.line)
+    for match in res:
+        if match.group() == "do()":
+            flagMulEnabled = True
+        elif match.group() == "don't()":
+            flagMulEnabled = False
+        else:
+            if flagMulEnabled == True:
+                mulList.append(int(match.group("a")) * int(match.group("b")))
 
-    return None
+    return sum(mulList)
 
 
 ############
@@ -90,7 +71,7 @@ def resolve_part2():
 inputFile = "sample.txt"
 
 # MAX_ROUND = 1000
-# inputFile = "input.txt"
+inputFile = "input.txt"
 
 data.rawInput = readInputFile(inputFile)
 
@@ -106,7 +87,7 @@ print()
 print(
     f"-> part 1 ({time.time() - startTime:.6f}s): {Ansi.blue}{res}{Ansi.norm}")
 
-exit()
+#exit()
 
 initData()
 res = None
