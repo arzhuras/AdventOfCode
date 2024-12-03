@@ -21,8 +21,8 @@ init_script()
 class Data:
     rawInput = None
     fields = None
-
-    # grid = None
+    line = None
+    grid = None
 
 
 data = Data()
@@ -35,6 +35,8 @@ data = Data()
 
 def initData():
     data.fields = []
+
+    # data.line = "".join(data.rawInput)
 
     for line in data.rawInput:
         # line = line.replace(".","")
