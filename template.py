@@ -29,7 +29,7 @@ data = Data()
 
 ###  /modules libraries ###
 # from matrix2d import *
-# MATRIX2D_COLORSET = {"#": Ansi.cyan}
+# MATRIX2D_COLORSET = {"#": Ansi.cyan, "X": Ansi.red}
 # from matrix3d import *
 
 

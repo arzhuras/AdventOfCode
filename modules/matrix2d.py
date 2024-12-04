@@ -21,26 +21,26 @@ class OFFSET:
     NOTURNINGBACK = {S: [W, N, E], N: [W, S, E], W: [N, E, S], E: [N, W, S]}
 
 
-global MATRIX2D_COLORSET
-MATRIX2D_COLORSET = {"#": Ansi.cyan, "X": Ansi.red}
+#global MATRIX2D_COLORSET
+#MATRIX2D_COLORSET = {"#": Ansi.cyan, "X": Ansi.red}
 
 # Affiche une matrice
 
 
-def showGrid(grid, splitX=None, splitY=None, maxX=None, maxY=None):
+def showGrid(grid, colorset = {"#": Ansi.cyan, "X": Ansi.red}):
     for y in range(len(grid)):
         for x in range(len(grid[y])):
             car = grid[y][x]
-            if car in MATRIX2D_COLORSET:
-                print(f"{MATRIX2D_COLORSET[car]}{car}{Ansi.norm}", end="")
+            if car in colorset:
+                print(f"{colorset[car]}{car}{Ansi.norm}", end="")
             else:
                 print(car, end="")
         print()
 
 
-def showGridLst(gridLst):
+def showGridLst(gridLst, colorset = {"#": Ansi.cyan, "X": Ansi.red}):
     for i in range(len(gridLst)):
-        showGrid(gridLst[i])
+        showGrid(gridLst[i], colorset)
         print()
 
 # Etend une grille si les côtés contiennent au moins un élement. Voir extendGridForce pour forcer quoi qu'il arrive

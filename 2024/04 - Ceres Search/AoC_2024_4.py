@@ -28,7 +28,7 @@ data = Data()
 
 ###  /modules libraries ###
 from matrix2d import *
-MATRIX2D_COLORSET = {"X": Ansi.red}
+MATRIX2D_COLORSET = {"#": Ansi.cyan, "X": Ansi.red}
 # from matrix3d import *
 
 
@@ -49,7 +49,7 @@ def resolve_part1():
     #print(grid_height, grid_width)
     extendGrid(grid)
     border_size = 1
-    #showGrid(grid)
+    #showGrid(grid, MATRIX2D_COLORSET)
 
     xmasCount = 0
     for y in range(border_size, grid_height + border_size):
@@ -70,7 +70,7 @@ def resolve_part2():
     #print(grid_height, grid_width)
     extendGrid(grid)
     border_size = 1
-    #showGrid(grid)
+    #showGrid(grid, MATRIX2D_COLORSET)
 
     xmasCount = 0
     for y in range(border_size, grid_height + border_size):
