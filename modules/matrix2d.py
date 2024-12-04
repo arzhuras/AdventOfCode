@@ -22,7 +22,7 @@ class OFFSET:
 
 
 global MATRIX2D_COLORSET
-MATRIX2D_COLORSET = {"#": Ansi.cyan}
+MATRIX2D_COLORSET = {"#": Ansi.cyan, "X": Ansi.red}
 
 # Affiche une matrice
 
@@ -43,9 +43,7 @@ def showGridLst(gridLst):
         showGrid(gridLst[i])
         print()
 
-# Etend une grille si les côtés contiennent au moins un élement
-
-
+# Etend une grille si les côtés contiennent au moins un élement. Voir extendGridForce pour forcer quoi qu'il arrive
 def extendGrid(grid, eltEmpty="."):
 
     # première ligne

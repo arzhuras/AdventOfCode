@@ -95,6 +95,7 @@ inputFile = "sample.txt"
 # inputFile = "input.txt"
 
 data.rawInput = readInputFile(inputFile)
+# data.grid = loadMatrix2d(inputFile)
 
 initData()
 res = None
