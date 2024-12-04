@@ -19,10 +19,10 @@ class OFFSET:
     CROSSEAST = (NE, SE)
     CROSSSOUTH = (SE, SW)
 
-    NORTH = [NW, N, NE]
-    EAST = [NE, E, SE]
-    WEST = [NW, W, SW]
-    SOUTH = [SW, S, SE]
+    NORTH = (NW, N, NE)
+    EAST = (NE, E, SE)
+    WEST = (NW, W, SW)
+    SOUTH = (SW, S, SE)
 
     OPPOSITE = {NW: SE, N: S, NE: SW, W: E, E: W, SW: NE, S: N, SE: NW}
     NOTURNINGBACK = {S: [W, N, E], N: [W, S, E], W: [N, E, S], E: [N, W, S]}
