@@ -1,0 +1,65 @@
+### Utilisation de modules ###
+
+Permet de déclarer le repertoire projet dans le chemin des modules
+Mettre à jour les 2 fichiers suivants (pour terminal et debug):
+
+.env
+
+WORKSPACE_FOLDER=C:\Dropbox\Python\AoC
+PYTHONPATH=${WORKSPACE_FOLDER}\modules;
+
+
+.vscode/settings.json (a créer éventuellement)
+
+{
+    "terminal.integrated.env.windows": {
+        "PYTHONPATH": "${workspaceFolder}/modules"
+    },
+    "python.envFile": "${workspaceFolder}/.env"
+}
+
+#######################
+### Black formatter ###
+#######################
+Installer l'extension "black formatter" de microsoft
+
+https://builtin.com/data-science/autopep8-vs-black
+
+-> ouvrir le setting.json global: AppData\Roaming\Code\User\settings.json
+View > Command Palette... and run Preferences: Open User Settings (JSON)):
+
+
+    "[python]": {
+        "editor.formatOnType": true,
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true
+    },
+
+
+
+##############################
+### Isort import organizer ###
+##############################
+Installer l'extension "isort" de microsoft
+
+    "[python]": {
+        "editor.formatOnType": true,
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+        },
+    },
+    "isort.args":["--profile", "black"],
+
+
+
+!!! Black impose son style : recommendation: ne pas le changer !!!
+### Black line length ###
+'Code -> Preferences -> Settings' and search for "python formatting black args".
+
+Add two separate arguments, in this order: --line-length and n, where "n" is your desired number of allowed characters per line:
+
+    "black-formatter.args": [
+        "--line-length 100"
+    ]

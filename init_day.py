@@ -1,8 +1,9 @@
-import sys
-import os
-from bs4 import BeautifulSoup
-import requests
 import datetime
+import os
+import sys
+
+import requests
+from bs4 import BeautifulSoup
 
 """ 
 - Se logguer sur https://adventofcode.com/
@@ -47,8 +48,14 @@ with open(SESSION_FILE_NAME, "r") as inputFile:
     session = inputFile.read().strip()
 
 if len(session) != 128:
-    print(ANSI_RED, "invalid session cookie in .session file (bad length <> 128) :", len(
-        session), session, ANSI_NORM, session)
+    print(
+        ANSI_RED,
+        "invalid session cookie in .session file (bad length <> 128) :",
+        len(session),
+        session,
+        ANSI_NORM,
+        session,
+    )
     exit()
 print("session token:", session)
 
@@ -64,9 +71,9 @@ targetDay = int(targetDay)
 
 if targetYear == "":
     targetYear = str(date.year)
-targetYear=int(targetYear)
+targetYear = int(targetYear)
 
-#print(f"{targetDay} {targetYear} {URL_DAY.format(targetYear, targetDay)}")
+# print(f"{targetDay} {targetYear} {URL_DAY.format(targetYear, targetDay)}")
 
 # Get current day puzzle
 r = s.get(URL_DAY.format(targetYear, targetDay))
@@ -93,7 +100,7 @@ dayTitle = dayTitle.strip()
 
 # Create current day directory
 DAY_PATH = f"{targetYear}/{targetDay:02} - {dayTitle}"
-#print(f"### {targetDay:02} {targetDay} {DAY_PATH}")
+# print(f"### {targetDay:02} {targetDay} {DAY_PATH}")
 print(ANSI_BLUE, DAY_PATH, ANSI_NORM)
 os.makedirs(DAY_PATH, exist_ok=True)
 
@@ -117,6 +124,8 @@ if os.path.exists(f"{DAY_PATH}/{destFileName}"):
     print(ANSI_RED, f"{DAY_PATH}/{destFileName} already exists", ANSI_NORM)
     exit()
 print(ANSI_BLUE, f"  {destFileName}", ANSI_NORM)
-with open(TEMPLATE_FILE_NAME, "r") as inputFile, open(f"{DAY_PATH}/{destFileName}", "x") as destFile:
+with open(TEMPLATE_FILE_NAME, "r") as inputFile, open(
+    f"{DAY_PATH}/{destFileName}", "x"
+) as destFile:
     content = inputFile.read()
     destFile.write(content)

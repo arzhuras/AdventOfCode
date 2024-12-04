@@ -11,23 +11,30 @@ class OFFSET:
     SW = (+1, -1, "SW")
     S = (+1, 0, "S")
     SE = (+1, 1, "SE")
-    AROUND = [NW, N, NE, W, E, SW, S, SE]
-    CROSS = [N, E, S, W]
+    AROUND = (NW, N, NE, W, E, SW, S, SE)
+
+    CROSS = (N, E, S, W)
+    CROSSWEST = (SW, NW)
+    CROSSNORTH = (NW, NE)
+    CROSSEAST = (NE, SE)
+    CROSSSOUTH = (SE, SW)
+
     NORTH = [NW, N, NE]
     EAST = [NE, E, SE]
     WEST = [NW, W, SW]
     SOUTH = [SW, S, SE]
+
     OPPOSITE = {NW: SE, N: S, NE: SW, W: E, E: W, SW: NE, S: N, SE: NW}
     NOTURNINGBACK = {S: [W, N, E], N: [W, S, E], W: [N, E, S], E: [N, W, S]}
 
 
-#global MATRIX2D_COLORSET
-#MATRIX2D_COLORSET = {"#": Ansi.cyan, "X": Ansi.red}
+# Exemple colorset pour showGrid
+# MATRIX2D_COLORSET = {"#": Ansi.cyan, "X": Ansi.red}
 
 # Affiche une matrice
 
 
-def showGrid(grid, colorset = {"#": Ansi.cyan, "X": Ansi.red}):
+def showGrid(grid, colorset={"#": Ansi.cyan, "X": Ansi.red}):
     for y in range(len(grid)):
         for x in range(len(grid[y])):
             car = grid[y][x]
@@ -38,10 +45,11 @@ def showGrid(grid, colorset = {"#": Ansi.cyan, "X": Ansi.red}):
         print()
 
 
-def showGridLst(gridLst, colorset = {"#": Ansi.cyan, "X": Ansi.red}):
+def showGridLst(gridLst, colorset={"#": Ansi.cyan, "X": Ansi.red}):
     for i in range(len(gridLst)):
         showGrid(gridLst[i], colorset)
         print()
+
 
 # Etend une grille si les côtés contiennent au moins un élement. Voir extendGridForce pour forcer quoi qu'il arrive
 def extendGrid(grid, eltEmpty="."):
@@ -80,6 +88,7 @@ def extendGrid(grid, eltEmpty="."):
                 grid[y2].append(eltEmpty)
             break
 
+
 # Etend une grille sur tous les cotes systematiquement
 
 
@@ -106,6 +115,7 @@ def extendGridForce(grid, eltEmpty="."):
     boundY = len(grid)
     for y in range(boundY):
         grid[y].append(eltEmpty)
+
 
 # compact une grille en éliminant les côtés vides
 
@@ -162,6 +172,7 @@ def shrinkGrid(grid, eltEmpty="."):
             for y2 in range(boundY):
                 grid[y2].pop(x)
 
+
 # Affiche une matrice de bas en haut
 
 
@@ -214,7 +225,10 @@ def isOverlap(grid, gridY, gridX, pieceGrid, empty):
             # print(
             # f"isOverlap: = piece[{pieceY},{pieceX}]={pieceGrid[pieceY][pieceX]}, grid[{gridY + pieceY}, {gridX + pieceX}]={grid[gridY + pieceY][gridX + pieceX]}"
             # )
-            if pieceGrid[pieceY][pieceX] != empty and grid[gridY + pieceY][gridX + pieceX] != empty:
+            if (
+                pieceGrid[pieceY][pieceX] != empty
+                and grid[gridY + pieceY][gridX + pieceX] != empty
+            ):
                 # print(f"  -> overlap! {gridY}, {gridX}")
                 return True
     # print(f"  -> not overlap! {gridY}, {gridX}")

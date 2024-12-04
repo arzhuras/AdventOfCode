@@ -1,7 +1,9 @@
-from tools import *
-import time
-import math
 import copy
+import math
+import time
+
+from tools import *
+
 # import re
 
 # from collections import deque
@@ -60,12 +62,12 @@ def initData():
     # line = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))"
     # res = re.finditer(r"mul\((?P<a>\d+),(?P<b>\d+)\)|(do\(\))|(don\'t\(\))",data.line)
     # for match in res:
-        # print(match)
-        # print(match.group())
-        # print(match.group(1))
-        # print(match.group(2))
-        # print(match.group("a"))
-        # print(match.group("b"))
+    # print(match)
+    # print(match.group())
+    # print(match.group(1))
+    # print(match.group(2))
+    # print(match.group("a"))
+    # print(match.group("b"))
 
 
 ##################
@@ -106,8 +108,7 @@ print()
 print(Ansi.red, "### PART 1 ###", Ansi.norm)
 res = resolve_part1()
 print()
-print(
-    f"-> part 1 ({time.time() - startTime:.6f}s): {Ansi.blue}{res}{Ansi.norm}")
+print(f"-> part 1 ({time.time() - startTime:.6f}s): {Ansi.blue}{res}{Ansi.norm}")
 
 exit()
 
@@ -120,5 +121,4 @@ print()
 print(Ansi.red, "### PART 2 ###", Ansi.norm)
 res = resolve_part2()
 print()
-print(
-    f"-> part 2 ({time.time() - startTime:.6f}s): {Ansi.blue}{res}{Ansi.norm}")
+print(f"-> part 2 ({time.time() - startTime:.6f}s): {Ansi.blue}{res}{Ansi.norm}")
