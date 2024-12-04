@@ -10,7 +10,7 @@ class OFFSET:
     E = (0, +1, "E")
     SW = (+1, -1, "SW")
     S = (+1, 0, "S")
-    SE = (+1, 1, "SE")
+    SE = (+1, +1, "SE")
     AROUND = (NW, N, NE, W, E, SW, S, SE)
 
     CROSS = (N, E, S, W)
