@@ -86,6 +86,11 @@ def resolve_part2():
     return None
 
 
+def resolve_bothpart():
+
+    return None, None
+
+
 ############
 ### MAIN ###
 ############
@@ -99,26 +104,29 @@ inputFile = "sample.txt"
 data.rawInput = readInputFile(inputFile)
 # data.grid = loadMatrix2d(inputFile)
 
-initData()
-res = None
 
 ### PART 1 ###
-startTime = time.time()
 print()
 print(Ansi.red, "### PART 1 ###", Ansi.norm)
-res = resolve_part1()
-print()
-print(f"-> part 1 ({time.time() - startTime:.6f}s): {Ansi.blue}{res}{Ansi.norm}")
-
-exit()
 
 initData()
-res = None
+startTime = time.time()
+res1 = resolve_part1()
+# res1,res2 = resolve_bothpart()
+endTime = time.time()
+
+print()
+print(f"-> part 1 ({endTime - startTime:.6f}s): {Ansi.blue}{res1}{Ansi.norm}")
+
 
 ### PART 2 ###
-startTime = time.time()
 print()
 print(Ansi.red, "### PART 2 ###", Ansi.norm)
-res = resolve_part2()
+
+initData()
+startTime = time.time()
+res2 = resolve_part2()
+endTime = time.time()
+
 print()
-print(f"-> part 2 ({time.time() - startTime:.6f}s): {Ansi.blue}{res}{Ansi.norm}")
+print(f"-> part 2 ({endTime - startTime:.6f}s): {Ansi.blue}{res2}{Ansi.norm}")
