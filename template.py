@@ -1,6 +1,7 @@
 import copy
 import math
 import time
+from collections import defaultdict
 
 from tools import *
 
@@ -37,7 +38,7 @@ data = Data()
 
 def initData():
     data.fields = []
-
+    # data.rules = defaultdict(lambda: set())
     # data.line = "".join(data.rawInput)
 
     for line in data.rawInput:

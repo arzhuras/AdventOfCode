@@ -1,6 +1,7 @@
 import copy
 import math
 import time
+from collections import defaultdict
 
 from tools import *
 
@@ -31,23 +32,17 @@ data = Data()
 
 def initData():
     data.fields = []
-    data.rules = {}
+    data.rules = defaultdict(lambda: set())
     data.updates = []
 
     for curLine, line in enumerate(data.rawInput):
         if line == "":
             break
         key, value = map(int, line.split("|"))
-        if key not in data.rules:
-            data.rules[key] = set()
         data.rules[key].add(value)
-
-    # print(data.rules)
 
     for curLine, line in enumerate(data.rawInput[curLine + 1 :]):
         data.updates.append(list(map(int, line.split(","))))
-
-    # print(data.updates)
 
 
 ##################
@@ -71,7 +66,7 @@ def resolve_bothpart():
     for updtIdx, curUpdate in enumerate(data.updates):
         page, conflictingPage = is_valid(curUpdate)
         if page == -1:
-            middle_1.append(curUpdate[int(len(curUpdate) / 2)])
+            middle_1.append(curUpdate[len(curUpdate) // 2])
             # print(updtIdx, curUpdate, "  VALID DIRECT:", middle_1)
             continue
         while page != -1:
@@ -79,7 +74,7 @@ def resolve_bothpart():
             curUpdate[curUpdate.index(page)] = conflictingPage
             curUpdate[curUpdate.index(conflictingPage)] = page
             page, conflictingPage = is_valid(curUpdate)
-        middle_2.append(curUpdate[int(len(curUpdate) / 2)])
+        middle_2.append(curUpdate[len(curUpdate) // 2])
         # print(updtIdx, curUpdate, "  VALID:", middle_2)
 
     return sum(middle_1), sum(middle_2)
