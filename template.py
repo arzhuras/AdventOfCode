@@ -25,6 +25,7 @@ class Data:
     rawInput = None
     fields = None
     line = None
+    gridLst = None
     grid = None
 
 
@@ -77,7 +78,6 @@ def initData():
 
 
 def resolve_part1():
-    # grid = data.grid
 
     return None
 
@@ -88,6 +88,7 @@ def resolve_part2():
 
 
 def resolve_bothpart():
+    # grid = data.grid[0]
 
     return None, None
 
@@ -112,8 +113,8 @@ print(Ansi.red, "### PART 1 ###", Ansi.norm)
 
 initData()
 startTime = time.time()
-res1 = resolve_part1()
-# res1,res2 = resolve_bothpart()
+# res1 = resolve_part1()
+res1, res2 = resolve_bothpart()
 endTime = time.time()
 
 print()
@@ -126,7 +127,7 @@ print(Ansi.red, "### PART 2 ###", Ansi.norm)
 
 initData()
 startTime = time.time()
-res2 = resolve_part2()
+# res2 = resolve_part2()
 endTime = time.time()
 
 print()
