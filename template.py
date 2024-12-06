@@ -1,6 +1,7 @@
 import copy
 import math
 import time
+from collections import defaultdict
 
 from tools import *
 
@@ -24,6 +25,7 @@ class Data:
     rawInput = None
     fields = None
     line = None
+    gridLst = None
     grid = None
 
 
@@ -37,7 +39,7 @@ data = Data()
 
 def initData():
     data.fields = []
-
+    # data.rules = defaultdict(lambda: set())
     # data.line = "".join(data.rawInput)
 
     for line in data.rawInput:
@@ -76,7 +78,6 @@ def initData():
 
 
 def resolve_part1():
-    # grid = data.grid
 
     return None
 
@@ -84,6 +85,12 @@ def resolve_part1():
 def resolve_part2():
 
     return None
+
+
+def resolve_bothpart():
+    # grid = data.grid[0]
+
+    return None, None
 
 
 ############
@@ -99,26 +106,29 @@ inputFile = "sample.txt"
 data.rawInput = readInputFile(inputFile)
 # data.grid = loadMatrix2d(inputFile)
 
-initData()
-res = None
 
 ### PART 1 ###
-startTime = time.time()
 print()
 print(Ansi.red, "### PART 1 ###", Ansi.norm)
-res = resolve_part1()
-print()
-print(f"-> part 1 ({time.time() - startTime:.6f}s): {Ansi.blue}{res}{Ansi.norm}")
-
-exit()
 
 initData()
-res = None
+startTime = time.time()
+# res1 = resolve_part1()
+res1, res2 = resolve_bothpart()
+endTime = time.time()
+
+print()
+print(f"-> part 1 ({endTime - startTime:.6f}s): {Ansi.blue}{res1}{Ansi.norm}")
+
 
 ### PART 2 ###
-startTime = time.time()
 print()
 print(Ansi.red, "### PART 2 ###", Ansi.norm)
-res = resolve_part2()
+
+initData()
+startTime = time.time()
+# res2 = resolve_part2()
+endTime = time.time()
+
 print()
-print(f"-> part 2 ({time.time() - startTime:.6f}s): {Ansi.blue}{res}{Ansi.norm}")
+print(f"-> part 2 ({endTime - startTime:.6f}s): {Ansi.blue}{res2}{Ansi.norm}")

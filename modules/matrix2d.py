@@ -26,6 +26,7 @@ class OFFSET:
 
     OPPOSITE = {NW: SE, N: S, NE: SW, W: E, E: W, SW: NE, S: N, SE: NW}
     NOTURNINGBACK = {S: [W, N, E], N: [W, S, E], W: [N, E, S], E: [N, W, S]}
+    ROTATE_RIGHT = {N: E, E: S, S: W, W: N}
 
 
 # Exemple colorset pour showGrid
