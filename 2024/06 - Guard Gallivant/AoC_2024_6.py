@@ -81,7 +81,8 @@ def follow_path(grid, gridBorder, startY, startX):
 
         # check infinite loop
         if direction in gridExitDirection[y][x]:  # infinite loop detected!
-            # print(f"infinite loop detected in ({y},{x})")
+            #print(f"infinite loop detected in ({y},{x})")
+            print(f"{y},{x}")
             return -1
         gridExitDirection[y][x].append(direction)
         # showGrid(grid, MATRIX2D_COLORSET)
@@ -117,7 +118,7 @@ def resolve_bothpart():
         res = follow_path(grid, data.gridBorder, data.startY, data.startX)
         if res == -1:
             blockCount += 1
-            showGrid(grid, MATRIX2D_COLORSET)
+            #showGrid(grid, MATRIX2D_COLORSET)
 
     return posCount, blockCount
 
@@ -135,6 +136,7 @@ inputFile = "sample.txt"
 
 # MAX_ROUND = 1000
 inputFile = "input.txt"
+inputFile = "Day06.txt"
 
 # data.rawInput = readInputFile(inputFile)
 data.gridLst = loadMatrix2d(inputFile)
