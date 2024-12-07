@@ -77,6 +77,12 @@ def initData():
 ##################
 
 
+def resolve_bothpart():
+    # grid = data.grid[0]
+
+    return None, None
+
+
 def resolve_part1():
 
     return None
@@ -85,12 +91,6 @@ def resolve_part1():
 def resolve_part2():
 
     return None
-
-
-def resolve_bothpart():
-    # grid = data.grid[0]
-
-    return None, None
 
 
 ############
