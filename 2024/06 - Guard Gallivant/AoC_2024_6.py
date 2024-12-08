@@ -85,13 +85,13 @@ def follow_path(grid, gridBorder, startY, startX):
             return -1
         gridExitDirection[y][x].append(direction)
 
-        while (grid[y + direction[0]][x + direction[1]]) in (
+        while (grid[y + direction.y][x + direction.x]) in (
             "#",
             "O",
         ):
             direction = OFFSET.ROTATE_RIGHT[direction]
-        x = x + direction[1]
-        y = y + direction[0]
+        x = x + direction.x
+        y = y + direction.y
     grid[y][x] = "@"
 
     return posCount  # number of pos (including start) or -1 if infinite loop

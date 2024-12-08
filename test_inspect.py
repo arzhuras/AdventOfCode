@@ -2,15 +2,19 @@ import inspect
 
 x, y, z = 1, 2, 3
 
+
 def retrieve_name(var):
     callers_local_vars = inspect.currentframe().f_back.f_locals.items()
     return [var_name for var_name, var_val in callers_local_vars if var_val is var]
 
-#print(retrieve_name(y))
+
+# print(retrieve_name(y))
+
 
 def foo(bar):
     print(retrieve_name(bar), bar)
-    return 
+    return
+
 
 zebask = "azerty"
 zebask2 = zebask
@@ -18,22 +22,23 @@ zebask3 = "azerty"
 
 toto = "sdf"
 
+
 def showVar(*vars):
     callers_local_vars = inspect.currentframe().f_back.f_locals.items()
     print(type(callers_local_vars))
     print(type(vars), vars)
-    for var_name, var_val in callers_local_vars: 
+    for var_name, var_val in callers_local_vars:
         print("->", var_name, var_val, id(var_val))
         for var in vars:
             if var_val is var:
                 print(f"@ {var_name}: {var_val}")
-    #print([var_name for var_name, var_val in callers_local_vars if var_val is var],var)
+    # print([var_name for var_name, var_val in callers_local_vars if var_val is var],var)
 
-    #for var in vars:
+    # for var in vars:
 
 
-#print(retrieve_name(zebask), zebask)
-#foo(zebask)
+# print(retrieve_name(zebask), zebask)
+# foo(zebask)
 
 showVar(zebask, zebask2, zebask3, x, y, z)
 
