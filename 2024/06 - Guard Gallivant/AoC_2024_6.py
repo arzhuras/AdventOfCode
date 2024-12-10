@@ -66,8 +66,8 @@ def follow_path(grid, gridBorder, startY, startX):
     x = startX
     y = startY
     gridExitDirection = [
-        [[] for i in range(len(grid) - gridBorder)]
-        for j in range(len(grid[0]) - gridBorder)
+        [[] for i in range(len(grid) + 2 * gridBorder)]
+        for j in range(len(grid[0]) + 2 * gridBorder)
     ]
     while (
         x >= gridBorder
@@ -84,11 +84,14 @@ def follow_path(grid, gridBorder, startY, startX):
             # print(f"infinite loop detected in ({y},{x})")
             return -1
         gridExitDirection[y][x].append(direction)
-        # showGrid(grid, MATRIX2D_COLORSET)
-        if (grid[y + direction[0]][x + direction[1]]) in ("#", "O"):  # rotate 90°
+
+        while (grid[y + direction.y][x + direction.x]) in (
+            "#",
+            "O",
+        ):
             direction = OFFSET.ROTATE_RIGHT[direction]
-        x = x + direction[1]
-        y = y + direction[0]
+        x = x + direction.x
+        y = y + direction.y
     grid[y][x] = "@"
 
     return posCount  # number of pos (including start) or -1 if infinite loop
@@ -99,15 +102,13 @@ def resolve_bothpart():
     # showGrid(grid1, MATRIX2D_COLORSET)
 
     posCount = follow_path(grid, data.gridBorder, data.startY, data.startX)
-    showGrid(grid, MATRIX2D_COLORSET)
+    # showGrid(grid, MATRIX2D_COLORSET)
 
-    # get pos
     posLst = []
     for y in range(data.gridBorder, len(grid) - data.gridBorder):
         for x in range(data.gridBorder, len(grid[y]) - data.gridBorder):
             if grid[y][x] == "X":
                 posLst.append((y, x))
-    print(len(posLst))
 
     # test all blocking pos
     blockCount = 0
@@ -117,14 +118,9 @@ def resolve_bothpart():
         res = follow_path(grid, data.gridBorder, data.startY, data.startX)
         if res == -1:
             blockCount += 1
-            showGrid(grid, MATRIX2D_COLORSET)
 
     return posCount, blockCount
 
-
-# part 2 :
-# 1920 too high
-# 1919 too high
 
 ############
 ### MAIN ###
@@ -135,6 +131,7 @@ inputFile = "sample.txt"
 
 # MAX_ROUND = 1000
 inputFile = "input.txt"
+# inputFile = "Day06.txt"
 
 # data.rawInput = readInputFile(inputFile)
 data.gridLst = loadMatrix2d(inputFile)

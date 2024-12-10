@@ -1,16 +1,20 @@
+from collections import namedtuple
+
 from tools import *
+
+offsetTuple = namedtuple("offsetTuple", ["y", "x", "label"])
 
 
 class OFFSET:
     # offset neihgbors (y,x)
-    NW = (-1, -1, "NW")
-    N = (-1, 0, "N")
-    NE = (-1, 1, "NE")
-    W = (0, -1, "W")
-    E = (0, +1, "E")
-    SW = (+1, -1, "SW")
-    S = (+1, 0, "S")
-    SE = (+1, +1, "SE")
+    NW = offsetTuple(-1, -1, "NW")
+    N = offsetTuple(-1, 0, "N")
+    NE = offsetTuple(-1, 1, "NE")
+    W = offsetTuple(0, -1, "W")
+    E = offsetTuple(0, +1, "E")
+    SW = offsetTuple(+1, -1, "SW")
+    S = offsetTuple(+1, 0, "S")
+    SE = offsetTuple(+1, +1, "SE")
     AROUND = (NW, N, NE, W, E, SW, S, SE)
 
     CROSS = (N, E, S, W)
