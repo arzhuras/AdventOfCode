@@ -1,7 +1,5 @@
 import inspect
 
-x, y, z = 1, 2, 3
-
 
 def retrieve_name(var):
     callers_local_vars = inspect.currentframe().f_back.f_locals.items()
@@ -14,13 +12,6 @@ def retrieve_name(var):
 def foo(bar):
     print(retrieve_name(bar), bar)
     return
-
-
-zebask = "azerty"
-zebask2 = zebask
-zebask3 = "azerty"
-
-toto = "sdf"
 
 
 def showVar(*vars):
@@ -39,6 +30,14 @@ def showVar(*vars):
 
 # print(retrieve_name(zebask), zebask)
 # foo(zebask)
+
+x, y, z = 1, 2, 3
+
+zebask = "azerty"
+zebask2 = zebask
+zebask3 = "azerty"
+
+toto = "sdf"
 
 showVar(zebask, zebask2, zebask3, x, y, z)
 
