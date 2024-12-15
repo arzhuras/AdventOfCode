@@ -84,6 +84,7 @@ def resolve_part1():
 
 def resolve_bothpart():
     # grid = data.grid[0]
+    # grid = [["." for i in range(width)] for j in range(height)]
 
     return None, None
 
@@ -108,7 +109,8 @@ data.rawInput = readInputFile(inputFile)
 
 
 ### PART 1 ###
-print()
+year, dayTitle = os.path.dirname(sys.argv[0]).split("/")[-2:]
+print(Ansi.green, f"--- {year} {dayTitle} ---", Ansi.norm)
 print(Ansi.red, "### PART 1 ###", Ansi.norm)
 
 initData()
@@ -117,12 +119,10 @@ startTime = time.time()
 res1, res2 = resolve_bothpart()
 endTime = time.time()
 
-print()
 print(f"-> part 1 ({endTime - startTime:.6f}s): {Ansi.blue}{res1}{Ansi.norm}")
 
 
 ### PART 2 ###
-print()
 print(Ansi.red, "### PART 2 ###", Ansi.norm)
 
 initData()
@@ -130,5 +130,4 @@ startTime = time.time()
 # res2 = resolve_part2()
 endTime = time.time()
 
-print()
 print(f"-> part 2 ({endTime - startTime:.6f}s): {Ansi.blue}{res2}{Ansi.norm}")
