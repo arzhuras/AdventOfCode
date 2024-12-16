@@ -39,18 +39,18 @@ class OFFSET:
 # Affiche une matrice
 
 
-def showGrid(grid, colorset={"#": Ansi.cyan, "X": Ansi.red}):
+def showGrid(grid, colorset={"#": Ansi.cyan, "X": Ansi.red}, span=3):
     for y in range(len(grid)):
         for x in range(len(grid[y])):
-            car = grid[y][x]
+            car = str(grid[y][x])
             if car in colorset:
-                print(f"{colorset[car]}{car}{Ansi.norm}", end="")
+                print(f"{colorset[car]}{car:>{span}}{Ansi.norm}", end="")
             else:
-                print(car, end="")
+                print(f"{car:>{span}}", end="")
         print()
 
 
-def showGridLst(gridLst, colorset={"#": Ansi.cyan, "X": Ansi.red}):
+def showGridLst(gridLst, colorset={"#": Ansi.cyan, "X": Ansi.red}, span=3):
     for i in range(len(gridLst)):
         showGrid(gridLst[i], colorset)
         print()

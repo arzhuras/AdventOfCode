@@ -83,7 +83,7 @@ def foundMinCost(machine):
         if reminderY % machine[3] != 0:
             continue
         countB = reminderX // machine[2]
-        if reminderX // machine[2] != reminderY // machine[3]:
+        if countB != reminderY // machine[3]:
             continue
         curCost = countA * 3 + countB * 1
         # print("  Found ", machine, countA, countB, curCost)

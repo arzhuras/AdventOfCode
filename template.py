@@ -83,8 +83,9 @@ def resolve_part1():
 
 
 def resolve_bothpart():
-    # grid = data.grid[0]
-    # grid = [["." for i in range(width)] for j in range(height)]
+    # grid = data.gridLst[0]
+    # grid = [["." for x in range(width)] for y in range(height)]
+    # showGrid(grid)
 
     return None, None
 
@@ -105,7 +106,7 @@ inputFile = "sample.txt"
 # inputFile = "input.txt"
 
 data.rawInput = readInputFile(inputFile)
-# data.grid = loadMatrix2d(inputFile)
+# data.gridLst = loadMatrix2d(inputFile)
 
 
 ### PART 1 ###
