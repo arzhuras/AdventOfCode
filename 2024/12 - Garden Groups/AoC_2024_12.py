@@ -81,9 +81,9 @@ def resolve_bothpart():
     gridBorder = 1
 
     zone = [[-1 for x in range(len(grid[0]))] for y in range(len(grid))]
-    showGrid(zone)
+    # showGrid(zone)
 
-    showGrid(grid)
+    # showGrid(grid)
 
     # map the zone
     zoneIdx = 0
@@ -110,7 +110,7 @@ def resolve_bothpart():
                         else:
                             region.perimeter += 1
                 zoneIdx += 1
-    showGrid(zone, MATRIX2D_COLORSET, 4)
+    # showGrid(zone, MATRIX2D_COLORSET, 4)
 
     # calculate price1: perimeter
     price1 = 0
@@ -145,6 +145,7 @@ def resolve_bothpart():
                         zone[y][x] != zoneIdx or zone[y + offset.y][x] == zoneIdx
                     ):
                         flag = False
+
         # Vertical sides
         for x in range(gridBorder, len(zone[y]) - gridBorder):
             for offset in OFFSET.W, OFFSET.E:
