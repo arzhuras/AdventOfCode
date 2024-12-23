@@ -1,4 +1,6 @@
-/.vscode
+/.vscode/*
+!/.vscode/settings.json
+!/.vscode/launch.json
 /.session
 __pycache__
 .session

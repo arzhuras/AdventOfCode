@@ -23,8 +23,8 @@ init_script()
 
 class Data:
     rawInput = None
-    fields = None
     line = None
+    lineFields = None
     gridLst = None
     grid = None
 
@@ -38,7 +38,7 @@ data = Data()
 
 
 def initData():
-    data.fields = []
+    data.lineFields = []
     # data.rules = defaultdict(lambda: set())
     # data.line = "".join(data.rawInput)
 
@@ -48,9 +48,9 @@ def initData():
         # line = line.replace(";","")
         # line = line.replace("="," ")
         # intFields = list(map(int,line.split()))
-        data.fields.append([line.split()])
+        data.lineFields.append([line.split()])
 
-    print("fields:", data.fields)
+    print("lineFields:", data.lineFields)
 
     # data.grid = []
     # data.grid = loadMatrix2d(inputFile)[0]
@@ -113,22 +113,18 @@ data.rawInput = readInputFile(inputFile)
 year, dayTitle = os.path.dirname(sys.argv[0]).split("/")[-2:]
 print(Ansi.green, f"--- {year} {dayTitle} ---", Ansi.norm)
 print(Ansi.red, "### PART 1 ###", Ansi.norm)
-
 initData()
 startTime = time.time()
 # res1 = resolve_part1()
 res1, res2 = resolve_bothpart()
 endTime = time.time()
-
 print(f"-> part 1 ({endTime - startTime:.6f}s): {Ansi.blue}{res1}{Ansi.norm}")
 
 
 ### PART 2 ###
 print(Ansi.red, "### PART 2 ###", Ansi.norm)
-
 initData()
 startTime = time.time()
 # res2 = resolve_part2()
 endTime = time.time()
-
 print(f"-> part 2 ({endTime - startTime:.6f}s): {Ansi.blue}{res2}{Ansi.norm}")

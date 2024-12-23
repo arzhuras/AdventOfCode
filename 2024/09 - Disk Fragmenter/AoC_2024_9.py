@@ -46,165 +46,120 @@ def initData():
 ##################
 
 
-def resolve_part1():
-    diskmap = data.rawInput[0]
+def doSplitMap(diskmap):
     splitmap = []
 
-    # explode
     idNumber = 0
-    # print(diskmap)
-    for blockIdx, block in enumerate(diskmap):
-        # print(blockIdx, block)
+    for blockIdx, blockLen in enumerate(diskmap):
+        # print(blockIdx, blockLen)
+
         if blockIdx % 2 == 0:  # pair
-            splitmap.append(["file", int(block), str(idNumber), int(block)])
+            splitmap.append(["file", int(blockLen), 0, idNumber, int(blockLen)])
             idNumber += 1
+            if int(blockLen) == 0:
+                print(blockIdx, "FILE ZERO BLOCK", splitmap[-1])
         else:
-            splitmap.append(["free", int(block)])
-    # print(splitmap)
+            splitmap.append(["free", int(blockLen), int(blockLen)])
+
+    # print("SPLITMAP")
+    # for eltIdx, elt in enumerate(splitmap):
+    #     print(eltIdx, elt)
+
+    return splitmap
+
+
+def doChecksum(splitmap):
+    checksum = 0
+    blockPos = 0
+    for eltId, elt in enumerate(splitmap):
+        # print(eltId, blockPos, elt)
+        if elt[1] == elt[2]:  # empty block
+            blockPos += elt[1]
+            # print("   SKIP BLOCK", eltId, elt[1], blockPos)
+            continue
+
+        for blockId in range(3, len(elt), 2):
+            for i in range(elt[blockId + 1]):
+                if elt[blockId + 1] > 0:
+                    tmpsum = blockPos * elt[blockId]
+                    checksum += tmpsum
+                    blockPos += 1
+        if elt[2] > 0:
+            blockPos += elt[2]
+            # print("   SKIP", elt[2], blockPos)
+    return checksum
+
+
+def resolve_part1():
+    ### split map ###
+    # 0:"file", 1:fileSize, 2:fileEmptySpace, 3:idNumber1, 4:idCount1
+    # 0:"free", 1:freeSize, 2:freeEmptySpace, [3:idNumber1, 4:idCount1 ... idNumberN, idCountN]
+    splitmap = doSplitMap(data.rawInput[0])
 
     # compact star 1
     fileBlockIdx = len(splitmap) - len(splitmap) % 2
     fileBlock = splitmap[fileBlockIdx]
     for freeBlockIdx in range(1, len(splitmap), 2):
         freeBlock = splitmap[freeBlockIdx]
-        # print("freeBlock", freeBlockIdx, freeBlock)
-        while freeBlock[1] > 0 and fileBlockIdx >= 0:
-            chunkLen = min(freeBlock[1], fileBlock[1])
+        while freeBlock[2] > 0 and fileBlockIdx >= 0:
+            chunkLen = min(freeBlock[2], fileBlock[1] - fileBlock[2])
             # print(f"  fileBlock {fileBlockIdx} {fileBlock} chunk {chunkLen}")
-            freeBlock.append(fileBlock[2])
+            freeBlock.append(fileBlock[3])
             freeBlock.append(chunkLen)
-            freeBlock[1] -= chunkLen
-            fileBlock[1] -= chunkLen
-            fileBlock[3] = fileBlock[1]
-            # print("  ", freeBlock)
-            # print("  ", fileBlock)
+            freeBlock[2] -= chunkLen
+            fileBlock[2] += chunkLen
+            fileBlock[4] -= chunkLen
 
-            if fileBlock[1] == 0:
+            if fileBlock[4] == 0:  # block vide
                 fileBlockIdx -= 2
                 fileBlock = splitmap[fileBlockIdx]
-        if fileBlockIdx - freeBlockIdx == 1:
+
+            if freeBlockIdx > fileBlockIdx:
+                # print("BREAK 1 >", freeBlockIdx, fileBlockIdx)
+                break
+
+        if freeBlockIdx > fileBlockIdx:
+            # print("BREAK 2 >", freeBlockIdx, fileBlockIdx)
             break
 
-    # checksum
-    checksum = 0
-    fileId = 0
-    for elt in splitmap:
-        # print(elt)
-        for blockId in range(2, len(elt), 2):
-            if elt[blockId + 1] == 0:
-                break
-            for num in range(elt[blockId + 1]):
-                tmpsum = fileId * int(elt[blockId])
-                checksum += tmpsum
-                # print("  ", elt[blockId], elt[blockId + 1], fileId, tmpsum, checksum)
-                fileId += 1
+    # for eltIdx, elt in enumerate(splitmap):
+    #     print(eltIdx, elt)
 
-    return checksum
+    return doChecksum(splitmap)
 
 
 def resolve_part2():
-
-    diskmap = data.rawInput[0]
-    splitmap = []
-
-    # explode
-    idNumber = 0
-    # print(diskmap)
-    # record splitmap -> file|free, blockSize, block
-    for blockIdx, blockLen in enumerate(diskmap):
-        # print(blockIdx, block)
-        if blockIdx % 2 == 0:  # pair
-            splitmap.append(["file", int(blockLen), str(idNumber), int(blockLen)])
-            idNumber += 1
-        else:
-            splitmap.append(["free", int(blockLen)])
-    # print(splitmap)
-
-    # compact star 2
-
-    # fileBlockSorted = sorted(s, key = lambda x: (x[1], x[2]))
-
-    for eltIdx, elt in enumerate(splitmap):
-        print(eltIdx, elt)
-
+    ### split map ###
+    # 0:"file", 1:fileSize, 2:fileEmptySpace, 3:idNumber1, 4:idCount1
+    # 0:"free", 1:freeSize, 2:freeEmptySpace, [3:idNumber1, 4:idCount1 ... idNumberN, idCountN]
+    splitmap = doSplitMap(data.rawInput[0])
+    print()
+    ### compact star 2 ###
     for fileBlockIdx in range(len(splitmap) - len(splitmap) % 2, 0, -2):
         fileBlock = splitmap[fileBlockIdx]
-        print("-> fileBlock", fileBlockIdx, fileBlock)
+        # print("-> fileBlock", fileBlockIdx, fileBlock)
 
-        # freeBlock = splitmap[freeBlockIdx]
         freeBlockIdx = 1
         freeBlock = splitmap[freeBlockIdx]
-        while freeBlock[1] < fileBlock[1]:
+        while freeBlockIdx < fileBlockIdx and freeBlock[2] < fileBlock[1]:
             freeBlockIdx += 2
             if freeBlockIdx > len(splitmap) - 1:
                 break
             freeBlock = splitmap[freeBlockIdx]
-        if freeBlockIdx > len(splitmap) - 1:
-            print("   SKIP")
-            continue
-        print("   freeBlock", freeBlockIdx, freeBlock)
 
-        freeBlock[1] -= fileBlock[1]
-        freeBlock.append(fileBlock[2])
-        freeBlock.append(fileBlock[3])
-        # fileBlock[2] = "."
-        fileBlock[1] = 0
-        # fileBlock[3] = 0
+        if freeBlockIdx < fileBlockIdx:
+            freeBlock[2] -= fileBlock[1]
+            freeBlock.append(fileBlock[3])
+            freeBlock.append(fileBlock[4])
 
-        # print("  ", freeBlock)
-        # print("  ", fileBlock)
+            fileBlock[2] = fileBlock[1]
+            fileBlock[4] = 0
 
-        # if fileBlockIdx - freeBlockIdx == 1:
-        # break
+    # for eltIdx, elt in enumerate(splitmap):
+    #     print(eltIdx, elt)
+    # print()
 
-    for eltIdx, elt in enumerate(splitmap):
-        print(eltIdx, elt)
-    print()
-
-    # checksum
-    checksum = 0
-    fileId = 0
-    for eltId, elt in enumerate(splitmap):
-        print(eltId, elt)
-        if eltId % 2 == 0:  # file record
-            if elt[1] == 0:
-                fileId += elt[3]
-                print(fileId)
-                continue
-
-            for blockId in range(2, len(elt), 2):
-                for _ in range(elt[blockId + 1]):
-                    if elt[blockId + 1] > 0:
-                        tmpsum = fileId * int(elt[blockId])
-                        checksum += tmpsum
-                        print(
-                            "  ",
-                            elt[blockId],
-                            elt[blockId + 1],
-                            fileId,
-                            tmpsum,
-                            checksum,
-                        )
-                    fileId += 1
-                    print(fileId)
-
-        if len(elt) == 2:
-            fileId += elt[1]
-            print(fileId)
-            continue
-
-        for blockId in range(2, len(elt), 2):
-            for _ in range(elt[blockId + 1]):
-                if elt[blockId] != "." and elt[blockId + 1] > 0:
-                    tmpsum = fileId * int(elt[blockId])
-                    checksum += tmpsum
-                    print(
-                        "  ", elt[blockId], elt[blockId + 1], fileId, tmpsum, checksum
-                    )
-                fileId += 1
-                print(fileId)
-
-    return checksum
+    return doChecksum(splitmap)
 
 
 ############
@@ -215,34 +170,30 @@ def resolve_part2():
 inputFile = "sample.txt"
 
 # MAX_ROUND = 1000
-# inputFile = "input.txt"
+inputFile = "input.txt"
 
 data.rawInput = readInputFile(inputFile)
 # data.grid = loadMatrix2d(inputFile)
 
 
 ### PART 1 ###
-print()
+print(sys.argv[0])
+year, dayTitle = os.path.dirname(sys.argv[0]).split("/")[-2:]
+print(Ansi.green, f"--- {year} {dayTitle} ---", Ansi.norm)
 print(Ansi.red, "### PART 1 ###", Ansi.norm)
-
 initData()
 startTime = time.time()
 res1 = resolve_part1()
 # res1, res2 = resolve_bothpart()
 endTime = time.time()
-
-print()
 print(f"-> part 1 ({endTime - startTime:.6f}s): {Ansi.blue}{res1}{Ansi.norm}")
 
+# exit()
 
 ### PART 2 ###
-print()
 print(Ansi.red, "### PART 2 ###", Ansi.norm)
-
 initData()
 startTime = time.time()
 res2 = resolve_part2()
 endTime = time.time()
-
-print()
 print(f"-> part 2 ({endTime - startTime:.6f}s): {Ansi.blue}{res2}{Ansi.norm}")
