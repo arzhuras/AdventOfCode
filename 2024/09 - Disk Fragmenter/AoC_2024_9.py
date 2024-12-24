@@ -133,7 +133,7 @@ def resolve_part2():
     # 0:"file", 1:fileSize, 2:fileEmptySpace, 3:idNumber1, 4:idCount1
     # 0:"free", 1:freeSize, 2:freeEmptySpace, [3:idNumber1, 4:idCount1 ... idNumberN, idCountN]
     splitmap = doSplitMap(data.rawInput[0])
-    print()
+
     ### compact star 2 ###
     for fileBlockIdx in range(len(splitmap) - len(splitmap) % 2, 0, -2):
         fileBlock = splitmap[fileBlockIdx]

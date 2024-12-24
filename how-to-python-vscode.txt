@@ -44,7 +44,7 @@ Installer l'extension "black formatter" de microsoft
 https://builtin.com/data-science/autopep8-vs-black
 
 -> ouvrir le setting.json global: AppData\Roaming\Code\User\settings.json
-View > Command Palette... and run Preferences: Open User Settings (JSON)):
+View > Command Palette... and run Preferences: Open User Settings (JSON):
 
 
     "[python]": {

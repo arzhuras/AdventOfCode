@@ -2,6 +2,7 @@ import copy
 import math
 import time
 from collections import defaultdict
+from functools import cache
 
 from tools import *
 
@@ -41,117 +42,71 @@ def initData():
     data.fields = []
 
     for line in data.rawInput:
-        data.fields = line.split()
+        data.fields = map(int,line.split())
 
-    print("fields:", data.fields)
+    #print("fields:", data.fields)
 
 
 ##################
 ### PROCEDURES ###
 ##################
 
-
-def update_stones(stoneLst, depth=0):
-    tab = "  " * depth
-    for stoneIdx, stone in enumerate(stoneLst):
-        # print(f"{tab}{stone}")
-        if type(stone) == str:
-            if stone == "0":
-                stoneLst[stoneIdx] = "1"
-            elif len(stone) % 2 == 0:
-                stoneLst[stoneIdx] = [
-                    stone[: len(stone) // 2],
-                    str(int(stone[len(stone) // 2 :])),
-                ]
-            else:
-                stoneLst[stoneIdx] = str(int(stoneLst[stoneIdx]) * 2024)
+@cache
+def splitStone(stoneVal:int):
+    #print("splitStone", stoneVal)
+    if stoneVal == 0:
+        return [1]
+    else:
+        tmpStr = str(stoneVal)
+        if len(tmpStr) % 2 == 0:
+            return [int(tmpStr[: len(tmpStr) // 2]), int(tmpStr[len(tmpStr) // 2 :])]
         else:
-            update_stones(stone, depth + 1)
+            return [stoneVal * 2024]
+
+@cache
+def expandStone(stoneVal : int, blink: int): # en conservant les listes intermédiaires
+    #print("  " * blink, "expandStone", stoneVal, blink)
+    stoneLst = splitStone(stoneVal)
+    if blink ==1:
+        return stoneLst
+    
+    if len(stoneLst) == 1:
+        return expandStone(stoneLst[0], blink - 1)
+    else:
+        return expandStone(stoneLst[0], blink - 1) + expandStone(stoneLst[1], blink - 1)
 
 
-def count_stones(stoneLst, depth=0):
-    stoneCount = 0
-    for stoneIdx, stone in enumerate(stoneLst):
-        # print(f"{tab}{stone}")
-        if type(stone) == str:
-            stoneCount += 1
-        else:
-            stoneCount += count_stones(stone, depth + 1)
-    return stoneCount
-
+@cache
+def expandStone2(stoneVal : int, blink: int): # sans conserver les listes intermédiaires
+    #print("  " * blink, "expandStone", stoneVal, blink)
+    stoneLst = splitStone(stoneVal)
+    if blink ==1:
+        #print("-> ", stoneVal, blink, stoneLst)
+        return len(stoneLst)
+    
+    if len(stoneLst) == 1:
+        return expandStone2(stoneLst[0], blink - 1)
+    else:
+        return expandStone2(stoneLst[0], blink - 1) + expandStone2(stoneLst[1], blink - 1)
 
 def resolve_part1():
-    stoneLst = data.fields
+    BLINK = 25
+    stoneCount = 0
 
-    for round in range(25):
-        print(round)
-        for stoneIdx in range(len(stoneLst)):
-            stone = stoneLst[stoneIdx]
-            if stone == "0":
-                stoneLst[stoneIdx] = "1"
-            elif len(stone) % 2 == 0:
-                stoneLst[stoneIdx] = stone[: len(stone) // 2]
-                stoneLst.append(str(int(stone[len(stone) // 2 :])))
-            else:
-                stoneLst[stoneIdx] = str(int(stone) * 2024)
-    # print(stoneLst)
-    stoneCount = count_stones(stoneLst)
-    return stoneCount
-
-
-def resolve_part2a():
-    stoneLst = data.fields
-
-    for round in range(25):
-        # print(f"{Ansi.blue}{round} {stoneLst}{Ansi.norm}")
-        update_stones(stoneLst)
-        # print(stoneLst)
-
-    # print(stoneLst)
-    stoneCount = count_stones(stoneLst)
+    for stoneVal in data.fields:
+        stoneCount += len(expandStone(stoneVal, BLINK))
 
     return stoneCount
-
-
-def update_stones2(stoneBase, rounds, cache, depth=0):
-    tab = "  " * depth
-
-    stoneLst = stoneBase
-
-    for round in range(rounds):
-        roundOffset = rounds - round - 1  # nombre de round jusqu'a la cible
-        for stoneIdx in range(stoneLst):
-            stone = stoneLst[stoneIdx]
-            if stone in cache:
-                if len(cache[stone]) >= roundOffset:
-                    stoneLst[stoneIdx] = cache[stone][roundOffset]
-            else:
-                if stone == "0":
-                    stoneLst[stoneIdx] = "1"
-                elif len(stone) % 2 == 0:
-                    stoneLst[stoneIdx] = stone[: len(stone) // 2]
-                    stoneLst.append(str(int(stone[len(stone) // 2 :])))
-                else:
-                    stoneLst[stoneIdx] = str(int(stoneLst[stoneIdx]) * 2024)
-
-                # print(f"{tab}{stone}")
-                if type(stone) == str:
-                    if stone in cache:
-                        stoneLst[stoneIdx] = cache[stone]
-                        continue
-                else:
-                    update_stones2(stone, depth + 1)
-    cache[stone] = []
 
 
 def resolve_part2():
-    stoneLst = data.fields
-    cache = defaultdict(lambda: list())
+    BLINK = 75
+    stoneCount = 0
 
-    for stoneIdx, stone in enumerate(stoneLst):
-        stoneLst[stoneIdx] = update_stones2(stone, 6, cache)
+    for stoneVal in data.fields:
+        stoneCount += expandStone2(stoneVal, BLINK)
 
-    return sum(stoneLst)
+    return stoneCount
 
 
 ############
@@ -161,37 +116,30 @@ def resolve_part2():
 # MAX_ROUND = 10
 inputFile = "sample.txt"
 inputFile = "sample2.txt"
-inputFile = "sample3.txt"
+#inputFile = "sample3.txt"
 
 # MAX_ROUND = 1000
-# inputFile = "input.txt"
+inputFile = "input.txt"
 
 data.rawInput = readInputFile(inputFile)
 # data.grid = loadMatrix2d(inputFile)
 
 
 ### PART 1 ###
-print()
+year, dayTitle = os.path.dirname(sys.argv[0]).split("/")[-2:]
+print(Ansi.green, f"--- {year} {dayTitle} ---", Ansi.norm)
 print(Ansi.red, "### PART 1 ###", Ansi.norm)
-
 initData()
 startTime = time.time()
 res1 = resolve_part1()
 # res1, res2 = resolve_bothpart()
 endTime = time.time()
-
-print()
 print(f"-> part 1 ({endTime - startTime:.6f}s): {Ansi.blue}{res1}{Ansi.norm}")
-exit()
 
 ### PART 2 ###
-print()
 print(Ansi.red, "### PART 2 ###", Ansi.norm)
-
 initData()
 startTime = time.time()
 res2 = resolve_part2()
 endTime = time.time()
-
-print()
 print(f"-> part 2 ({endTime - startTime:.6f}s): {Ansi.blue}{res2}{Ansi.norm}")

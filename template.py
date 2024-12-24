@@ -8,9 +8,13 @@ from tools import *
 # import re
 
 # from collections import deque
+
 # import operator
 # opFunc = {"+": operator.add, "-": operator.sub, "*": operator.mul, "/": operator.truediv}
+
 # from functools import reduce
+# from functools import cache
+
 # import itertools
 
 
