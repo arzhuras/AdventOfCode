@@ -64,37 +64,27 @@ def splitStone(stoneVal:int):
             return [stoneVal * 2024]
 
 @cache
-def expandStone(stoneVal : int, blink: int): # en conservant les listes intermédiaires
+def expandStone(stoneVal : int, blink: int, optimized = True): # en conservant les listes intermédiaires
     #print("  " * blink, "expandStone", stoneVal, blink)
     stoneLst = splitStone(stoneVal)
     if blink ==1:
-        return stoneLst
+        if optimized == True:
+            return len(stoneLst)
+        else:
+            return stoneLst
     
     if len(stoneLst) == 1:
-        return expandStone(stoneLst[0], blink - 1)
+        return expandStone(stoneLst[0], blink - 1, optimized)
     else:
-        return expandStone(stoneLst[0], blink - 1) + expandStone(stoneLst[1], blink - 1)
+        return expandStone(stoneLst[0], blink - 1, optimized) + expandStone(stoneLst[1], blink - 1, optimized)
 
-
-@cache
-def expandStone2(stoneVal : int, blink: int): # sans conserver les listes intermédiaires
-    #print("  " * blink, "expandStone", stoneVal, blink)
-    stoneLst = splitStone(stoneVal)
-    if blink ==1:
-        #print("-> ", stoneVal, blink, stoneLst)
-        return len(stoneLst)
-    
-    if len(stoneLst) == 1:
-        return expandStone2(stoneLst[0], blink - 1)
-    else:
-        return expandStone2(stoneLst[0], blink - 1) + expandStone2(stoneLst[1], blink - 1)
 
 def resolve_part1():
     BLINK = 25
     stoneCount = 0
 
     for stoneVal in data.fields:
-        stoneCount += len(expandStone(stoneVal, BLINK))
+        stoneCount += len(expandStone(stoneVal, BLINK, False))
 
     return stoneCount
 
@@ -104,7 +94,7 @@ def resolve_part2():
     stoneCount = 0
 
     for stoneVal in data.fields:
-        stoneCount += expandStone2(stoneVal, BLINK)
+        stoneCount += expandStone(stoneVal, BLINK)
 
     return stoneCount
 
