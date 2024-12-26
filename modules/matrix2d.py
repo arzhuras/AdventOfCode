@@ -32,6 +32,8 @@ class OFFSET:
     NOTURNINGBACK = {S: [W, N, E], N: [W, S, E], W: [N, E, S], E: [N, W, S]}
     ROTATE_RIGHT = {N: E, E: S, S: W, W: N}
 
+    MOVE = {"^": N, ">": E, "v": S, "<": W}
+
 
 # Exemple colorset pour showGrid
 # MATRIX2D_COLORSET = {"#": Ansi.cyan, "X": Ansi.red}
@@ -39,8 +41,15 @@ class OFFSET:
 # Affiche une matrice
 
 
-def showGrid(grid, colorset={"#": Ansi.cyan, "X": Ansi.red}, span=3):
+def showGrid(grid, colorset={"#": Ansi.cyan, "X": Ansi.red}, span=3, coord=True):
+    if coord == True:
+        print(f"{' ':>{span}}", end="")
+        for x in range(len(grid[0])):
+            print(f"{Ansi.blue}{x:>{span}}{Ansi.norm}", end="")
+        print()
     for y in range(len(grid)):
+        if coord == True:
+            print(f"{Ansi.blue}{y:>{span}}{Ansi.norm}", end="")
         for x in range(len(grid[y])):
             car = str(grid[y][x])
             if car in colorset:
@@ -191,19 +200,29 @@ def showStack(stack):
 # Charge une ou plusieurs matrices 2D depuis un fichier
 def loadMatrix2d(argFile):
     rawInput = readInputFile(argFile)
-    matrice2d = []
-    tmpLine = []
+    gridLst = []
+    grid = []
     for line in rawInput:
         if line == "":
-            matrice2d.append(tmpLine)
-            tmpLine = []
+            gridLst.append(grid)
+            grid = []
             continue
-        tmpLine.append([car for car in line])
+        grid.append([car for car in line])
 
-    matrice2d.append(tmpLine)
-    tmpLine = []
+    gridLst.append(grid)
+    grid = []
 
-    return matrice2d
+    return gridLst
+
+
+def loadGrid(rawInput):
+    grid = []
+    for line in rawInput:
+        if line == "":
+            break
+        grid.append([car for car in line])
+
+    return grid
 
 
 def flipH(grid):
