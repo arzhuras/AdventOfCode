@@ -59,9 +59,9 @@ def showGrid(grid, colorset={"#": Ansi.cyan, "X": Ansi.red}, span=3, coord=True)
         print()
 
 
-def showGridLst(gridLst, colorset={"#": Ansi.cyan, "X": Ansi.red}, span=3):
+def showGridLst(gridLst, colorset={"#": Ansi.cyan, "X": Ansi.red}, span=3, coord=True):
     for i in range(len(gridLst)):
-        showGrid(gridLst[i], colorset)
+        showGrid(gridLst[i], colorset, span, coord)
         print()
 
 

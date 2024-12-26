@@ -96,7 +96,7 @@ def resolve_part1():
     grid = data.grid
     posX = data.startPosX
     posY = data.startPosY
-    showGrid(grid, MATRIX2D_COLORSET, 3)
+    # showGrid(grid, MATRIX2D_COLORSET, 3)
 
     for move in data.moves:
         # print("move:", move)
