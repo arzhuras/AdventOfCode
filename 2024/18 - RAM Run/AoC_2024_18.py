@@ -36,9 +36,11 @@ class Data:
 data = Data()
 
 ###  /modules libraries ###
-# from matrix2d import *
-# MATRIX2D_COLORSET = {"#": Ansi.cyan, "X": Ansi.red}
+from matrix2d import *
+
+MATRIX2D_COLORSET = {"#": Ansi.cyan, "X": Ansi.red, "O": Ansi.yellow}
 # from matrix3d import *
+from graph import *
 
 
 def initData():
@@ -52,9 +54,9 @@ def initData():
         # line = line.replace(";","")
         # line = line.replace("="," ")
         # intFields = list(map(int,line.split()))
-        data.lineFields.append([line.split()])
+        data.lineFields.append(tuple(map(int, line.split(","))))
 
-    print("lineFields:", data.lineFields)
+    # print("lineFields:", data.lineFields)
 
     # data.grid = []
     # data.grid = loadMatrix2d(inputFile)[0]
@@ -82,21 +84,51 @@ def initData():
 
 
 def resolve_part1():
+    WIDTH = 7
+    HEIGHT = 7
+    maxFallingBytes = 12
 
-    return None
+    WIDTH = 71
+    HEIGHT = 71
+    maxFallingBytes = 1024
 
-
-def resolve_bothpart():
+    grid = [["." for x in range(WIDTH)] for y in range(HEIGHT)]
     # grid = data.gridLst[0]
     # grid = [["." for x in range(width)] for y in range(height)]
-    # showGrid(grid)
 
-    return None, None
+    for x, y in data.lineFields[:maxFallingBytes]:
+        grid[y][x] = "#"
+    extendGridForce(grid, eltEmpty="#")
+    showGrid(grid)
+
+    graph = buildGraphFromGrid(grid)
+    # showGraph(graph)
+
+    shortestDistanceWithPath = dijkstraAlgoWithPath(graph, (1, 1))
+    # print(shortestDistanceWithPath[(WIDTH,HEIGHT)])
+    for y, x in shortestDistanceWithPath[(WIDTH, HEIGHT)][1]:
+        grid[y][x] = "O"
+    showGrid(grid, colorset=MATRIX2D_COLORSET)
+
+    return shortestDistanceWithPath[(WIDTH, HEIGHT)][0]
 
 
 def resolve_part2():
+    grid = [["." for x in range(WIDTH)] for y in range(HEIGHT)]
+    for x, y in data.lineFields:
+        grid[y][x] = "#"
+        graph = buildGraphFromGrid(grid)
+        # showGraph(graph)
 
-    return None
+        shortestDistance = dijkstraAlgo(graph, (0, 0))
+        if (WIDTH - 1, HEIGHT - 1) not in shortestDistance:
+            # showGrid(grid, colorset=MATRIX2D_COLORSET)
+            print(f"({x},{y}) : {Ansi.red}IMPOSSIBLE{Ansi.norm}")
+            return (x, y)
+        # print(shortestDistance[(WIDTH - 1, HEIGHT - 1)])
+        print(f"({x},{y}) : {shortestDistance[(WIDTH-1, HEIGHT-1)]}")
+
+    return shortestDistanceWithPath[(WIDTH - 1, HEIGHT - 1)][0]
 
 
 ############
@@ -104,10 +136,14 @@ def resolve_part2():
 ############
 
 # MAX_ROUND = 10
+WIDTH = 7
+HEIGHT = 7
 inputFile = "sample.txt"
 
 # MAX_ROUND = 1000
-# inputFile = "input.txt"
+WIDTH = 71
+HEIGHT = 71
+inputFile = "input.txt"
 
 data.rawInput = readInputFile(inputFile)
 # data.gridLst = loadMatrix2d(inputFile)
@@ -119,8 +155,8 @@ print(Ansi.green, f"--- {year} {dayTitle} ---", Ansi.norm)
 print(Ansi.red, "### PART 1 ###", Ansi.norm)
 initData()
 startTime = time.time()
-# res1 = resolve_part1()
-res1, res2 = resolve_bothpart()
+res1 = resolve_part1()
+# res1, res2 = resolve_bothpart()
 endTime = time.time()
 print(f"-> part 1 ({endTime - startTime:.6f}s): {Ansi.blue}{res1}{Ansi.norm}")
 
@@ -129,6 +165,6 @@ print(f"-> part 1 ({endTime - startTime:.6f}s): {Ansi.blue}{res1}{Ansi.norm}")
 print(Ansi.red, "### PART 2 ###", Ansi.norm)
 initData()
 startTime = time.time()
-# res2 = resolve_part2()
+res2 = resolve_part2()
 endTime = time.time()
 print(f"-> part 2 ({endTime - startTime:.6f}s): {Ansi.blue}{res2}{Ansi.norm}")

@@ -126,20 +126,7 @@ def dijkstraAlgoWithPath(graph: dict, startNode: str) -> list:
                renvoi pour chaque noeud la distance minimale + le chemin depuis la source
     """
     queue = deque([startNode])  # inDir = W par défaut
-    # distance = {startNode: (0, [startNode], OFFSET.W, [(0, OFFSET.W.label)], [])}
-    distance = {
-        startNode: [  # node
-            0,  # [0] best distance from start
-            (-1, -1),  # [1] best incoming node
-            {  # [2] dict of incoming nodes
-                (-1, -1): (  # node key
-                    0,  # [2][key][0] distance from start
-                    OFFSET.W.label,  # [2][key][1] incoming direction
-                    [[(-1, -1), OFFSET.W.label, 0]],
-                )  # [2][key][2] n-2 node 1 ... n-2 node n
-            },
-        ]
-    }
+    distance = {startNode: (0, [startNode], OFFSET.W, [(0, OFFSET.W.label)], [])}
     while queue:
         curNode = queue.popleft()
         inDir = distance[curNode][2]

@@ -2,20 +2,30 @@ from collections import namedtuple
 
 from tools import *
 
-offsetTuple = namedtuple("offsetTuple", ["y", "x", "label"])
+offsetTuple = namedtuple("offset", ["y", "x", "label", "move"])
 
 
 class OFFSET:
     # offset neihgbors (y,x)
-    NW = offsetTuple(-1, -1, "NW")
-    N = offsetTuple(-1, 0, "N")
-    NE = offsetTuple(-1, 1, "NE")
-    W = offsetTuple(0, -1, "W")
-    E = offsetTuple(0, +1, "E")
-    SW = offsetTuple(+1, -1, "SW")
-    S = offsetTuple(+1, 0, "S")
-    SE = offsetTuple(+1, +1, "SE")
+    NW = offsetTuple(-1, -1, "NW", "↖")
+    N = offsetTuple(-1, 0, "N", "^")
+    NE = offsetTuple(-1, 1, "NE", "↗")
+    W = offsetTuple(0, -1, "W", "<")
+    E = offsetTuple(0, +1, "E", ">")
+    SW = offsetTuple(+1, -1, "SW", "↙")
+    S = offsetTuple(+1, 0, "S", "v")
+    SE = offsetTuple(+1, +1, "SE", "↘")
     AROUND = (NW, N, NE, W, E, SW, S, SE)
+    MAP_OFFSET = {
+        (-1, -1): NW,
+        (-1, 0): N,
+        (-1, 1): NE,
+        (0, -1): W,
+        (0, 1): E,
+        (1, -1): SW,
+        (1, 0): S,
+        (1, 1): SE,
+    }
 
     CROSS = (N, E, S, W)
     CROSSWEST = (SW, NW)
@@ -31,6 +41,7 @@ class OFFSET:
     OPPOSITE = {NW: SE, N: S, NE: SW, W: E, E: W, SW: NE, S: N, SE: NW}
     NOTURNINGBACK = {S: [W, N, E], N: [W, S, E], W: [N, E, S], E: [N, W, S]}
     ROTATE_RIGHT = {N: E, E: S, S: W, W: N}
+    ROTATE_LEFT = {N: W, W: S, S: E, E: N}
 
     MOVE = {"^": N, ">": E, "v": S, "<": W}
 

@@ -39,6 +39,7 @@ data = Data()
 # from matrix2d import *
 # MATRIX2D_COLORSET = {"#": Ansi.cyan, "X": Ansi.red}
 # from matrix3d import *
+# from graph import *
 
 
 def initData():
