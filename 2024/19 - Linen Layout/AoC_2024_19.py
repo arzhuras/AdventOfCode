@@ -31,6 +31,8 @@ class Data:
     lineFields = None
     gridLst = None
     grid = None
+    patterns = None
+    design = None
 
 
 data = Data()
@@ -42,38 +44,14 @@ data = Data()
 
 
 def initData():
-    data.lineFields = []
-    # data.rules = defaultdict(lambda: set())
-    # data.line = "".join(data.rawInput)
 
-    for line in data.rawInput:
-        # line = line.replace(".","")
-        # line = line.replace(",","")
-        # line = line.replace(";","")
-        # line = line.replace("="," ")
-        # intFields = list(map(int,line.split()))
-        data.lineFields.append([line.split()])
+    data.patterns = data.rawInput[0].replace(" ", "").split(",")
+    data.design = []
+    for line in data.rawInput[2:]:
+        data.design.append(line)
 
-    print("lineFields:", data.lineFields)
-
-    # data.grid = []
-    # data.grid = loadMatrix2d(inputFile)[0]
-    # showGrid(data.grid)
-
-    # data.grids = []
-    # data.grids = loadMatrix2d(inputFile)
-    # showGridLst(data.grid)
-
-    # REGEXP https://pynative.com/python-regex-findall-finditer/
-    # line = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))"
-    # res = re.finditer(r"mul\((?P<a>\d+),(?P<b>\d+)\)|(do\(\))|(don\'t\(\))",data.line)
-    # for match in res:
-    # print(match)
-    # print(match.group())
-    # print(match.group(1))
-    # print(match.group(2))
-    # print(match.group("a"))
-    # print(match.group("b"))
+    print("patterns:", data.patterns)
+    print("design:", data.design)
 
 
 ##################
@@ -87,11 +65,29 @@ def resolve_part1():
 
 
 def resolve_bothpart():
-    # grid = data.gridLst[0]
-    # grid = [["." for x in range(width)] for y in range(height)]
-    # showGrid(grid)
 
-    return None, None
+    possibleDesign = 0
+    for design in data.design:
+        print(f"{Ansi.blue}{design}{Ansi.norm}")
+        curPos = 0
+        while curPos < len(design):
+            match = False
+            for elt in data.patterns:
+                # print(design[curPos : curPos + len(elt)], elt)
+                if design[curPos : curPos + len(elt)] == elt:
+                    match = True
+                    print("  ", elt)
+                    break
+            if match == True:
+                curPos += len(elt)
+            else:
+                print(f"{Ansi.red}  IMPOSSIBLE{Ansi.norm}")
+                break
+        if curPos >= len(design):
+            possibleDesign += 1
+            print(f"{Ansi.green}  MATCH{Ansi.norm}")
+
+    return possibleDesign, None
 
 
 def resolve_part2():
