@@ -33,7 +33,7 @@ class Data:
     grid = None
     patterns = None
     design = None
-    patternsCombination = None
+    combination = None
 
 
 data = Data()
@@ -51,7 +51,11 @@ def initData():
     for line in data.rawInput[2:]:
         data.design.append(line)
 
-    # print("patterns:", data.patterns)
+    # tri par longueur et alpha
+    data.patterns.sort()
+    data.patterns.sort(key=lambda item: len(item), reverse=True)
+
+    # print("patterns sorted:", data.patterns)
     # print("design:", data.design)
 
 
@@ -74,8 +78,8 @@ def checkMatchWithArrangement(design, arrangement=[], curPos=0, depth=0):
             # print(f"{tab}{Ansi.yellow}{elt}  MATCH{Ansi.norm}")
             if curPos + len(elt) >= len(design):
                 # print(f"{tab}ARR: {arrangement + [elt]}")
-                return res + [arrangement + [elt]]
-            tmpRes = checkMatch(
+                res = res + [arrangement + [elt]]
+            tmpRes = checkMatchWithArrangement(
                 design, arrangement + [elt], curPos + len(elt), depth + 1
             )
             if len(tmpRes) > 0:
@@ -92,7 +96,7 @@ def checkMatch(design):
     for elt in data.patterns:
         if design[: len(elt)] == elt:
             if len(design) == len(elt):
-                return res + 1
+                res = res + 1
             tmpRes = checkMatch(design[len(elt) :])
             if tmpRes > 0:
                 res = res + tmpRes
@@ -117,32 +121,33 @@ def resolve_bothpart():
     return possibleDesign1, possibleDesign2
 
 
-def checkMatch2(design):
-    res = 0
-    for elt in data.patterns:
-        if design[: len(elt)] == elt:
-            if len(design) == len(elt):
-                return res + 1
-            tmpRes = checkMatch(design[len(elt) :])
-            if tmpRes > 0:
-                res = res + tmpRes
-    return res
-
-
 def resolve_bothpart2():
     # compute sub combination for the different patterns
+    combination = {}
+    for pattern in data.patterns:
+        combination[pattern] = checkMatch(pattern)
+    print(combination)
 
     possibleDesign1 = 0
     possibleDesign2 = 0
     for design in data.design:
         print(f"{Ansi.blue}{design:10}{Ansi.norm}", end="")
-        res = checkMatch(design)
-        if res > 0:
+        arrangement = []
+        res = checkMatchWithArrangement(design)
+        while len(design) > 0:
+            matchFlag = False
+            for pattern in data.patterns:
+                if design[: len(pattern)] == pattern:
+                    design = design[len(pattern) :]
+                    arrangement.append(combination[pattern])
+                    matchFlag = True
+                    break
+        if matchFlag == True:
             print(f"{Ansi.green} FULL MATCH{Ansi.norm} ", end="")
             possibleDesign1 += 1
         else:
             print(f"{Ansi.red} IMPOSSIBLE{Ansi.norm} ", end="")
-        possibleDesign2 += res
+        print(arrangement, end="")
         print(res)
 
     return possibleDesign1, possibleDesign2
