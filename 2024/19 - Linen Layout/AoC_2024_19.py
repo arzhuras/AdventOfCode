@@ -33,6 +33,7 @@ class Data:
     grid = None
     patterns = None
     design = None
+    patternsCombination = None
 
 
 data = Data()
@@ -64,7 +65,7 @@ def resolve_part1():
     return None
 
 
-def checkMatch(design, arrangement=[], curPos=0, depth=0):
+def checkMatchWithArrangement(design, arrangement=[], curPos=0, depth=0):
     tab = "  " * depth
     res = []
     for elt in data.patterns:
@@ -86,6 +87,18 @@ def checkMatch(design, arrangement=[], curPos=0, depth=0):
     return res
 
 
+def checkMatch(design):
+    res = 0
+    for elt in data.patterns:
+        if design[: len(elt)] == elt:
+            if len(design) == len(elt):
+                return res + 1
+            tmpRes = checkMatch(design[len(elt) :])
+            if tmpRes > 0:
+                res = res + tmpRes
+    return res
+
+
 def resolve_bothpart():
 
     possibleDesign1 = 0
@@ -93,12 +106,43 @@ def resolve_bothpart():
     for design in data.design:
         print(f"{Ansi.blue}{design:10}{Ansi.norm}", end="")
         res = checkMatch(design)
-        if len(res) > 0:
+        if res > 0:
             print(f"{Ansi.green} FULL MATCH{Ansi.norm} ", end="")
             possibleDesign1 += 1
         else:
             print(f"{Ansi.red} IMPOSSIBLE{Ansi.norm} ", end="")
-        possibleDesign2 += len(res)
+        possibleDesign2 += res
+        print(res)
+
+    return possibleDesign1, possibleDesign2
+
+
+def checkMatch2(design):
+    res = 0
+    for elt in data.patterns:
+        if design[: len(elt)] == elt:
+            if len(design) == len(elt):
+                return res + 1
+            tmpRes = checkMatch(design[len(elt) :])
+            if tmpRes > 0:
+                res = res + tmpRes
+    return res
+
+
+def resolve_bothpart2():
+    # compute sub combination for the different patterns
+
+    possibleDesign1 = 0
+    possibleDesign2 = 0
+    for design in data.design:
+        print(f"{Ansi.blue}{design:10}{Ansi.norm}", end="")
+        res = checkMatch(design)
+        if res > 0:
+            print(f"{Ansi.green} FULL MATCH{Ansi.norm} ", end="")
+            possibleDesign1 += 1
+        else:
+            print(f"{Ansi.red} IMPOSSIBLE{Ansi.norm} ", end="")
+        possibleDesign2 += res
         print(res)
 
     return possibleDesign1, possibleDesign2
@@ -131,7 +175,7 @@ print(Ansi.red, "### PART 1 ###", Ansi.norm)
 initData()
 startTime = time.time()
 # res1 = resolve_part1()
-res1, res2 = resolve_bothpart()
+res1, res2 = resolve_bothpart2()
 endTime = time.time()
 print(f"-> part 1 ({endTime - startTime:.6f}s): {Ansi.blue}{res1}{Ansi.norm}")
 
