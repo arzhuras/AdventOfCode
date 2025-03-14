@@ -50,8 +50,8 @@ def initData():
     for line in data.rawInput[2:]:
         data.design.append(line)
 
-    print("patterns:", data.patterns)
-    print("design:", data.design)
+    # print("patterns:", data.patterns)
+    # print("design:", data.design)
 
 
 ##################
@@ -64,30 +64,44 @@ def resolve_part1():
     return None
 
 
+def checkMatch(design, arrangement=[], curPos=0, depth=0):
+    tab = "  " * depth
+    res = []
+    for elt in data.patterns:
+        # print(design[curPos : curPos + len(elt)], elt)
+        if design[curPos : curPos + len(elt)] == elt:
+            # print(f"{tab}{Ansi.yellow}{elt}  MATCH{Ansi.norm}")
+            if curPos + len(elt) >= len(design):
+                # print(f"{tab}ARR: {arrangement + [elt]}")
+                return res + [arrangement + [elt]]
+            tmpRes = checkMatch(
+                design, arrangement + [elt], curPos + len(elt), depth + 1
+            )
+            if len(tmpRes) > 0:
+                res = res + tmpRes
+                # print(f"{tab}RES: {tmpRes}")
+        # print(f"{tab}{Ansi.grey}{elt}  NO MATCH: {elt} <-> {design[curPos : curPos + len(elt)]}{Ansi.norm}")
+    # print(f"{tab}{Ansi.red}IMPOSSIBLE{Ansi.norm}")
+    # print(f"{tab}{Ansi.yellow}RES2: {tmpRes}{Ansi.norm}")
+    return res
+
+
 def resolve_bothpart():
 
-    possibleDesign = 0
+    possibleDesign1 = 0
+    possibleDesign2 = 0
     for design in data.design:
-        print(f"{Ansi.blue}{design}{Ansi.norm}")
-        curPos = 0
-        while curPos < len(design):
-            match = False
-            for elt in data.patterns:
-                # print(design[curPos : curPos + len(elt)], elt)
-                if design[curPos : curPos + len(elt)] == elt:
-                    match = True
-                    print("  ", elt)
-                    break
-            if match == True:
-                curPos += len(elt)
-            else:
-                print(f"{Ansi.red}  IMPOSSIBLE{Ansi.norm}")
-                break
-        if curPos >= len(design):
-            possibleDesign += 1
-            print(f"{Ansi.green}  MATCH{Ansi.norm}")
+        print(f"{Ansi.blue}{design:10}{Ansi.norm}", end="")
+        res = checkMatch(design)
+        if len(res) > 0:
+            print(f"{Ansi.green} FULL MATCH{Ansi.norm} ", end="")
+            possibleDesign1 += 1
+        else:
+            print(f"{Ansi.red} IMPOSSIBLE{Ansi.norm} ", end="")
+        possibleDesign2 += len(res)
+        print(res)
 
-    return possibleDesign, None
+    return possibleDesign1, possibleDesign2
 
 
 def resolve_part2():
@@ -101,6 +115,7 @@ def resolve_part2():
 
 # MAX_ROUND = 10
 inputFile = "sample.txt"
+# inputFile = "sample2.txt"
 
 # MAX_ROUND = 1000
 # inputFile = "input.txt"
