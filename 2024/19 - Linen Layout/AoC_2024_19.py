@@ -33,7 +33,7 @@ class Data:
     grid = None
     patterns = None
     design = None
-    combination = None
+    patternsExtended = None
 
 
 data = Data()
@@ -54,6 +54,25 @@ def initData():
     # tri par longueur et alpha
     data.patterns.sort()
     data.patterns.sort(key=lambda item: len(item), reverse=True)
+    print("patterns:", data.patterns)
+    tmpSet = set()
+    for pattern in data.patterns:
+        if len(pattern) == 1:
+            break
+        suff = pattern[len(pattern) - 1]
+        for pattern2 in data.patterns:
+            if len(pattern2) == 1:
+                break
+            if pattern2 == pattern:
+                continue
+            pref = pattern2[0]
+            if pref == suff:
+                # print(pattern, pattern2)
+                tmpSet.add(pattern + pattern2[1:])
+    data.patternsExtended = data.patterns.copy() + list(tmpSet)
+    data.patternsExtended.sort()
+    data.patternsExtended.sort(key=lambda item: len(item), reverse=True)
+    # print("patternsExtended:", data.patternsExtended)
 
     # print("patterns sorted:", data.patterns)
     # print("design:", data.design)
@@ -121,34 +140,68 @@ def resolve_bothpart():
     return possibleDesign1, possibleDesign2
 
 
+def checkMatchOptim(design):
+    res = 0
+    for elt in data.patterns:
+        if design[: len(elt)] == elt:
+            if len(design) == len(elt):
+                res = res + 1
+            tmpRes = checkMatch(design[len(elt) :])
+            if tmpRes > 0:
+                res = res + tmpRes
+    return res
+
+
 def resolve_bothpart2():
     # compute sub combination for the different patterns
     combination = {}
+    # print(len(data.patterns))
+    # print(len(data.patternsExtended))
     for pattern in data.patterns:
         combination[pattern] = checkMatch(pattern)
-    print(combination)
+        # print(pattern, combination[pattern])
+    # exit()
+    # print(combination)
+    # data.patterns = data.patternsExtended
 
     possibleDesign1 = 0
     possibleDesign2 = 0
-    for design in data.design:
+    for design in data.design[:]:
         print(f"{Ansi.blue}{design:10}{Ansi.norm}", end="")
         arrangement = []
-        res = checkMatchWithArrangement(design)
+        # res = checkMatchWithArrangement(design)
         while len(design) > 0:
             matchFlag = False
-            for pattern in data.patterns:
+            """
+            for pattern in data.patternsExtended:
+                # print(pattern)
                 if design[: len(pattern)] == pattern:
                     design = design[len(pattern) :]
                     arrangement.append(combination[pattern])
                     matchFlag = True
                     break
+            if matchFlag == False:
+                break
+            """
+            for span in range(len(data.patternsExtended[0]), 0, -1):
+                if design[:span] in combination:
+                    # print("bingo", span, design[:span])
+                    arrangement.append(combination[design[:span]])
+                    design = design[span:]
+                    matchFlag = True
+                    break
+            if matchFlag == False:
+                break
+
         if matchFlag == True:
             print(f"{Ansi.green} FULL MATCH{Ansi.norm} ", end="")
             possibleDesign1 += 1
+            possibleDesign2 += math.prod(arrangement)
         else:
             print(f"{Ansi.red} IMPOSSIBLE{Ansi.norm} ", end="")
-        print(arrangement, end="")
-        print(res)
+        print(math.prod(arrangement), arrangement, end="")
+        # print(res)
+        print()
 
     return possibleDesign1, possibleDesign2
 
@@ -164,7 +217,7 @@ def resolve_part2():
 
 # MAX_ROUND = 10
 inputFile = "sample.txt"
-# inputFile = "sample2.txt"
+inputFile = "sample2.txt"
 
 # MAX_ROUND = 1000
 # inputFile = "input.txt"
