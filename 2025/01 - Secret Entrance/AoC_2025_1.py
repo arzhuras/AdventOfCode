@@ -74,20 +74,14 @@ def resolve_bothpart():
     zeroCount, zeroCount2 = 0, 0
     for rot, offset, opFunc in data.lineFields:
         zeroCount2 += offset // 100
-        print(f"{code:02}", end="")
-        tmpCode = opFunc(code, offset % 100)
-        if (rot == "L" and code > 0 and tmpCode < 0) or (
-            rot == "R" and code > 0 and tmpCode >= 100
-        ):
-            zeroCount2 += 1
-        code = tmpCode % 100
+        tmpCode = opFunc(code, offset % 100) % 100
         if code == 0:
             zeroCount += 1
-        print(
-            f" {rot} {offset:03} {tmpCode:03} -> {code:02}  ({zeroCount}, {zeroCount2})",
-        )
-
-    return zeroCount, zeroCount2
+        elif tmpCode > 0:
+            if (rot == "L" and tmpCode > code) or (rot == "R" and tmpCode < code):
+                zeroCount2 += 1
+        code = tmpCode
+    return zeroCount, zeroCount + zeroCount2
 
 
 def resolve_part2():
@@ -103,7 +97,7 @@ def resolve_part2():
 inputFile = "sample.txt"
 
 # MAX_ROUND = 1000
-# inputFile = "input.txt"
+inputFile = "input.txt"
 
 data.rawInput = readInputFile(inputFile)
 # data.gridLst = loadMatrix2d(inputFile)
