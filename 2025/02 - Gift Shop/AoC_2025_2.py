@@ -44,37 +44,11 @@ data = Data()
 
 def initData():
     data.lineFields = []
-    # data.rules = defaultdict(lambda: set())
-    # data.line = "".join(data.rawInput)
 
     for line in data.rawInput:
-        # line = line.replace(".","")
-        # line = line.replace(",","")
-        # line = line.replace(";","")
-        # line = line.replace("="," ")
-        # intFields = list(map(int,line.split()))
-        data.lineFields.append([line.split()])
-
+        print([tuple(s.split("-")) for s in line.split(",")])
+        data.lineFields = [tuple(map(int, s.split("-"))) for s in line.split(",")]
     print("lineFields:", data.lineFields)
-
-    # data.grid = []
-    # data.grid = loadMatrix2d(inputFile)[0]
-    # showGrid(data.grid)
-
-    # data.grids = []
-    # data.grids = loadMatrix2d(inputFile)
-    # showGridLst(data.grid)
-
-    # REGEXP https://pynative.com/python-regex-findall-finditer/
-    # line = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))"
-    # res = re.finditer(r"mul\((?P<a>\d+),(?P<b>\d+)\)|(do\(\))|(don\'t\(\))",data.line)
-    # for match in res:
-    # print(match)
-    # print(match.group())
-    # print(match.group(1))
-    # print(match.group(2))
-    # print(match.group("a"))
-    # print(match.group("b"))
 
 
 ##################
@@ -88,11 +62,22 @@ def resolve_part1():
 
 
 def resolve_bothpart():
-    # grid = data.gridLst[0]
-    # grid = [["." for x in range(width)] for y in range(height)]
-    # showGrid(grid)
+    invalidIdsSum, invalidIdsSum2 = 0, 0
+    for elt in data.lineFields:
+        for id in range(elt[0], elt[1] + 1):
+            strId = str(id)
+            for slice in range(len(strId) // 2, 0, -1):
+                if strId.replace(strId[:slice], "") == "":
+                    invalidIdsSum2 += id
+                    if slice * 2 == len(strId):
+                        invalidIdsSum += id
+                        print(elt, strId[:slice], strId, slice, "MID")
+                    else:
+                        print(elt, strId[:slice], strId, slice)
 
-    return None, None
+                    break
+
+    return invalidIdsSum, invalidIdsSum2
 
 
 def resolve_part2():
@@ -108,7 +93,7 @@ def resolve_part2():
 inputFile = "sample.txt"
 
 # MAX_ROUND = 1000
-# inputFile = "input.txt"
+#inputFile = "input.txt"
 
 data.rawInput = readInputFile(inputFile)
 # data.gridLst = loadMatrix2d(inputFile)
@@ -128,7 +113,7 @@ print(f"-> part 1 ({endTime - startTime:.6f}s): {Ansi.blue}{res1}{Ansi.norm}")
 
 ### PART 2 ###
 print(Ansi.red, "### PART 2 ###", Ansi.norm)
-initData()
+# initData()
 startTime = time.time()
 # res2 = resolve_part2()
 endTime = time.time()
