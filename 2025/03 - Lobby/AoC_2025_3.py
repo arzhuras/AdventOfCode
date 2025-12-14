@@ -44,37 +44,11 @@ data = Data()
 
 def initData():
     data.lineFields = []
-    # data.rules = defaultdict(lambda: set())
-    # data.line = "".join(data.rawInput)
 
     for line in data.rawInput:
-        # line = line.replace(".","")
-        # line = line.replace(",","")
-        # line = line.replace(";","")
-        # line = line.replace("="," ")
-        # intFields = list(map(int,line.split()))
-        data.lineFields.append([line.split()])
+        data.lineFields.append([int(elt) for elt in line])
 
     print("lineFields:", data.lineFields)
-
-    # data.grid = []
-    # data.grid = loadMatrix2d(inputFile)[0]
-    # showGrid(data.grid)
-
-    # data.grids = []
-    # data.grids = loadMatrix2d(inputFile)
-    # showGridLst(data.grid)
-
-    # REGEXP https://pynative.com/python-regex-findall-finditer/
-    # line = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))"
-    # res = re.finditer(r"mul\((?P<a>\d+),(?P<b>\d+)\)|(do\(\))|(don\'t\(\))",data.line)
-    # for match in res:
-    # print(match)
-    # print(match.group())
-    # print(match.group(1))
-    # print(match.group(2))
-    # print(match.group("a"))
-    # print(match.group("b"))
 
 
 ##################
@@ -87,12 +61,33 @@ def resolve_part1():
     return None
 
 
-def resolve_bothpart():
-    # grid = data.gridLst[0]
-    # grid = [["." for x in range(width)] for y in range(height)]
-    # showGrid(grid)
+def getJoltage(bank, batCount):
+    print("->", bank, batCount)
+    batJoltage = ""
+    curIndex = 0
+    for i in range(batCount):
+        if batCount - i - 1 > 0:
+            tmpBank = bank[curIndex : -(batCount - i - 1)]
+        else:
+            tmpBank = bank[curIndex:]
+        # print(f"  [{i:02}] {curIndex} {tmpBank}")
+        tmpIndex = max(range(len(tmpBank)), key=tmpBank.__getitem__)
+        # print(f"       {tmpIndex}, {tmpBank[tmpIndex]}")
+        batJoltage = batJoltage + str(tmpBank[tmpIndex])
+        curIndex += tmpIndex + 1
 
-    return None, None
+    print(f"{batJoltage}")
+    return int(batJoltage)
+
+
+def resolve_bothpart():
+    joltage1 = 0
+    joltage2 = 0
+    for bank in data.lineFields:
+        joltage1 += getJoltage(bank, 2)
+        joltage2 += getJoltage(bank, 12)
+
+    return joltage1, joltage2
 
 
 def resolve_part2():
@@ -108,7 +103,7 @@ def resolve_part2():
 inputFile = "sample.txt"
 
 # MAX_ROUND = 1000
-# inputFile = "input.txt"
+inputFile = "input.txt"
 
 data.rawInput = readInputFile(inputFile)
 # data.gridLst = loadMatrix2d(inputFile)
@@ -128,7 +123,7 @@ print(f"-> part 1 ({endTime - startTime:.6f}s): {Ansi.blue}{res1}{Ansi.norm}")
 
 ### PART 2 ###
 print(Ansi.red, "### PART 2 ###", Ansi.norm)
-initData()
+# initData()
 startTime = time.time()
 # res2 = resolve_part2()
 endTime = time.time()

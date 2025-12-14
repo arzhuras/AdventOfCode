@@ -53,7 +53,7 @@ def initData():
         # line = line.replace(";","")
         # line = line.replace("="," ")
         # intFields = list(map(int,line.split()))
-        data.lineFields.append([line.split()])
+        data.lineFields.append(line.split())
 
     print("lineFields:", data.lineFields)
 
@@ -128,7 +128,7 @@ print(f"-> part 1 ({endTime - startTime:.6f}s): {Ansi.blue}{res1}{Ansi.norm}")
 
 ### PART 2 ###
 print(Ansi.red, "### PART 2 ###", Ansi.norm)
-initData()
+# initData()
 startTime = time.time()
 # res2 = resolve_part2()
 endTime = time.time()
