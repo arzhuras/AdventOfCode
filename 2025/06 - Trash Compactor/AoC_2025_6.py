@@ -12,7 +12,8 @@ from tools import *
 # import operator
 # opFunc = {"+": operator.add, "-": operator.sub, "*": operator.mul, "/": operator.truediv}
 
-# from functools import reduce
+from functools import reduce
+
 # from functools import cache
 
 # import itertools
@@ -29,8 +30,10 @@ class Data:
     rawInput = None
     line = None
     lineFields = None
-    gridLst = None
-    grid = None
+    operands = None
+    operator = None
+    operands2 = None
+    operator2 = None
 
 
 data = Data()
@@ -43,38 +46,44 @@ data = Data()
 
 
 def initData():
-    data.lineFields = []
-    # data.rules = defaultdict(lambda: set())
-    # data.line = "".join(data.rawInput)
+    data.operator = []
+    data.operands = []
 
     for line in data.rawInput:
-        # line = line.replace(".","")
-        # line = line.replace(",","")
-        # line = line.replace(";","")
-        # line = line.replace("="," ")
-        # intFields = list(map(int,line.split()))
-        data.lineFields.append([line.split()])
+        if line[0] == "+" or line[0] == "*":
+            data.operator = line.split()
+        else:
+            data.operands.append(list(map(int, line.split())))
 
-    print("lineFields:", data.lineFields)
+    #print("operands:", data.operands)
+    #print("operator:", data.operator)
 
-    # data.grid = []
-    # data.grid = loadMatrix2d(inputFile)[0]
-    # showGrid(data.grid)
+    data.operator2 = []
+    data.operands2 = []
 
-    # data.grids = []
-    # data.grids = loadMatrix2d(inputFile)
-    # showGridLst(data.grid)
+    # ajout espaces fin de ligne si besoin
+    # data.rawInput[-1] += (len(data.rawInput[0]) - len(data.rawInput[-1])) * " "
 
-    # REGEXP https://pynative.com/python-regex-findall-finditer/
-    # line = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))"
-    # res = re.finditer(r"mul\((?P<a>\d+),(?P<b>\d+)\)|(do\(\))|(don\'t\(\))",data.line)
-    # for match in res:
-    # print(match)
-    # print(match.group())
-    # print(match.group(1))
-    # print(match.group(2))
-    # print(match.group("a"))
-    # print(match.group("b"))
+    i = len(data.rawInput[0]) - 1
+    operands = data.rawInput[:-1]
+    operator = data.rawInput[-1]
+    tmpOperands = []
+    tmpStr = ""
+    while i >= 0:
+        tmpStr = ""
+        for elt in operands:
+            if elt[i] != " ":
+                tmpStr += elt[i]
+        if tmpStr != "":
+            tmpOperands.append(int(tmpStr))
+        if operator[i] != " ":
+            data.operands2.append(tmpOperands)
+            tmpOperands = []
+        i -= 1
+
+    data.operator2 = line.split()[::-1]
+    #print("operands2:", data.operands2)
+    #print("operator2:", data.operator2)
 
 
 ##################
@@ -82,22 +91,37 @@ def initData():
 ##################
 
 
-def resolve_part1():
-
-    return None
-
-
 def resolve_bothpart():
-    # grid = data.gridLst[0]
-    # grid = [["." for x in range(width)] for y in range(height)]
-    # showGrid(grid)
 
-    return None, None
+    res = calc(data.operator, data.operands)
+    #print("->", res)
+
+    res2 = []
+    for idx, op in enumerate(data.operator2):
+        if op == "+":
+            res2.append(sum(data.operands2[idx]))
+        else:
+            res2.append(math.prod(data.operands2[idx]))
+        #print(f"[{idx:03}] {op} -> {data.operands2[idx]} {res2[-1]}")
+    #print("->", res2)
+
+    return sum(res), sum(res2)
 
 
-def resolve_part2():
-
-    return None
+def calc(operator, operands):
+    res = []
+    for idx, op in enumerate(operator):
+        if op == "+":
+            tmpRes = 0
+            for elt in operands:
+                tmpRes += elt[idx]
+        else:
+            tmpRes = 1
+            for elt in operands:
+                tmpRes *= elt[idx]
+        #print(f"[{idx:03}] {op} -> {tmpRes}")
+        res.append(tmpRes)
+    return res
 
 
 ############
@@ -108,7 +132,7 @@ def resolve_part2():
 inputFile = "sample.txt"
 
 # MAX_ROUND = 1000
-# inputFile = "input.txt"
+inputFile = "input.txt"
 
 data.rawInput = readInputFile(inputFile)
 # data.gridLst = loadMatrix2d(inputFile)
@@ -128,7 +152,7 @@ print(f"-> part 1 ({endTime - startTime:.6f}s): {Ansi.blue}{res1}{Ansi.norm}")
 
 ### PART 2 ###
 print(Ansi.red, "### PART 2 ###", Ansi.norm)
-initData()
+# initData()
 startTime = time.time()
 # res2 = resolve_part2()
 endTime = time.time()
