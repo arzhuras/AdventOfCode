@@ -36,45 +36,17 @@ class Data:
 data = Data()
 
 ###  /modules libraries ###
-# from matrix2d import *
-# MATRIX2D_COLORSET = {"#": Ansi.cyan, "X": Ansi.red}
+from matrix2d import *
+
+MATRIX2D_COLORSET = {"#": Ansi.cyan, "X": Ansi.red, "^": Ansi.red, "|": Ansi.yellow}
 # from matrix3d import *
 # from graph import *
 
 
 def initData():
-    data.lineFields = []
-    # data.rules = defaultdict(lambda: set())
-    # data.line = "".join(data.rawInput)
-
-    for line in data.rawInput:
-        # line = line.replace(".","")
-        # line = line.replace(",","")
-        # line = line.replace(";","")
-        # line = line.replace("="," ")
-        # intFields = list(map(int,line.split()))
-        data.lineFields.append([line.split()])
-
-    print("lineFields:", data.lineFields)
-
-    # data.grid = []
-    # data.grid = loadMatrix2d(inputFile)[0]
-    # showGrid(data.grid)
-
-    # data.grids = []
-    # data.grids = loadMatrix2d(inputFile)
-    # showGridLst(data.grid)
-
-    # REGEXP https://pynative.com/python-regex-findall-finditer/
-    # line = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))"
-    # res = re.finditer(r"mul\((?P<a>\d+),(?P<b>\d+)\)|(do\(\))|(don\'t\(\))",data.line)
-    # for match in res:
-    # print(match)
-    # print(match.group())
-    # print(match.group(1))
-    # print(match.group(2))
-    # print(match.group("a"))
-    # print(match.group("b"))
+    data.grid = []
+    data.grid = loadMatrix2d(inputFile)[0]
+    showGrid(data.grid, MATRIX2D_COLORSET)
 
 
 ##################
@@ -88,11 +60,45 @@ def resolve_part1():
 
 
 def resolve_bothpart():
-    # grid = data.gridLst[0]
-    # grid = [["." for x in range(width)] for y in range(height)]
-    # showGrid(grid)
+    grid = copy.deepcopy(data.grid)
+    showGrid(grid, MATRIX2D_COLORSET, span=1)
 
-    return None, None
+    # recherche de la colonne de départ
+    for x, elt in enumerate(grid[0]):
+        if elt == "S":
+            break
+    print("Start x:", x)
+    beamLst = [x]
+    splitDic = {} # dictionnaire des splits réellement atteind
+
+    for y in range(1, len(grid)):
+        tmpBeamLst = []
+        for x in beamLst:
+            if grid[y][x] == ".":
+                tmpBeamLst.append(x)
+                grid[y][x] = "|"
+            elif grid[y][x] == "^":
+                nextNodes = [None, None]
+                for idx, col in enumerate((x - 1, x + 1)):
+                    tmpBeamLst.append(col)
+                    grid[y][col] = "|"
+                    for i in range(y + 1, len(grid)):
+                        if grid[i][col] == "^":
+                            nextNodes[idx] = (i, col)
+                            break
+                splitDic[(y, x)] = [nextNodes[0], nextNodes[1], 0] # next node left, next node right, somme des 2 noeuds
+        beamLst = tmpBeamLst
+
+    for value in reversed(list(splitDic.values())):
+        for elt in value[0:2]:
+            if elt is not None:
+                value[2] += splitDic[elt][2]
+            else:
+                value[2] += 1
+
+    showGrid(grid, MATRIX2D_COLORSET, span=1)
+
+    return len(splitDic), splitDic[next(iter(splitDic))][2]
 
 
 def resolve_part2():
@@ -108,7 +114,7 @@ def resolve_part2():
 inputFile = "sample.txt"
 
 # MAX_ROUND = 1000
-# inputFile = "input.txt"
+inputFile = "input.txt"
 
 data.rawInput = readInputFile(inputFile)
 # data.gridLst = loadMatrix2d(inputFile)
@@ -128,7 +134,7 @@ print(f"-> part 1 ({endTime - startTime:.6f}s): {Ansi.blue}{res1}{Ansi.norm}")
 
 ### PART 2 ###
 print(Ansi.red, "### PART 2 ###", Ansi.norm)
-initData()
+# initData()
 startTime = time.time()
 # res2 = resolve_part2()
 endTime = time.time()

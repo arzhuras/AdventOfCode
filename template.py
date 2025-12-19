@@ -88,7 +88,9 @@ def resolve_part1():
 
 
 def resolve_bothpart():
+    # grid = data.grid
     # grid = data.gridLst[0]
+    # grid = copy.deepcopy(data.grid)
     # grid = [["." for x in range(width)] for y in range(height)]
     # showGrid(grid)
 
