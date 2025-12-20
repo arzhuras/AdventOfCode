@@ -28,7 +28,7 @@ init_script()
 class Data:
     rawInput = None
     line = None
-    lineFields = None
+    boxes = None
     gridLst = None
     grid = None
 
@@ -43,38 +43,12 @@ data = Data()
 
 
 def initData():
-    data.lineFields = []
-    # data.rules = defaultdict(lambda: set())
-    # data.line = "".join(data.rawInput)
+    data.boxes = []
 
     for line in data.rawInput:
-        # line = line.replace(".","")
-        # line = line.replace(",","")
-        # line = line.replace(";","")
-        # line = line.replace("="," ")
-        # intFields = list(map(int,line.split()))
-        data.lineFields.append([line.split()])
+        data.boxes.append(list(map(int, line.split(","))))
 
-    print("lineFields:", data.lineFields)
-
-    # data.grid = []
-    # data.grid = loadMatrix2d(inputFile)[0]
-    # showGrid(data.grid)
-
-    # data.grids = []
-    # data.grids = loadMatrix2d(inputFile)
-    # showGridLst(data.grid)
-
-    # REGEXP https://pynative.com/python-regex-findall-finditer/
-    # line = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))"
-    # res = re.finditer(r"mul\((?P<a>\d+),(?P<b>\d+)\)|(do\(\))|(don\'t\(\))",data.line)
-    # for match in res:
-    # print(match)
-    # print(match.group())
-    # print(match.group(1))
-    # print(match.group(2))
-    # print(match.group("a"))
-    # print(match.group("b"))
+    # print("lineFields:", data.boxes)
 
 
 ##################
@@ -88,11 +62,93 @@ def resolve_part1():
 
 
 def resolve_bothpart():
-    # grid = data.gridLst[0]
-    # grid = [["." for x in range(width)] for y in range(height)]
-    # showGrid(grid)
+    boxes = data.boxes
 
-    return None, None
+    # calcul des distances optimisation sous la diagnonale
+    boxDistLst = []
+    for boxeIdx, boxe in enumerate(boxes):
+        tmpDist = []
+        for nextBoxeIdx in range(len(boxes)):
+            if nextBoxeIdx < boxeIdx:  # optim sous la diagonale
+                tmpDist = 0
+                for coor in range(3):
+                    tmpDist += (boxe[coor] - boxes[nextBoxeIdx][coor]) ** 2
+                # tmpDist = math.sqrt(tmpDist) # pas besoin de la racine carrée pour comparer les distances
+                boxDistLst.append(
+                    (tmpDist, tuple(boxes[boxeIdx]), tuple(boxes[nextBoxeIdx]))
+                )
+    boxDistLst.sort(key=lambda elt: elt[0])  # trier par distance croissante
+
+    """
+    for idx, elt in enumerate(boxDistLst[:20]):
+        print(idx, elt)
+    print(len(boxDistLst))
+    """
+
+    circuitsDict = []
+    boxCircuit = {}
+
+    res1, res2 = 0, 0
+
+    for idx, elt in enumerate(boxDistLst):  # boxDistLst 0=dist, 1=box1, 2=box2
+        # print()
+        # print(idx, elt[1], elt[2], elt[0])
+        if elt[1] not in boxCircuit and elt[2] not in boxCircuit:
+            circuitsDict.append([elt[1], elt[2]])
+            boxCircuit[elt[1]] = len(circuitsDict) - 1
+            boxCircuit[elt[2]] = len(circuitsDict) - 1
+            # print(Ansi.green, "new", Ansi.norm, circuitsDict[-1])
+        elif elt[1] in boxCircuit and elt[2] in boxCircuit:
+            if boxCircuit[elt[1]] == boxCircuit[elt[2]]:
+                # print(Ansi.blue, "both already in same circuits", Ansi.norm)
+                pass
+            else:
+                circ1Idx = boxCircuit[elt[1]]
+                circ2Idx = boxCircuit[elt[2]]
+                # print(Ansi.red, "merge", Ansi.norm, circ1Idx, "and", circ2Idx)
+                circuitsDict[circ1Idx] = circuitsDict[circ1Idx] + circuitsDict[circ2Idx]
+                for box in circuitsDict[circ2Idx]:
+                    boxCircuit[box] = circ1Idx
+                circuitsDict[circ2Idx] = []
+        elif elt[1] not in boxCircuit:
+            circuitsDict[boxCircuit[elt[2]]].append(elt[1])
+            boxCircuit[elt[1]] = boxCircuit[elt[2]]
+            # print(Ansi.yellow, "add", Ansi.norm, elt[1], boxCircuit[elt[2]], elt[2])
+        elif elt[2] not in boxCircuit:
+            circuitsDict[boxCircuit[elt[1]]].append(elt[2])
+            boxCircuit[elt[2]] = boxCircuit[elt[1]]
+            # print(Ansi.yellow, "add ", Ansi.norm, elt[2], boxCircuit[elt[1]], elt[1])
+
+        # check 3 larger circuit at MAX_ROUND-1
+        if idx == MAX_ROUND - 1:
+            # print()
+            circLen = []
+            for circuitIdx, circuit in enumerate(circuitsDict):
+                circLen.append(len(circuit))
+                # print(circuitIdx, len(circuit), circuit)
+            circLen.sort(reverse=True)
+            res1 = math.prod(circLen[:3])
+            print(Ansi.cyan, "res1=", res1, "circLen:", circLen[:3], Ansi.norm)
+
+        """
+        print("boxCircuit:", len(boxes), len(boxCircuit), boxCircuit)
+        for circuitIdx, circuit in enumerate(circuitsDict):
+            print(circuitIdx, len(circuit), circuit)
+        """
+        # check unique crocuit with ALL boxes
+        circuitCount = 0
+        for circuit in circuitsDict:
+            if len(circuit) > 0:
+                circuitCount += 1
+        # print("circuitCount:", circuitCount, len(boxCircuit))
+        if circuitCount == 1 and len(boxCircuit) == len(
+            boxes
+        ):  # 1 circuit avec 100% des boxes
+            res2 = elt[1][0] * elt[2][0]
+            print(Ansi.cyan, "res2=", res2, idx, elt[1], elt[2], Ansi.norm)
+            break
+
+    return res1, res2
 
 
 def resolve_part2():
@@ -104,11 +160,8 @@ def resolve_part2():
 ### MAIN ###
 ############
 
-# MAX_ROUND = 10
-inputFile = "sample.txt"
-
-# MAX_ROUND = 1000
-# inputFile = "input.txt"
+inputFile, MAX_ROUND = "sample.txt", 10
+inputFile, MAX_ROUND = "input.txt", 1000
 
 data.rawInput = readInputFile(inputFile)
 # data.gridLst = loadMatrix2d(inputFile)
@@ -128,7 +181,7 @@ print(f"-> part 1 ({endTime - startTime:.6f}s): {Ansi.blue}{res1}{Ansi.norm}")
 
 ### PART 2 ###
 print(Ansi.red, "### PART 2 ###", Ansi.norm)
-initData()
+# initData()
 startTime = time.time()
 # res2 = resolve_part2()
 endTime = time.time()

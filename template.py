@@ -106,11 +106,8 @@ def resolve_part2():
 ### MAIN ###
 ############
 
-# MAX_ROUND = 10
-inputFile = "sample.txt"
-
-# MAX_ROUND = 1000
-# inputFile = "input.txt"
+inputFile, MAX_ROUND = "sample.txt", 10
+# inputFile, MAX_ROUND = "input.txt", 1000
 
 data.rawInput = readInputFile(inputFile)
 # data.gridLst = loadMatrix2d(inputFile)
